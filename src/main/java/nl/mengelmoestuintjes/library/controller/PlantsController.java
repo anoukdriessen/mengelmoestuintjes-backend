@@ -1,5 +1,7 @@
 package nl.mengelmoestuintjes.library.controller;
 
+import nl.mengelmoestuintjes.library.service.PlantService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,7 +10,19 @@ import org.springframework.web.bind.annotation.*;
  * @author anoukdriessen
  */
 @RestController
+@CrossOrigin
+@RequestMapping(value = "/plants")
 public class PlantsController {
+
+    @Autowired
+    private PlantService plantService;
+
+    // method to search plants
+    @RequestMapping(method = RequestMethod.GET, value = "")
+    public ResponseEntity<Object> searchPlants(@RequestParam(name="name", defaultValue = "") String name,
+                                               @RequestParam(name="category", defaultValue = "") String category) {
+        return ResponseEntity.ok().body(plantService.getPlants(name, category));
+    }
 
     // get request to get all plants
     @GetMapping("/plants")
@@ -17,9 +31,9 @@ public class PlantsController {
     }
 
     // get request to get one plant with { id }
-    @GetMapping("/plants/{id}")
-    public ResponseEntity<Object> getPlant(@PathVariable long id) {
-        return ResponseEntity.ok(...);
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Object> getPlant(@PathVariable("id") long id) {
+        return ResponseEntity.ok().body(plantService.getPlantById(id));
     }
 
     // get request to get all books with specified category
