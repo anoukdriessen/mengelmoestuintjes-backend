@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>nl.mengelmoestuintjes</groupId>
-	<artifactId>library</artifactId>
+	<artifactId>app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Library</name>
-	<description>Library WebService with Spring Boot</description>
+	<name>app</name>
+	<description>Full Stack app with Spring Boot and React</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -21,11 +21,19 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 
