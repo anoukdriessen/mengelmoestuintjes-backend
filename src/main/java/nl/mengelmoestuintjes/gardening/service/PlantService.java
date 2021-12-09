@@ -6,41 +6,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class PlantService {
-    public List<Plant> getPlants() {
-        return new ArrayList<>();
-//        return ListOfPlants.getPlants(); TODO
-    }
+public interface PlantService {
+    public List<Plant> getPlants();
 
-    public Plant getPlantById(int id) {
-        ArrayList<Plant> listOfPlants = new ArrayList<>();
-//        Plant toFind = ListOfPlants.getPlant(id); TODO
-        Plant toFind = listOfPlants.get(id);
-        if (toFind == null) throw new RecordNotFoundException("Cannot find plant");
-        return toFind;
-    }
+    public Optional<Plant> getPlantById(long id);
 
-    public int addPlant(Plant plant) {
-        return 0;
-//        return ListOfPlants.addPlant(plant); TODO
-    }
+    public int addPlant(Plant plant);
 
-    public void removePlantById(int id) {
-        ArrayList<Plant> listOfPlants = new ArrayList<>();
-        Plant toFind = listOfPlants.get(id);
-//        Plant toFind = ListOfPlants.getPlant(id); TODO
-        if (toFind == null) throw new RecordNotFoundException("Cannot find plant");
-//        ListOfPlants.removePlant(id);
-        listOfPlants.remove(id);
-    }
+    public void removePlantById(int id);
 
-    public void updatePlantById(int id, Plant plant) {
-        ArrayList<Plant> listOfPlants = new ArrayList<>();
-        Plant toFind = listOfPlants.get(id);
-//        Plant toFind = ListOfPlants.getPlant(id); TODO
-        if (toFind == null) throw new RecordNotFoundException("Cannot find plant");
-//        ListOfBooks.updateBook(id, book); TODO
-    }
+    public void updatePlantById(int id, Plant plant);
 }
