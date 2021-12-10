@@ -23,12 +23,15 @@ public class Post {
     // constructor is niet nodig bij Spring Boot
     // Spring Boot maakt gebruik van de default constructor
     // als je er een maakt moet je ze allemaal maken
+    // lege constructor
     public Post(){}
-    public Post(int id, String title, String description, Date created){
+    // full constructor
+    public Post(int id, String title, String description, Date created, Date modified){
         this.id = id;
         this.title = title;
         this.description = description;
         this.created = created;
+        this.modified = modified;
     }
     public Post(String title, String description) {
         this.title = title;
