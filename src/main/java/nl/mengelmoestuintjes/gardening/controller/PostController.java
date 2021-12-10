@@ -24,13 +24,13 @@ public class PostController {
     public ResponseEntity<Object> getAllPosts() {
         return ResponseEntity.ok(postRepository.findAll());
     }
-//
-//    @GetMapping(value = "/posts/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public Post getPostById(@PathVariable int id) {
-//        return this.posts.get(id);
-//    }
-//
+
+    @GetMapping(value = "/posts/{id}")
+    public ResponseEntity<Object> getPostById(@PathVariable int id) {
+        return ResponseEntity.ok(postRepository.findById());
+    }
+
+
 //    @DeleteMapping(value = "/posts/{id}")
 //    @ResponseStatus(HttpStatus.NO_CONTENT)
 //    public String deletePostById(@PathVariable int id) {
