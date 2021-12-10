@@ -20,7 +20,15 @@ public class Post {
     private Date created;
     private Date modified;
 
-    // constructor is niet nodig
+    // constructor is niet nodig bij Spring Boot
+    // Spring Boot maakt gebruik van de default constructor
+
+    public Post(String title, String description) {
+        this.title = title;
+        this.description = description;
+        this.created = new Date(); // current date
+    }
+
 
     // getters & setters
 
