@@ -27,22 +27,15 @@ public class PostController {
 
     @GetMapping(value = "/posts/{id}")
     public ResponseEntity<Object> getPostById(@PathVariable int id) {
-        return ResponseEntity.ok(postRepository.findById());
+        return ResponseEntity.ok(postRepository.findById(id));
     }
 
-
-//    @DeleteMapping(value = "/posts/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public String deletePostById(@PathVariable int id) {
-//        String deleted = "nothing";
-//
-//        if (this.getPostById(id) != null) {
-//            deleted = this.getPostById(id).toString();
-//            this.posts.remove(id);
-//        }
-//
-//        return deleted;
-//    }
+    @DeleteMapping(value = "/posts/{id}")
+    public ResponseEntity<Object> deletePostById(@PathVariable("id") int id) {
+        postRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+    
 //
 //    @PostMapping(value = "/posts")
 //    @ResponseStatus(HttpStatus.CREATED)
