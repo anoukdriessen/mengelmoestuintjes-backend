@@ -21,49 +21,48 @@ public class PostController {
 
     // GET
     @GetMapping(value = "/posts")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Post> getAllPosts() {
-        return this.posts;
+    public ResponseEntity<Object> getAllPosts() {
+        return ResponseEntity.ok(postRepository.findAll());
     }
-
-    @GetMapping(value = "/posts/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Post getPostById(@PathVariable int id) {
-        return this.posts.get(id);
-    }
-
-    @DeleteMapping(value = "/posts/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public String deletePostById(@PathVariable int id) {
-        String deleted = "nothing";
-
-        if (this.getPostById(id) != null) {
-            deleted = this.getPostById(id).toString();
-            this.posts.remove(id);
-        }
-
-        return deleted;
-    }
-
-    @PostMapping(value = "/posts")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Post newPost(@RequestBody Post postToAdd) {
-        posts.add(postToAdd);
-
-        return postToAdd;
-    }
-
-    @PutMapping(value = "/posts/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Post updatePost(@PathVariable("id") int id, @RequestBody Post modifiedPost) {
-        Post post = posts.get(id);
-        // TODO check if not empty
-        post.setTitle(modifiedPost.getTitle());
-        post.setDescription(modifiedPost.getDescription());
-        post.setModified(new Date());
-
-        posts.set(id, post);
-
-        return post;
-    }
+//
+//    @GetMapping(value = "/posts/{id}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public Post getPostById(@PathVariable int id) {
+//        return this.posts.get(id);
+//    }
+//
+//    @DeleteMapping(value = "/posts/{id}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public String deletePostById(@PathVariable int id) {
+//        String deleted = "nothing";
+//
+//        if (this.getPostById(id) != null) {
+//            deleted = this.getPostById(id).toString();
+//            this.posts.remove(id);
+//        }
+//
+//        return deleted;
+//    }
+//
+//    @PostMapping(value = "/posts")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public Post newPost(@RequestBody Post postToAdd) {
+//        posts.add(postToAdd);
+//
+//        return postToAdd;
+//    }
+//
+//    @PutMapping(value = "/posts/{id}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public Post updatePost(@PathVariable("id") int id, @RequestBody Post modifiedPost) {
+//        Post post = posts.get(id);
+//        // TODO check if not empty
+//        post.setTitle(modifiedPost.getTitle());
+//        post.setDescription(modifiedPost.getDescription());
+//        post.setModified(new Date());
+//
+//        posts.set(id, post);
+//
+//        return post;
+//    }
 }
