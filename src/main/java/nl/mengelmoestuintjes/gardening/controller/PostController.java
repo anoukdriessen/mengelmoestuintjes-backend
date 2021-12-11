@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +20,7 @@ public class PostController {
 
     @Autowired
     private PostRepository postRepository;
-
+    
     // GET
     @GetMapping(value = "/posts")
     public ResponseEntity<Object> getAllPosts() {
@@ -30,32 +32,76 @@ public class PostController {
         return ResponseEntity.ok(postRepository.findById(id));
     }
 
+    // DELETE
     @DeleteMapping(value = "/posts/{id}")
     public ResponseEntity<Object> deletePostById(@PathVariable("id") int id) {
         postRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-    
-//
-//    @PostMapping(value = "/posts")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public Post newPost(@RequestBody Post postToAdd) {
-//        posts.add(postToAdd);
-//
-//        return postToAdd;
-//    }
-//
-//    @PutMapping(value = "/posts/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public Post updatePost(@PathVariable("id") int id, @RequestBody Post modifiedPost) {
-//        Post post = posts.get(id);
-//        // TODO check if not empty
-//        post.setTitle(modifiedPost.getTitle());
-//        post.setDescription(modifiedPost.getDescription());
-//        post.setModified(new Date());
-//
-//        posts.set(id, post);
-//
-//        return post;
-//    }
+
+    // POST
+    @PostMapping(value = "/posts")
+    public ResponseEntity<Object> newPost(@RequestBody Post postToAdd) {
+        postToAdd.setCreated(new Date());
+
+        Post newPost = postRepository.save(postToAdd);
+        int newId = newPost.getId();
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newId).toUri();
+        System.out.println("ik ben hier");
+        return ResponseEntity.created(location).build();
+    }
+
+    // PUT
+    @PutMapping(value = "/posts/{id}")
+    public ResponseEntity<Object> updatePost(@PathVariable("id") int id, @RequestBody Post modifiedPost) {
+        Post toModify = postRepository.findById(id).orElse(null);
+
+        boolean titleNotEmpty = !modifiedPost.getTitle().isEmpty();
+        boolean descriptionNotEmpty = !modifiedPost.getTitle().isEmpty();
+        boolean modifed = false;
+
+        // title
+        if (titleNotEmpty) {
+            toModify.setTitle(modifiedPost.getTitle());
+            modifed = true;
+        }
+        // description
+        if (descriptionNotEmpty) {
+            toModify.setDescription(modifiedPost.getDescription());
+            modifed = true;
+        }
+        // if something is modified set modified date
+        if (modifed) { toModify.setModified(new Date()); }
+
+        postRepository.save(toModify);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping(value = "/posts/{id}")
+    public ResponseEntity<Object> updatePartOfPost(@PathVariable("id") int id, @RequestBody Post modifiedPost) {
+        Post toModify = postRepository.findById(id).orElse(null);
+
+        boolean titleNotEmpty = !modifiedPost.getTitle().isEmpty() && modifiedPost.getTitle() != null;
+        boolean descriptionNotEmpty = !modifiedPost.getDescription().isEmpty() && modifiedPost.getTitle() != null;
+        boolean modifed = false;
+
+        // title
+        if (titleNotEmpty) {
+            toModify.setTitle(modifiedPost.getTitle());
+            modifed = true;
+        }
+        // description
+        if (descriptionNotEmpty) {
+            toModify.setDescription(modifiedPost.getDescription());
+            modifed = true;
+        }
+        // if something is modified set modified date
+        if (modifed) { toModify.setModified(new Date()); }
+
+        postRepository.save(toModify);
+
+        return ResponseEntity.noContent().build();
+    }
 }
