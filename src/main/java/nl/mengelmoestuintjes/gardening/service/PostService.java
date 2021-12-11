@@ -23,6 +23,7 @@ public class PostService {
         postRepository.deleteById(id);
     }
     public int newPost(Post toAdd) {
+        toAdd.setCreated(new Date());
         Post newPost = postRepository.save(toAdd);
         return newPost.getId();
     }
