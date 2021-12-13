@@ -17,14 +17,17 @@ public class PostController {
     private PostService postService;
 
     @GetMapping(value = "/posts")
-    public ResponseEntity<Object> getAllPosts() {
-        return ResponseEntity.ok(postService.getAllPosts());
+    public ResponseEntity<Object> getAllPosts(
+            @RequestParam(name = "author", defaultValue = "") String author
+    ) {
+        return ResponseEntity.ok(postService.getAllPosts(author));
     }
 
     @GetMapping(value = "/posts/{id}")
     public ResponseEntity<Object> getPostById(@PathVariable int id) {
         return ResponseEntity.ok(postService.getPostById(id));
     }
+
 
     @DeleteMapping(value = "/posts/{id}")
     public ResponseEntity<Object> deletePostById(@PathVariable("id") int id) {

@@ -14,9 +14,7 @@ public class Post {
 
     private String title;
     private String description;
-
-//    private User author;
-
+    private String author;
     private Date created;
     private Date modified;
 
@@ -26,16 +24,18 @@ public class Post {
     // lege constructor
     public Post(){}
     // full constructor
-    public Post(int id, String title, String description, Date created, Date modified){
+    public Post(int id, String title, String description, String author, Date modified){
         this.id = id;
         this.title = title;
         this.description = description;
-        this.created = created;
+        this.author = author;
+        this.created = new Date();
         this.modified = modified;
     }
-    public Post(String title, String description) {
+    public Post(String title, String description, String author) {
         this.title = title;
         this.description = description;
+        this.author = author;
         this.created = new Date(); // current date
     }
 
@@ -65,13 +65,13 @@ public class Post {
         this.description = description;
     }
 
-//    public User getAuthor() {
-//        return author;
-//    }
-//
-//    public void setAuthor(User author) {
-//        this.author = author;
-//    }
+    public String getAuthor() {
+        return this.author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
     public Date getCreated() {
         return created;

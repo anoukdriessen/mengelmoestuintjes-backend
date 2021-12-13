@@ -1,11 +1,13 @@
 package nl.mengelmoestuintjes.gardening.service;
 
+import nl.mengelmoestuintjes.gardening.exceptions.RecordNotFoundException;
 import nl.mengelmoestuintjes.gardening.model.Post;
 import nl.mengelmoestuintjes.gardening.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class PostService {
@@ -13,14 +15,36 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
-    public Iterable<Post> getAllPosts() {
+    public Iterable<Post> getAllPosts(String author) {
+        if (!author.isBlank()) {
+            return postRepository.findAllByAuthor(author);
+        }
         return postRepository.findAll();
+
     }
+
     public Post getPostById(int id) {
-        return postRepository.findById(id).orElse(null);
+        Optional<Post> toFind = postRepository.findById(id);
+
+        // check if post exists
+        if (toFind.isPresent()) {
+            return toFind.get();
+        } else {
+            // post does not exists
+            throw new RecordNotFoundException("ID does not exists, post not found");
+        }
+
     }
     public void deletePost(int id) {
-        postRepository.deleteById(id);
+        Optional<Post> toFind = postRepository.findById(id);
+
+        // check if post exists
+        if (toFind.isPresent()) {
+            postRepository.deleteById(id);
+        } else {
+            // post does not exists
+            throw new RecordNotFoundException("ID does not exists, post not found");
+        }
     }
     public int newPost(Post toAdd) {
         toAdd.setCreated(new Date());
