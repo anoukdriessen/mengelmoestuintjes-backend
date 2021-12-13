@@ -34,7 +34,6 @@ public class PostService {
             // post does not exists
             throw new RecordNotFoundException("ID does not exists, post not found");
         }
-
     }
     public void deletePost(int id) {
         Optional<Post> toFind = postRepository.findById(id);

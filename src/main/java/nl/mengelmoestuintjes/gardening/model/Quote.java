@@ -29,7 +29,7 @@ public class Quote {
         this.author = author;
         this.text = text;
     }
-    
+
     // getters
     public int getId() {
         return id;
