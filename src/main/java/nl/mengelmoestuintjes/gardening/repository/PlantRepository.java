@@ -1,6 +1,6 @@
 //package nl.mengelmoestuintjes.gardening.repository;
 //
-//import nl.mengelmoestuintjes.gardening.model.Plant;
+//import nl.mengelmoestuintjes.gardening.model.plants.Plant;
 //import org.springframework.data.jpa.repository.JpaRepository;
 //import org.springframework.data.repository.CrudRepository;
 //

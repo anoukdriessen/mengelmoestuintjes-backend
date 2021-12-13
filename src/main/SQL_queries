@@ -7,6 +7,15 @@ VALUES
 	(3, 'Doe waar je blij van wordt', 'Mijn vierde post', 'kevin'),
 	(4, 'Dit moet je zien', 'Mijn vijfde post', 'kevin'),
 	(5, 'I did a thing', 'Mijn zesde post', 'kevin');
+INSERT INTO posts (title, description, author)
+    VALUES
+        ('Hello World', 'Mijn eerste post', 'anouk'),
+        ('Plant een zaadje', 'Mijn tweede post', 'anouk'),
+        ('Je zorgt zelf voor groei', 'Mijn derde post', 'anouk'),
+        ('Doe waar je blij van wordt', 'Mijn vierde post', 'kevin'),
+        ('Dit moet je zien', 'Mijn vijfde post', 'kevin'),
+        ('I did a thing', 'Mijn zesde post', 'kevin');
+
 
 # JSON
 {

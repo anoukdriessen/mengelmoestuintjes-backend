@@ -1,14 +1,14 @@
-package nl.mengelmoestuintjes.gardening.model;
+package nl.mengelmoestuintjes.gardening.model.plants;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "plants")
-public class Fruit extends Plant {
+public class Herb extends Plant {
 
     // empty constructor
-    public Fruit() {
+    public Herb() {
         super();
     }
 

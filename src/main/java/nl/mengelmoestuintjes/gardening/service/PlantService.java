@@ -1,10 +1,8 @@
 package nl.mengelmoestuintjes.gardening.service;
 
-import nl.mengelmoestuintjes.gardening.exceptions.RecordNotFoundException;
-import nl.mengelmoestuintjes.gardening.model.Plant;
+import nl.mengelmoestuintjes.gardening.model.plants.Plant;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

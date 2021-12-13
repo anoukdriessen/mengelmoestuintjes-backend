@@ -1,5 +1,6 @@
 package nl.mengelmoestuintjes.gardening.controller;
 
+import nl.mengelmoestuintjes.gardening.dto.PostRequestDto;
 import nl.mengelmoestuintjes.gardening.model.Post;
 import nl.mengelmoestuintjes.gardening.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
-import java.util.Date;
 
 @RestController
 public class PostController {
@@ -36,7 +37,7 @@ public class PostController {
     }
 
     @PostMapping(value = "/posts")
-    public ResponseEntity<Object> newPost(@RequestBody Post toAdd) {
+    public ResponseEntity<Object> newPost(@Valid @RequestBody PostRequestDto toAdd) {
         int newId = postService.newPost(toAdd);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newId).toUri();
         return ResponseEntity.created(location).build();

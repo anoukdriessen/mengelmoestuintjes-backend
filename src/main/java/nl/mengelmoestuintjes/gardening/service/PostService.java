@@ -1,5 +1,6 @@
 package nl.mengelmoestuintjes.gardening.service;
 
+import nl.mengelmoestuintjes.gardening.dto.PostRequestDto;
 import nl.mengelmoestuintjes.gardening.exceptions.RecordNotFoundException;
 import nl.mengelmoestuintjes.gardening.model.Post;
 import nl.mengelmoestuintjes.gardening.repository.PostRepository;
@@ -46,9 +47,12 @@ public class PostService {
             throw new RecordNotFoundException("ID does not exists, post not found");
         }
     }
-    public int newPost(Post toAdd) {
+    public int newPost(PostRequestDto toAdd) {
+        //String title, String description, String author
+        Post post = new Post(toAdd.getTitle(), toAdd.getDescription(), toAdd.getAuthor());
+
         toAdd.setCreated(new Date());
-        Post newPost = postRepository.save(toAdd);
+        Post newPost = postRepository.save(post);
         return newPost.getId();
     }
     public void updatePost(int id, Post modified) {
