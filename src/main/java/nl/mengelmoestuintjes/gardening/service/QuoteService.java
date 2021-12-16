@@ -12,15 +12,16 @@ import java.util.Random;
 @Service
 public class QuoteService {
     private static String NOT_FOUND = "Quote not found";
+    private final QuoteRepository quoteRepository;
 
     @Autowired
-    private QuoteRepository quoteRepository;
+    public QuoteService(QuoteRepository quoteRepository) {
+        this.quoteRepository = quoteRepository;
+    }
 
     // Create
-    public int newQuote(Quote toAdd) {
-        Quote quote = new Quote(toAdd.getAuthor(), toAdd.getText());
-        Quote newQuote = quoteRepository.save(quote);
-        return newQuote.getId();
+    public Quote newQuote(Quote toAdd) {
+        return quoteRepository.save( toAdd );
     }
 
     // Read
@@ -50,16 +51,15 @@ public class QuoteService {
         Quote toModify = quoteRepository.findById(id).orElse(null);
 
         if (toModify != null) {
-            boolean authorNotEmpty = !modified.getAuthor().isEmpty() && modified.getAuthor() != null;
-            boolean textNotEmpty = !modified.getText().isEmpty() && modified.getText() != null;
+            boolean authorNotEmpty = !modified.getAuthor().isEmpty();
+            boolean textNotEmpty = !modified.getText().isEmpty();
 
-            if (authorNotEmpty) {
-                toModify.setAuthor(modified.getAuthor());
-            }
-            if (textNotEmpty) {
-                toModify.setText(modified.getText());
-            }
+            if (authorNotEmpty) { toModify.setAuthor(modified.getAuthor()); }
+            if (textNotEmpty) { toModify.setText(modified.getText()); }
+
             quoteRepository.save(toModify);
+        } else {
+            throw new RecordNotFoundException(NOT_FOUND);
         }
     }
 
@@ -67,9 +67,9 @@ public class QuoteService {
     public void deleteQuoteById(int id) {
         Optional<Quote> toFind = quoteRepository.findById(id);
 
-        if (toFind.isPresent()) {   // check if quote exists
+        if (toFind.isPresent()) {  // check if quote exists
             quoteRepository.deleteById(id);
-        } else {                    // post does not exists
+        } else {  // post does not exists
             throw new RecordNotFoundException(NOT_FOUND);
         }
     }

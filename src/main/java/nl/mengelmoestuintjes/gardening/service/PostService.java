@@ -1,101 +1,113 @@
 package nl.mengelmoestuintjes.gardening.service;
 
-import nl.mengelmoestuintjes.gardening.dto.PostRequestDto;
 import nl.mengelmoestuintjes.gardening.exceptions.RecordNotFoundException;
-import nl.mengelmoestuintjes.gardening.model.Post;
+import nl.mengelmoestuintjes.gardening.model.posts.Post;
+import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
 import nl.mengelmoestuintjes.gardening.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class PostService {
+    private static final String NOT_FOUND = "Post not found";
+    private final PostRepository postRepository;
 
     @Autowired
-    private PostRepository postRepository;
-
-    public Iterable<Post> getAllPosts(String author) {
-        if (!author.isBlank()) {
-            return postRepository.findAllByAuthor(author);
-        }
-        return postRepository.findAll();
-
+    public PostService(PostRepository postRepository) {
+        this.postRepository = postRepository;
     }
 
+    // Create
+    public Post newPost(Post toAdd) {
+        return postRepository.save( toAdd );
+    }
+
+    // Read
+    public Iterable<Post> getAllPosts(String author, boolean visible, PostCategory category) {
+        if ( !author.isBlank() && visible ) {
+            return postRepository.findAllByAuthorAndVisible(author, visible);
+        } else if ( !Objects.isNull(category) && visible ){
+            return postRepository.findAllByCategoryAndVisible(category, visible);
+        } else if ( visible ) {
+            return postRepository.findByVisibleTrue();
+        } else if ( !author.isBlank() ) {
+            return postRepository.findAllByAuthor(author);
+        } else if ( !Objects.isNull(category) ) {
+            return postRepository.findAllByCategory(category);
+        } else {
+            return postRepository.findAll();
+        }
+    }
     public Post getPostById(int id) {
         Optional<Post> toFind = postRepository.findById(id);
 
-        // check if post exists
-        if (toFind.isPresent()) {
+        if (toFind.isPresent()) { // check if post exists
             return toFind.get();
-        } else {
-            // post does not exists
-            throw new RecordNotFoundException("ID does not exists, post not found");
+        } else {  // post does not exists
+            throw new RecordNotFoundException(NOT_FOUND);
         }
     }
-    public void deletePost(int id) {
-        Optional<Post> toFind = postRepository.findById(id);
 
-        // check if post exists
-        if (toFind.isPresent()) {
-            postRepository.deleteById(id);
-        } else {
-            // post does not exists
-            throw new RecordNotFoundException("ID does not exists, post not found");
-        }
-    }
-    public int newPost(PostRequestDto toAdd) {
-        //String title, String description, String author
-        Post post = new Post(toAdd.getTitle(), toAdd.getDescription(), toAdd.getAuthor());
-
-        toAdd.setCreated(new Date());
-        Post newPost = postRepository.save(post);
-        return newPost.getId();
-    }
+    // Update
     public void updatePost(int id, Post modified) {
         Post toModify = postRepository.findById(id).orElse(null);
 
-        boolean titleNotEmpty = !modified.getTitle().isEmpty();
-        boolean descriptionNotEmpty = !modified.getTitle().isEmpty();
-        boolean modifed = false;
+        if (toModify != null) {
+            boolean titleNotEmpty = !modified.getTitle().isEmpty();
+            boolean categoryNotEmpty = modified.getCategory() != null;
+            boolean descriptionNotEmpty = !modified.getTitle().isEmpty();
+            boolean imageNotEmpty = !modified.getImageUrl().isEmpty();
+            boolean authorNotEmpty = !modified.getAuthor().isEmpty();
+            boolean visibleChanged = modified.isVisible() != toModify.isVisible();
 
-        // title
-        if (titleNotEmpty) {
-            toModify.setTitle(modified.getTitle());
-            modifed = true;
-        }
-        // description
-        if (descriptionNotEmpty) {
-            toModify.setDescription(modified.getDescription());
-            modifed = true;
-        }
-        // if something is modified set modified date
-        if (modifed) { toModify.setModified(new Date()); }
+            boolean isModifed = false;
 
-        postRepository.save(toModify);
+            if (titleNotEmpty) {
+                toModify.setTitle(modified.getTitle());
+                isModifed = true;
+            }
+            if (categoryNotEmpty) {
+                toModify.setCategory(modified.getCategory());
+                isModifed = true;
+            }
+            if (descriptionNotEmpty) {
+                toModify.setDescription(modified.getDescription());
+                isModifed = true;
+            }
+            if (imageNotEmpty) {
+                toModify.setImageUrl(modified.getImageUrl());
+                isModifed = true;
+            }
+            if (authorNotEmpty) {
+                toModify.setAuthor(modified.getAuthor());
+                isModifed = true;
+            }
+            if (visibleChanged) {
+                toModify.setVisible(modified.isVisible());
+                isModifed = true;
+            }
+
+            // if something is modified set modified date
+            if (isModifed) { toModify.setModified(new Date()); }
+            postRepository.save(toModify);
+        } else {
+            throw new RecordNotFoundException(NOT_FOUND);
+        }
     }
-    public void updatePartOfPost(int id, Post modified) {
-        Post toModify = postRepository.findById(id).orElse(null);
 
-        boolean titleNotEmpty = !modified.getTitle().isEmpty() && modified.getTitle() != null;
-        boolean descriptionNotEmpty = !modified.getDescription().isEmpty() && modified.getTitle() != null;
-        boolean modifed = false;
+    // Delete
+    public void deletePostById(int id) {
+        Optional<Post> toFind = postRepository.findById(id);
 
-        // title
-        if (titleNotEmpty) {
-            toModify.setTitle(modified.getTitle());
-            modifed = true;
+        if (toFind.isPresent()) { // check if post exists
+            postRepository.deleteById(id);
+        } else { // post does not exists
+            throw new RecordNotFoundException(NOT_FOUND);
         }
-        // description
-        if (descriptionNotEmpty) {
-            toModify.setDescription(modified.getDescription());
-            modifed = true;
-        }
-        // if something is modified set modified date
-        if (modifed) { toModify.setModified(new Date()); }
-
-        postRepository.save(toModify);
     }
+
 }

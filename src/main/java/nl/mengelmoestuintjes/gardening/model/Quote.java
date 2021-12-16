@@ -14,23 +14,18 @@ public class Quote {
 
       alleen moderators kunnen quotes toevoegen in hun dashboard
      */
-
-    // attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String author;
     private String text;
 
-    // constructors
     public Quote(){}
     public Quote(String author, String text) {
         this.author = author;
         this.text = text;
     }
 
-    // getters
     public int getId() {
         return id;
     }
@@ -41,7 +36,9 @@ public class Quote {
         return text;
     }
 
-    // setters
+    public void setId(int id) {
+        this.id = id;
+    }
     public void setAuthor(String author) {
         this.author = author;
     }

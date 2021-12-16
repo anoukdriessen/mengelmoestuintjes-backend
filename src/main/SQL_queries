@@ -1,31 +1,70 @@
 # Posts
-INSERT INTO posts (id, title, description, author)
-VALUES
-	(0, 'Hello World', 'Mijn eerste post', 'anouk'),
-	(1, 'Plant een zaadje', 'Mijn tweede post', 'anouk'),
-	(2, 'Je zorgt zelf voor groei', 'Mijn derde post', 'anouk'),
-	(3, 'Doe waar je blij van wordt', 'Mijn vierde post', 'kevin'),
-	(4, 'Dit moet je zien', 'Mijn vijfde post', 'kevin'),
-	(5, 'I did a thing', 'Mijn zesde post', 'kevin');
-INSERT INTO posts (title, description, author)
-    VALUES
-        ('Hello World', 'Mijn eerste post', 'anouk'),
-        ('Plant een zaadje', 'Mijn tweede post', 'anouk'),
-        ('Je zorgt zelf voor groei', 'Mijn derde post', 'anouk'),
-        ('Doe waar je blij van wordt', 'Mijn vierde post', 'kevin'),
-        ('Dit moet je zien', 'Mijn vijfde post', 'kevin'),
-        ('I did a thing', 'Mijn zesde post', 'kevin');
+INSERT INTO posts (title, category, description, imageUrl, author, visible)
+    VALUES ('','','','','',''),
+        ('','','','','','');
 
 
 # JSON
+[
+    {
+        "title": "Kevin is lief",
+        "category": "POST",
+        "description": "wat is het weer een vervelend werk",
+        "imageUrl": "url_naar_afbeelding",
+        "author": "kevin",
+        "created": "2021-12-16T13:09:01.513+00:00",
+        "modified": null,
+        "visible": true
+    },
+    {
+        "title": "Kevin is lief",
+        "category": "POST",
+        "description": "wat is het weer een vervelend werk",
+        "imageUrl": "url_naar_afbeelding",
+        "author": "kevin",
+        "created": "2021-12-16T13:09:24.812+00:00",
+        "modified": null,
+        "visible": false
+    },
+]
+
+# Tasks
+INSERT INTO tasks_garden (description, is_done, month, points, title)
+    VALUES ('', '', '', '', ''),
+        ('', '', '', '', ''),
+        ('', '', '', '', '');
+# JSON
+    *gardening*
 {
-    "title": "I did a thing",
-    "description": "wat een vervelend werk",
-    "author": "kevin"
+    "title": "give water to plant",
+    "description": "field X needs water",
+    "done": "false",
+    "month":  2,
+    "points": 50
 }
 {
-    "title": "I did a thing 2",
-    "description": "wat is het weer een vervelend werk",
-    "author": "anouk"
+    "title": "give water to plant",
+    "description": "field X needs water",
+    "done": "true",
+    "month":  0,
+    "points": 1000
 }
+    {
+        "title": "harken",
+        "description": "op veld X",
+        "done": false,
+        "dueDate": null
+    },
+    {
+        "title": "harken",
+        "description": "op veld X",
+        "done": true,
+        "dueDate": null
+    },
+    {
+        "title": "harken",
+        "description": "op veld X",
+        "done": false,
+        "dueDate": null
+    }
 

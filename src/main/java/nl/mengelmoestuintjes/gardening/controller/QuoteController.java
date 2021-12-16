@@ -1,20 +1,22 @@
 package nl.mengelmoestuintjes.gardening.controller;
 
+import nl.mengelmoestuintjes.gardening.controller.dto.quote.QuoteRequestDto;
+import nl.mengelmoestuintjes.gardening.controller.dto.quote.QuoteResponseDto;
 import nl.mengelmoestuintjes.gardening.model.Quote;
 import nl.mengelmoestuintjes.gardening.service.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/quotes")
 @CrossOrigin
 public class QuoteController {
-
-    private QuoteService quoteService;
+    private final QuoteService quoteService;
 
     @Autowired
     public QuoteController(QuoteService quoteService) {
@@ -22,22 +24,28 @@ public class QuoteController {
     }
 
     // Create
-    @PostMapping(value = "")
-    public ResponseEntity<Object> newQuote(Quote toAdd) {
-        int newId = quoteService.newQuote(toAdd);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newId).toUri();
-        return ResponseEntity.created(location).build();
+    @PostMapping
+    public QuoteResponseDto newQuote(@Valid @RequestBody QuoteRequestDto toAdd ) {
+        Quote quote = quoteService.newQuote( toAdd.toQuote() );
+        return QuoteResponseDto.fromQuote(quote);
     }
 
     // Read
-    @GetMapping(value = "")
-    public ResponseEntity<Object> getAllQuotes() {
-        return ResponseEntity.ok(quoteService.getAllQuotes());
+    @GetMapping
+    public List<QuoteResponseDto> getAllQuotes() {
+        List<QuoteResponseDto> all = new ArrayList<QuoteResponseDto>();
+        Iterable<Quote> quotes = quoteService.getAllQuotes();
+
+        for ( Quote q : quotes ) {
+            all.add( QuoteResponseDto.fromQuote( q ) );
+        }
+        return all;
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Object> getQuoteById(@PathVariable int id) {
-        return ResponseEntity.ok(quoteService.getQuoteById(id));
+    public QuoteResponseDto getQuoteById(@PathVariable( "id" ) int id) {
+        Quote quote = quoteService.getQuoteById(id);
+        return QuoteResponseDto.fromQuote(quote);
     }
 
     @GetMapping(value = "/random")
@@ -47,15 +55,14 @@ public class QuoteController {
 
     // Update
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Object> updateQuote(@PathVariable("id") int id, @RequestBody Quote modifiedQuote) {
+    public QuoteResponseDto updateQuote( @PathVariable( "id" ) int id, @RequestBody Quote modifiedQuote ) {
         quoteService.updateQuote(id, modifiedQuote);
-        return ResponseEntity.noContent().build();
+        return QuoteResponseDto.fromQuote(modifiedQuote);
     }
 
     // Delete
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Object> deleteQuoteById(@PathVariable("id") int id) {
+    public void deleteQuote(@PathVariable( "id" ) int id) {
         quoteService.deleteQuoteById(id);
-        return ResponseEntity.noContent().build();
     }
 }

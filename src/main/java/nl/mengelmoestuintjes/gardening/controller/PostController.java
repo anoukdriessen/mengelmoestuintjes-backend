@@ -1,57 +1,67 @@
 package nl.mengelmoestuintjes.gardening.controller;
 
-import nl.mengelmoestuintjes.gardening.dto.PostRequestDto;
-import nl.mengelmoestuintjes.gardening.model.Post;
+import nl.mengelmoestuintjes.gardening.controller.dto.post.PostRequestDto;
+import nl.mengelmoestuintjes.gardening.controller.dto.post.PostResponseDto;
+import nl.mengelmoestuintjes.gardening.model.posts.Post;
+import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
 import nl.mengelmoestuintjes.gardening.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
+@RequestMapping("posts")
+@CrossOrigin
 public class PostController {
+    private final PostService postService;
 
     @Autowired
-    private PostService postService;
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
 
-    @GetMapping(value = "/posts")
-    public ResponseEntity<Object> getAllPosts(
-            @RequestParam(name = "author", defaultValue = "") String author
+    // Create
+    @PostMapping
+    public PostResponseDto newPost( @Valid @RequestBody PostRequestDto toAdd ) {
+        Post post = postService.newPost( toAdd.toPost() );
+        return PostResponseDto.fromPost(post);
+    }
+
+    // Read
+    @GetMapping
+    public List<PostResponseDto> getAllPosts(
+            @RequestParam(name = "author", defaultValue = "", required = false) String author,
+            @RequestParam(name = "visible", required = false) boolean visible,
+            @RequestParam(name = "category", defaultValue = "", required = false) PostCategory category
     ) {
-        return ResponseEntity.ok(postService.getAllPosts(author));
+        List<PostResponseDto> all = new ArrayList<>();
+        Iterable<Post> posts = postService.getAllPosts(author, visible, category);
+
+        for (Post p : posts) {
+            all.add( PostResponseDto.fromPost( p ) );
+        }
+        return all;
     }
 
-    @GetMapping(value = "/posts/{id}")
-    public ResponseEntity<Object> getPostById(@PathVariable int id) {
-        return ResponseEntity.ok(postService.getPostById(id));
+    @GetMapping(value = "/{id}")
+    public PostResponseDto getPostById(@PathVariable( "id" ) int id) {
+        Post post = postService.getPostById(id);
+        return PostResponseDto.fromPost(post);
     }
 
-
-    @DeleteMapping(value = "/posts/{id}")
-    public ResponseEntity<Object> deletePostById(@PathVariable("id") int id) {
-        postService.deletePost(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping(value = "/posts")
-    public ResponseEntity<Object> newPost(@Valid @RequestBody PostRequestDto toAdd) {
-        int newId = postService.newPost(toAdd);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newId).toUri();
-        return ResponseEntity.created(location).build();
-    }
-
-    @PutMapping(value = "/posts/{id}")
-    public ResponseEntity<Object> updatePost(@PathVariable("id") int id, @RequestBody Post modifiedPost) {
+    // Update
+    @PutMapping(value = "/{id}")
+    public PostResponseDto updatePost( @PathVariable( "id" ) int id, @RequestBody Post modifiedPost) {
         postService.updatePost(id, modifiedPost);
-        return ResponseEntity.noContent().build();
+        return PostResponseDto.fromPost(modifiedPost);
     }
 
-    @PatchMapping(value = "/posts/{id}")
-    public ResponseEntity<Object> updatePartOfPost(@PathVariable("id") int id, @RequestBody Post modifiedPost) {
-        postService.updatePost(id, modifiedPost);
-        return ResponseEntity.noContent().build();
+    // Delete
+    @DeleteMapping(value = "/{id}")
+    public void deletePostById(@PathVariable( "id" ) int id) {
+        postService.deletePostById(id);
     }
 }

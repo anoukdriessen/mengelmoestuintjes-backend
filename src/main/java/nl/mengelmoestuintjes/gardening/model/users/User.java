@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.model;
+package nl.mengelmoestuintjes.gardening.model.users;
 
 public class User {
 
