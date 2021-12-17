@@ -1,5 +1,7 @@
 package nl.mengelmoestuintjes.gardening.model.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
@@ -12,6 +14,11 @@ public class Milestone {
     private String title;
     private String urlTooBadge;
     private long points;
+
+    @JsonIgnoreProperties("milestones")
+    @ManyToOne
+    @JoinColumn( name = "user_id", referencedColumnName = "id")
+    private User owner;
 
     public long getId() {
         return id;
