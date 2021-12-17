@@ -88,3 +88,11 @@ INSERT INTO PLANT_VEGETABLES (name)
 VALUES ('tomaat'),
        ('wortel'),
        ('pompoen');
+
+INSERT INTO authorities( role , username )
+VALUES (0, 'vivalanouk'),
+       (1, 'guus'),
+       (2, 'zonnestraal80'),
+       (3, 'luminousnodes'),
+       (4, 'zorro');
+

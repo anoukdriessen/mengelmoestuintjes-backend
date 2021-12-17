@@ -118,4 +118,13 @@ public class Post {
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%d ) %s, %s \n %s \n %s \n %s, %s, %s" ,
+                this.id, this.title, this.category,
+                this.description,
+                this.author,
+                this.created, this.modified, this.visible);
+    }
 }

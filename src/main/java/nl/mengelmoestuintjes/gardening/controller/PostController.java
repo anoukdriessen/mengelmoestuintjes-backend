@@ -6,6 +6,7 @@ import nl.mengelmoestuintjes.gardening.model.posts.Post;
 import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
 import nl.mengelmoestuintjes.gardening.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -50,6 +51,11 @@ public class PostController {
     public PostResponseDto getPostById(@PathVariable( "id" ) int id) {
         Post post = postService.getPostById(id);
         return PostResponseDto.fromPost(post);
+    }
+
+    @GetMapping(value = "/random")
+    public ResponseEntity<Post> getRandom() {
+        return ResponseEntity.ok( postService.getRandom() );
     }
 
     // Update

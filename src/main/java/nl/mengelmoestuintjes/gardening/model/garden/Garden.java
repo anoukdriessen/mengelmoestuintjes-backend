@@ -14,11 +14,23 @@ import java.util.Set;
 public class Garden {
 
     @Id
+    @Column(name = "garden_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     String name;
     int x;
     int y;
+
+    public Garden(){};
+    public Garden(int id, String name, int x, int y, List<Field> fields, User owner) {
+        this.id = id;
+        this.name = name;
+        this.x = x;
+        this.y = y;
+        this.fields = fields;
+        this.owner = owner;
+    }
+
 
     @OneToMany
     @JsonIgnore
