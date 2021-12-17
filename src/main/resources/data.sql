@@ -65,3 +65,26 @@ INSERT INTO tasks_todo (title, description, done, due_date)
            ('Het zaaien van X','lala','false','17-12-2021'),
            ('Het voorzaaien van X','lala','false','18-12-2021'),
            ('Onkruid weghalen','lala','false','15-12-2021');
+
+
+INSERT INTO plant_flowers (name, bloom)
+    VALUES ('roos', ''),
+           ('chrisant',''),
+           ('zonnehoed',''),
+           ('Dahlia', ''),
+           ('Goudsbloem', '');
+
+INSERT INTO plant_fruits (name, length)
+VALUES ('manderijn', '0'),
+       ('appels','0'),
+       ('kersen','0');
+
+INSERT INTO plant_herbs (name, good_for_tea)
+VALUES ('rozemarijn','true'),
+       ('dille', 'true'),
+       ('kamille', 'true');
+
+INSERT INTO PLANT_VEGETABLES (name)
+VALUES ('tomaat'),
+       ('wortel'),
+       ('pompoen');
