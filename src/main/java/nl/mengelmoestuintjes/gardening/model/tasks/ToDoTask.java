@@ -1,5 +1,8 @@
 package nl.mengelmoestuintjes.gardening.model.tasks;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import nl.mengelmoestuintjes.gardening.model.users.User;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -21,6 +24,11 @@ public class ToDoTask {
     private String description;
     private boolean done;
     private Date dueDate;
+
+    @JsonIgnoreProperties("tasks_todo")
+    @ManyToOne
+    @JoinColumn( name = "user_id", referencedColumnName = "id")
+    private User owner;
 
     public ToDoTask() {}
     public ToDoTask(int id, String title, String description, boolean done, Date dueDate) {

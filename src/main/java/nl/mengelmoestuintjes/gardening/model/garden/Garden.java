@@ -2,6 +2,8 @@ package nl.mengelmoestuintjes.gardening.model.garden;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import nl.mengelmoestuintjes.gardening.model.users.User;
 
 import javax.persistence.*;
 import java.util.List;
@@ -57,4 +59,9 @@ public class Garden {
     public void setY(int y) {
         this.y = y;
     }
+
+    @JsonIgnoreProperties("gardens")
+    @ManyToOne
+    @JoinColumn( name = "user_id", referencedColumnName = "id")
+    private User owner;
 }

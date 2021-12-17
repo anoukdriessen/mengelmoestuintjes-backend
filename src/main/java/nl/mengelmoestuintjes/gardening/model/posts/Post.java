@@ -1,5 +1,8 @@
 package nl.mengelmoestuintjes.gardening.model.posts;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import nl.mengelmoestuintjes.gardening.model.users.User;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -31,6 +34,11 @@ public class Post {
     private Date created;
     private Date modified;
     private boolean visible;
+
+    @JsonIgnoreProperties("posts")
+    @ManyToOne
+    @JoinColumn( name = "user_id", referencedColumnName = "id")
+    private User owner;
 
     public Post(){}
     public Post( int id, String title, PostCategory category, String description, String imageUrl,
