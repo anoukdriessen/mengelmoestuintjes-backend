@@ -1,4 +1,6 @@
-package nl.mengelmoestuintjes.gardening.model.users;
+package nl.mengelmoestuintjes.gardening.model.users.Authority;
+
+import nl.mengelmoestuintjes.gardening.model.users.UserRole;
 
 import java.io.Serializable;
 import java.util.Objects;
