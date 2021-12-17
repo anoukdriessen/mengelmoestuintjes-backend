@@ -1,7 +1,7 @@
 package nl.mengelmoestuintjes.gardening.controller;
 
-import nl.mengelmoestuintjes.gardening.controller.dto.post.PostRequestDto;
-import nl.mengelmoestuintjes.gardening.controller.dto.post.PostResponseDto;
+import nl.mengelmoestuintjes.gardening.controller.dto.PostRequestDto;
+import nl.mengelmoestuintjes.gardening.controller.dto.PostResponseDto;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
 import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
 import nl.mengelmoestuintjes.gardening.service.PostService;

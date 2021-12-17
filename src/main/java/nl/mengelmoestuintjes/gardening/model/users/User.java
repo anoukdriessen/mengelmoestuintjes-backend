@@ -3,7 +3,7 @@ package nl.mengelmoestuintjes.gardening.model.users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
-import nl.mengelmoestuintjes.gardening.model.tasks.ToDoTask;
+import nl.mengelmoestuintjes.gardening.model.tasks.Task;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -53,7 +53,7 @@ public class User {
      private List<Post> favoritePosts;
 
     @OneToMany( mappedBy = "owner" )
-     private List<ToDoTask> tasks;
+     private List<Task> tasks;
 
     @OneToMany( mappedBy = "owner" )
      private List<Garden> gardens;

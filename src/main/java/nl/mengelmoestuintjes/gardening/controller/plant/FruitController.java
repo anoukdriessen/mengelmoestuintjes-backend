@@ -1,10 +1,8 @@
 package nl.mengelmoestuintjes.gardening.controller.plant;
 
-import nl.mengelmoestuintjes.gardening.controller.dto.plant.PlantRequestDto;
-import nl.mengelmoestuintjes.gardening.controller.dto.plant.PlantResponseDto;
-import nl.mengelmoestuintjes.gardening.model.plants.Flower;
+import nl.mengelmoestuintjes.gardening.controller.dto.PlantRequestDto;
+import nl.mengelmoestuintjes.gardening.controller.dto.PlantResponseDto;
 import nl.mengelmoestuintjes.gardening.model.plants.Fruit;
-import nl.mengelmoestuintjes.gardening.service.plants.FlowerService;
 import nl.mengelmoestuintjes.gardening.service.plants.FruitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

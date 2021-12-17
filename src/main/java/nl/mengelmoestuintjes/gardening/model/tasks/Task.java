@@ -1,6 +1,8 @@
 package nl.mengelmoestuintjes.gardening.model.tasks;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import nl.mengelmoestuintjes.gardening.model.users.Milestone;
+import nl.mengelmoestuintjes.gardening.model.users.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -16,23 +18,23 @@ public class Task {
     private TypeTask type;
     private String title;
     private String description;
-    private boolean isDone;
+    private boolean done;
     private LocalDate starting;
     private LocalDate dueDate;
     private long points;
 
     public Task() {}
-    public Task(long id, TypeTask type, String title, String description, boolean isDone) {
+    public Task(long id, TypeTask type, String title, String description, boolean done) {
         this.id = id;
         this.type = type;
         this.title = title;
         this.description = description;
-        this.isDone = isDone;
+        this.done = done;
     }
     public Task(TypeTask type, String title, String description, LocalDate starting, LocalDate dueDate, long points) {
         this.title = title;
         this.description = description;
-        this.isDone = false;
+        this.done = false;
         this.type = type;
         switch ( type ) {
             case TODO:
@@ -47,6 +49,11 @@ public class Task {
         }
     }
 
+    @JsonIgnoreProperties("tasks")
+    @ManyToOne
+    @JoinColumn( name = "user_id", referencedColumnName = "id")
+    private User owner;
+
     public long getId() {
         return id;
     }
@@ -59,8 +66,8 @@ public class Task {
     public String getDescription() {
         return description;
     }
-    public boolean isDone() {
-        return isDone;
+    public boolean getIsDone() {
+        return done;
     }
     public LocalDate getStarting() {
         return starting;
@@ -71,15 +78,15 @@ public class Task {
     public long getPoints() {
         return points;
     }
+    public User getOwner() {
+        return owner;
+    }
 
     public void setId(long id) {
         this.id = id;
     }
     public void setType(TypeTask type) {
         this.type = type;
-    }
-    public void setDone(boolean done) {
-        isDone = done;
     }
     public void setTitle(String title) {
         this.title = title;
@@ -88,7 +95,11 @@ public class Task {
         this.description = description;
     }
     public void setIsDone(boolean done) {
-        isDone = done;
+        done = done;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public void setStarting(LocalDate starting) {
@@ -108,6 +119,6 @@ public class Task {
         return String.format("%s ) %s, %s, \n %s, %s",
                 this.id, this.type, this.title,
                 this.description,
-                this.isDone);
+                this.done);
     }
 }
