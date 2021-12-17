@@ -2,7 +2,7 @@ package nl.mengelmoestuintjes.gardening.service.tasks;
 
 import nl.mengelmoestuintjes.gardening.exceptions.RecordNotFoundException;
 import nl.mengelmoestuintjes.gardening.model.tasks.GardeningTask;
-import nl.mengelmoestuintjes.gardening.repository.GardeningTaskRepository;
+import nl.mengelmoestuintjes.gardening.repository.tasks.GardeningTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

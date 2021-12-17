@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.repository;
+package nl.mengelmoestuintjes.gardening.repository.tasks;
 
 import nl.mengelmoestuintjes.gardening.model.tasks.GardeningTask;
 import org.springframework.data.jpa.repository.JpaRepository;

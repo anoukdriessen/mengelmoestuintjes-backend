@@ -1,272 +1,231 @@
 package nl.mengelmoestuintjes.gardening.model.plants;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
-@Entity
-@Table(name = "plants")
 public class Plant {
-    // atributen
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private String family;              // de familie waar de plant bij hoort
+    private String description;         // de beschrijving van de plant
+    private String location;            // de standplaats van de plant
+    private String ground;              // de grondbehoefte van de plant
+//    @Column(name = "pre_sow")
+    private Boolean forPreSow;          // geschikt voor voorzaaien
+//    @Column(name = "seed_collecting")
+    private Boolean forSeedCollecting;  // geschikt voor het verzamelen van zaad
+    private Boolean forPot;             // geschikt voor pot
+    private Boolean forOutside;         // geschikt voor buiten
+    private Boolean forIndoor;         // geschikt voor buiten
+    private Boolean forGreenhouse;      // geschikt voor kas
+//    @Column(name = "for_vertical")
+    private Boolean forVerticalGarden;  // geschikt voor verticale tuin
+//    @Column(name = "outdoor")
+    private String sowOutdoors;          // maanden waarin de plant buiten gezaaid kan worden
+//    @Column(name = "indoor")
+    private String sowIndoors;           // maanden waarin de plant binnen gezaaid kan worden
+    private String harvest;              // maanden waarin de plant geoogst kan worden
 
-    @Column(name = "name")
-    String name;                // de naam van de plant
-    @Column(name = "family")
-    String family;              // de familie waar de plant bij hoort
-    @Column(name = "description")
-    String description;         // de beschrijving van de plant
-    @Column(name = "location")
-    String location;            // de standplaats van de plant
-    @Column(name = "ground")
-    String ground;              // de grondbehoefte van de plant
-    @Column(name = "pre_sow")
-    Boolean forPreSow;          // geschikt voor voorzaaien
-    @Column(name = "seed_collecting")
-    Boolean forSeedCollecting;  // geschikt voor het verzamelen van zaad
-    @Column(name = "for_pot")
-    Boolean forPot;             // geschikt voor pot
-    @Column(name = "for_outside")
-    Boolean forOutside;         // geschikt voor buiten
-    @Column(name = "for_greenhouse")
-    Boolean forGreenhouse;      // geschikt voor kas
-    @Column(name = "for_vertical")
-    Boolean forVerticalGarden;  // geschikt voor verticale tuin
+    private boolean frostResistance;    // de winterhardheid van de plant
+    private int waterRequirement;       // de waterbehoefte van de plant
+    private int depth;                  // de zaaidiepte
+//    @Column(name = "between_plants")
+    private int distanceBetweenPlants;  // de afstand tussen planten
+//    @Column(name = "between_rows")
+    private int distanceBetweenRows;    // de afstand tussen rijen
+    private int plantsPerMeter;         // planten per meter
+    private int plantsPerSquare;        // planten per vierkante meter
+//    @Column(name = "germinatation_days")
+    private int avgDaysGermination;     // gemiddelde tijd tot ontkiemen
+//    @Column(name = "harvest_days")
+    private int avgDaysHarvest;         // gemiddelde tijd tot oogst
 
-//    int[] sowIndoors;           // maanden waarin de plant binnen gezaaid kan worden
-//    int[] sowOutdoors;          // maanden waarin de plant buiten gezaaid kan worden
-//    int[] harvest;              // maanden waarin de plant geoogst kan worden
+//    ListOfPlants friends;   // vrienden van de plant (compagnion-planting)
+//    ListOfEnemies enemies  // vijanden van de plant (compagnion-planting)
 
-    @Column(name = "frost_resistance")
-    int frostResistance;        // de winterhardheid van de plant
-    @Column(name = "water_requirement")
-    int waterRequirement;       // de waterbehoefte van de plant
-    @Column(name = "depth")
-    int depth;                  // de zaaidiepte
-    @Column(name = "between_plants")
-    int distanceBetweenPlants;  // de afstand tussen planten
-    @Column(name = "between_rows")
-    int distanceBetweenRows;    // de afstand tussen rijen
-//    int plantsPerMeter;         // planten per meter
-//    int plantsPerSquare;        // planten per vierkante meter
-    @Column(name = "germinatation_days")
-    int avgDaysGermination;     // gemiddelde tijd tot ontkiemen
-    @Column(name = "harvest_days")
-    int avgDaysHarvest;         // gemiddelde tijd tot oogst
-
-//    ArrayList<Plant> friends;   // vrienden van de plant (compagnion-planting)
-//    ArrayList<Plant> enemies;   // vijanden van de plant (compagnion-planting)
-
-    // empty constructor
     public Plant() {
     }
 
-    // getters & setters
-    public Long getId() {
-        return id;
+    public Plant(String family, String description, String location, String ground, Boolean forPreSow, Boolean forSeedCollecting, Boolean forPot, Boolean forOutside, Boolean forIndoor, Boolean forGreenhouse, Boolean forVerticalGarden, String sowOutdoors, String sowIndoors, String harvest, boolean frostResistance, int waterRequirement, int depth, int distanceBetweenPlants, int distanceBetweenRows, int plantsPerMeter, int plantsPerSquare, int avgDaysGermination, int avgDaysHarvest) {
+        this.family = family;
+        this.description = description;
+        this.location = location;
+        this.ground = ground;
+        this.forPreSow = forPreSow;
+        this.forSeedCollecting = forSeedCollecting;
+        this.forPot = forPot;
+        this.forOutside = forOutside;
+        this.forIndoor = forIndoor;
+        this.forGreenhouse = forGreenhouse;
+        this.forVerticalGarden = forVerticalGarden;
+        this.sowOutdoors = sowOutdoors;
+        this.sowIndoors = sowIndoors;
+        this.harvest = harvest;
+        this.frostResistance = frostResistance;
+        this.waterRequirement = waterRequirement;
+        this.depth = depth;
+        this.distanceBetweenPlants = distanceBetweenPlants;
+        this.distanceBetweenRows = distanceBetweenRows;
+        this.plantsPerMeter = plantsPerMeter;
+        this.plantsPerSquare = plantsPerSquare;
+        this.avgDaysGermination = avgDaysGermination;
+        this.avgDaysHarvest = avgDaysHarvest;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public Plant(String family, String description, String location, String ground, String sowOutdoors, String sowIndoors, String harvest, int depth, int distanceBetweenPlants, int distanceBetweenRows, int avgDaysGermination, int avgDaysHarvest) {
+        this.family = family;
+        this.description = description;
+        this.location = location;
+        this.ground = ground;
+        this.sowOutdoors = sowOutdoors;
+        this.sowIndoors = sowIndoors;
+        this.harvest = harvest;
+        this.depth = depth;
+        this.distanceBetweenPlants = distanceBetweenPlants;
+        this.distanceBetweenRows = distanceBetweenRows;
+        this.plantsPerSquare = 0;
+        this.plantsPerMeter = 0;
+        this.avgDaysGermination = avgDaysGermination;
+        this.avgDaysHarvest = avgDaysHarvest;
     }
 
     public String getFamily() {
         return family;
     }
-
-    public void setFamily(String family) {
-        this.family = family;
-    }
-
     public String getDescription() {
         return description;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getLocation() {
         return location;
     }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public String getGround() {
         return ground;
     }
-
-    public void setGround(String ground) {
-        this.ground = ground;
-    }
-
     public Boolean getForPreSow() {
         return forPreSow;
     }
-
-    public void setForPreSow(Boolean forPreSow) {
-        this.forPreSow = forPreSow;
-    }
-
     public Boolean getForSeedCollecting() {
         return forSeedCollecting;
     }
-
-    public void setForSeedCollecting(Boolean forSeedCollecting) {
-        this.forSeedCollecting = forSeedCollecting;
-    }
-
     public Boolean getForPot() {
         return forPot;
     }
-
-    public void setForPot(Boolean forPot) {
-        this.forPot = forPot;
-    }
-
     public Boolean getForOutside() {
         return forOutside;
     }
-
-    public void setForOutside(Boolean forOutside) {
-        this.forOutside = forOutside;
+    public Boolean getForIndoor() {
+        return forIndoor;
     }
-
     public Boolean getForGreenhouse() {
         return forGreenhouse;
     }
-
-    public void setForGreenhouse(Boolean forGreenhouse) {
-        this.forGreenhouse = forGreenhouse;
-    }
-
     public Boolean getForVerticalGarden() {
         return forVerticalGarden;
     }
-
-    public void setForVerticalGarden(Boolean forVerticalGarden) {
-        this.forVerticalGarden = forVerticalGarden;
+    public String getSowOutdoors() {
+        return sowOutdoors;
     }
-
-//    public int[] getSowIndoors() {
-//        return sowIndoors;
-//    }
-//
-//    public void setSowIndoors(int[] sowIndoors) {
-//        this.sowIndoors = sowIndoors;
-//    }
-//
-//    public int[] getSowOutdoors() {
-//        return sowOutdoors;
-//    }
-
-//    public void setSowOutdoors(int[] sowOutdoors) {
-//        this.sowOutdoors = sowOutdoors;
-//    }
-//
-//    public int[] getHarvest() {
-//        return harvest;
-//    }
-//
-//    public void setHarvest(int[] harvest) {
-//        this.harvest = harvest;
-//    }
-
-    public int getFrostResistance() {
+    public String getSowIndoors() {
+        return sowIndoors;
+    }
+    public String getHarvest() {
+        return harvest;
+    }
+    public boolean getFrostResistance() {
         return frostResistance;
     }
-
-    public void setFrostResistance(int frostResistance) {
-        this.frostResistance = frostResistance;
-    }
-
     public int getWaterRequirement() {
         return waterRequirement;
     }
-
-    public void setWaterRequirement(int waterRequirement) {
-        this.waterRequirement = waterRequirement;
-    }
-
     public int getDepth() {
         return depth;
     }
-
-    public void setDepth(int depth) {
-        this.depth = depth;
-    }
-
     public int getDistanceBetweenPlants() {
         return distanceBetweenPlants;
     }
-
-    public void setDistanceBetweenPlants(int distanceBetweenPlants) {
-        this.distanceBetweenPlants = distanceBetweenPlants;
-    }
-
     public int getDistanceBetweenRows() {
         return distanceBetweenRows;
     }
-
-    public void setDistanceBetweenRows(int distanceBetweenRows) {
-        this.distanceBetweenRows = distanceBetweenRows;
+    public int getPlantsPerMeter() {
+        return plantsPerMeter;
     }
-
-//    public int getPlantsPerMeter() {
-//        return plantsPerMeter;
-//    }
-//
-//    public void setPlantsPerMeter(int plantsPerMeter) {
-//        this.plantsPerMeter = plantsPerMeter;
-//    }
-//
-//    public int getPlantsPerSquare() {
-//        return plantsPerSquare;
-//    }
-//
-//    public void setPlantsPerSquare(int plantsPerSquare) {
-//        this.plantsPerSquare = plantsPerSquare;
-//    }
-
+    public int getPlantsPerSquare() {
+        return plantsPerSquare;
+    }
     public int getAvgDaysGermination() {
         return avgDaysGermination;
     }
-
-    public void setAvgDaysGermination(int avgDaysGermination) {
-        this.avgDaysGermination = avgDaysGermination;
-    }
-
     public int getAvgDaysHarvest() {
         return avgDaysHarvest;
     }
 
+    public void setFamily(String family) {
+        this.family = family;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public void setLocation(String location) {
+        this.location = location;
+    }
+    public void setGround(String ground) {
+        this.ground = ground;
+    }
+    public void setForPreSow(Boolean forPreSow) {
+        this.forPreSow = forPreSow;
+    }
+    public void setForSeedCollecting(Boolean forSeedCollecting) {
+        this.forSeedCollecting = forSeedCollecting;
+    }
+    public void setForPot(Boolean forPot) {
+        this.forPot = forPot;
+    }
+    public void setForOutside(Boolean forOutside) {
+        this.forOutside = forOutside;
+    }
+    public void setForIndoor(Boolean forIndoor) {
+        this.forIndoor = forIndoor;
+    }
+    public void setForGreenhouse(Boolean forGreenhouse) {
+        this.forGreenhouse = forGreenhouse;
+    }
+    public void setForVerticalGarden(Boolean forVerticalGarden) {
+        this.forVerticalGarden = forVerticalGarden;
+    }
+    public void setSowOutdoors(String sowOutdoors) {
+        this.sowOutdoors = sowOutdoors;
+    }
+    public void setSowIndoors(String sowIndoors) {
+        this.sowIndoors = sowIndoors;
+    }
+    public void setHarvest(String harvest) {
+        this.harvest = harvest;
+    }
+    public void setFrostResistance(boolean frostResistance) {
+        this.frostResistance = frostResistance;
+    }
+    public void setWaterRequirement(int waterRequirement) {
+        this.waterRequirement = waterRequirement;
+    }
+    public void setDepth(int depth) {
+        this.depth = depth;
+    }
+    public void setDistanceBetweenPlants(int distanceBetweenPlants) {
+        this.distanceBetweenPlants = distanceBetweenPlants;
+    }
+    public void setDistanceBetweenRows(int distanceBetweenRows) {
+        this.distanceBetweenRows = distanceBetweenRows;
+    }
+    public void setPlantsPerMeter(int plantsPerMeter) {
+        this.plantsPerMeter = plantsPerMeter;
+    }
+    public void setPlantsPerSquare(int plantsPerSquare) {
+        this.plantsPerSquare = plantsPerSquare;
+    }
+    public void setAvgDaysGermination(int avgDaysGermination) {
+        this.avgDaysGermination = avgDaysGermination;
+    }
     public void setAvgDaysHarvest(int avgDaysHarvest) {
         this.avgDaysHarvest = avgDaysHarvest;
     }
-
-//    public ArrayList<Plant> getFriends() {
-//        return friends;
-//    }
-//
-//    public void setFriends(ArrayList<Plant> friends) {
-//        this.friends = friends;
-//    }
-//
-//    public ArrayList<Plant> getEnemies() {
-//        return enemies;
-//    }
-//
-//    public void setEnemies(ArrayList<Plant> enemies) {
-//        this.enemies = enemies;
-//    }
 }
+

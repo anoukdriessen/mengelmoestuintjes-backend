@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.controller;
+package nl.mengelmoestuintjes.gardening.controller.tasks;
 
 import nl.mengelmoestuintjes.gardening.controller.dto.task.GardeningTaskRequestDto;
 import nl.mengelmoestuintjes.gardening.controller.dto.task.GardeningTaskResponseDto;
