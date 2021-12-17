@@ -3,7 +3,7 @@ package nl.mengelmoestuintjes.gardening.model.plants;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "fruits")
+@Table(name = "plant_fruits")
 public class Fruit extends Plant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
