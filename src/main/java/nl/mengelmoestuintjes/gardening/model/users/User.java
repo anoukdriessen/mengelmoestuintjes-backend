@@ -1,9 +1,15 @@
 package nl.mengelmoestuintjes.gardening.model.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import nl.mengelmoestuintjes.gardening.model.garden.Garden;
+import nl.mengelmoestuintjes.gardening.model.posts.Post;
+import nl.mengelmoestuintjes.gardening.model.tasks.ToDoTask;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -13,10 +19,11 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+// TODO password encryption
     @Column(nullable = false)
     private String password;
 
-    //    TODO implement email
+//    TODO implement email
 //    @Column(nullable = false)
 //    private String email;
 
@@ -36,16 +43,26 @@ public class User {
 
     private UserRole role;
 
-    // TODO add relations
-    // private List<Milestone> milestones; 0-*
-    // private List<Post> posts; 0-*
-    // private List<User> friends; 0-*
+    @OneToMany( mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
+     private List<Milestone> milestones;
 
-    // private List<Message> favoriteMessages; 0-*
-    // private List<Plant> favoritePlants; 0-*
-    // private List<ToDoTask> tasks; 0-*
+    @OneToMany( mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
+    private List<Post> posts = new ArrayList<>();
 
-    // private List<Garden> gardens; 1-*
+    @OneToMany( mappedBy = "owner",  fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
+     private List<Post> favoritePosts;
+
+    @OneToMany( mappedBy = "owner",  fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
+     private List<ToDoTask> tasks;
+
+    @OneToMany( mappedBy = "owner",  fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
+     private List<Garden> gardens;
+
+// TODO add relations
+    // TODO ManyToMany
+    // private List<User> friends;
+    // TODO implement Plant
+    // private List<Plant> favoritePlants;
 
     @JsonIgnore
     private long levelUpLimit; // starting at 1000 xp
