@@ -1,5 +1,5 @@
 INSERT INTO quotes ( author, text )
-VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhalen'),
+    VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhalen'),
        ('gertraude beese', 'Een leven zonder dromen is als een tuin zonder bloemen'),
        ('phil bosman', 'De wonderen van heel de wereld vind je terug in je eigen tuin'),
        ('ireen_boerderijgeluk', 'Wat met liefde is geplant raakt nooit uitgebloeid'),
@@ -45,4 +45,25 @@ INSERT INTO tasks( title, type, description, done, starting, due_date, points )
        ('hello', 2, 'lala', false, null, null, 100),
        ('byebye', 2, 'lala', true, null, null, 100);
 
+INSERT INTO plants ( category, name, description, location )
+    VALUES (0, 'bloem1', 'bla', 0),
+           (0, 'bloem2', 'bla', 0),
+           (0, 'bloem3', 'bla', 0),
+           (0, 'bloem4', 'bla', 0),
+           (0, 'bloem5', 'bla', 0),
+           (1, 'fruit1', 'bla', 1),
+           (1, 'fruit2', 'bla', 1),
+           (1, 'fruit3', 'bla', 1),
+           (1, 'fruit4', 'bla', 1),
+           (1, 'fruit5', 'bla', 1),
+           (2, 'herb1', 'bla', 1),
+           (2, 'herb2', 'bla', 1),
+           (2, 'herb3', 'bla', 2),
+           (2, 'herb4', 'bla', 2),
+           (2, 'herb5', 'bla', 2),
+           (3, 'veg1', 'bla', 2),
+           (3, 'veg2', 'bla', 2),
+           (3, 'veg3', 'bla', 2),
+           (3, 'veg4', 'bla', 2),
+           (3, 'veg5', 'bla', 2);
 
