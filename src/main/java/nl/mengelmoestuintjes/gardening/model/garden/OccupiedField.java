@@ -1,13 +1,10 @@
 package nl.mengelmoestuintjes.gardening.model.garden;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
-import nl.mengelmoestuintjes.gardening.model.plants.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Entity

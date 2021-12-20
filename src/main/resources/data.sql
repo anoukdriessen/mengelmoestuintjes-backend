@@ -45,3 +45,4 @@ INSERT INTO tasks( title, type, description, done, starting, due_date, points )
        ('hello', 2, 'lala', false, null, null, 100),
        ('byebye', 2, 'lala', true, null, null, 100);
 
+
