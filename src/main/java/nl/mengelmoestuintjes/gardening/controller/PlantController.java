@@ -28,25 +28,25 @@ public class PlantController {
     }
 
     @PostMapping(value = "/flowers")
-    public PlantResponseDto newFlower(@Valid @RequestBody PlantRequestDto toAdd ) {
+    public PlantResponseDto newFlower(@RequestBody PlantRequestDto toAdd ) {
         Plant plant = service.newFlower( toAdd.toPlant() );
         return PlantResponseDto.fromPlant( plant );
     }
 
     @PostMapping(value = "/fruits")
-    public PlantResponseDto newFruit(@Valid @RequestBody PlantRequestDto toAdd ) {
+    public PlantResponseDto newFruit(@RequestBody PlantRequestDto toAdd ) {
         Plant plant = service.newFruit( toAdd.toPlant() );
         return PlantResponseDto.fromPlant( plant );
     }
 
     @PostMapping(value = "/herbs")
-    public PlantResponseDto newHerb(@Valid @RequestBody PlantRequestDto toAdd ) {
+    public PlantResponseDto newHerb(@RequestBody PlantRequestDto toAdd ) {
         Plant plant = service.newHerb( toAdd.toPlant() );
         return PlantResponseDto.fromPlant( plant );
     }
 
     @PostMapping(value = "/vegetables")
-    public PlantResponseDto newVegetable(@Valid @RequestBody PlantRequestDto toAdd ) {
+    public PlantResponseDto newVegetable(@RequestBody PlantRequestDto toAdd ) {
         Plant plant = service.newVegetable( toAdd.toPlant() );
         return PlantResponseDto.fromPlant( plant );
     }
@@ -55,10 +55,14 @@ public class PlantController {
     public List<PlantResponseDto> getAllPlants(
             @RequestParam(name = "name", defaultValue = "") String name,
             @RequestParam(name = "category", defaultValue = "") Category category,
-            @RequestParam(name = "location", defaultValue = "") Location location
+            @RequestParam(name = "location", defaultValue = "") Location location,
+            @RequestParam(name = "outdoors", defaultValue = "") String outdoors,
+            @RequestParam(name = "indoors", defaultValue = "") String indoors,
+            @RequestParam(name = "harvest", defaultValue = "") String harvest
     ) {
         List<PlantResponseDto> all = new ArrayList<>();
-        Iterable<Plant> plants = service.getAll( name, category, location );
+        Iterable<Plant> plants = service.getAll(
+                name, category, location, outdoors, indoors, harvest );
 
         for (Plant p : plants) {
             all.add( PlantResponseDto.fromPlant( p ) );

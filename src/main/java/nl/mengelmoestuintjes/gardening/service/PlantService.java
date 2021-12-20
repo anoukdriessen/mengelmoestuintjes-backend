@@ -38,10 +38,14 @@ public class PlantService {
         return repository.save( toAdd );
     }
 
-    public Iterable<Plant> getAll(String name, Category category, Location location) {
+    public Iterable<Plant> getAll(
+            String name, Category category, Location location, String outdoor, String indoor, String harvest) {
         if ( !name.isBlank() ) return repository.findPlantByNameContaining(name);
-        if (!Objects.isNull(category)) return repository.findPlantByCategory(category);
-        if (!Objects.isNull(location)) return repository.findPlantByLocation(location);
+        if ( !Objects.isNull(category) ) return repository.findPlantByCategory(category);
+        if ( !Objects.isNull(location) ) return repository.findPlantByLocation(location);
+        if ( !outdoor.isBlank() ) return repository.findPlantsByOutdoors(outdoor);
+        if ( !indoor.isBlank() ) return repository.findPlantsByIndoors(indoor);
+        if ( !harvest.isBlank() ) return repository.findPlantsByHarvest(harvest);
 
         return repository.findAll();
     }
