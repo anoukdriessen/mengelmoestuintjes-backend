@@ -19,22 +19,19 @@ public class QuoteService {
         this.quoteRepository = quoteRepository;
     }
 
-    // Create
     public Quote newQuote(Quote toAdd) {
         return quoteRepository.save( toAdd );
     }
 
-    // Read
-    public Iterable<Quote> getAllQuotes() {
+    public Iterable<Quote> getAll() {
         return quoteRepository.findAll();
     }
 
-    public Quote getQuoteById(int id) {
-        Optional<Quote> toFind = quoteRepository.findById(id);
-
-        if (toFind.isPresent()) {   // check if quote exists
+    public Quote getById( long id ) {
+        Optional<Quote> toFind = quoteRepository.findById( id );
+        if (toFind.isPresent()) {  // check if quote exists
             return toFind.get();
-        } else {                    // post does not exists
+        } else { // quote does not exists
             throw new RecordNotFoundException(NOT_FOUND);
         }
     }
@@ -42,13 +39,12 @@ public class QuoteService {
     public Quote getRandomQuote() {
         long bound = quoteRepository.count();
         Random r = new Random();
-        int id = r.nextInt((int) bound - 1);
-        return getQuoteById(id);
+        int id = r.nextInt( ( int ) bound - 1);
+        return getById( id );
     }
 
-    // Update
-    public void updateQuote(int id, Quote modified){
-        Quote toModify = quoteRepository.findById(id).orElse(null);
+    public void updateQuote( long id, Quote modified){
+        Quote toModify = quoteRepository.findById( id ).orElse(null);
 
         if (toModify != null) {
             boolean authorNotEmpty = !modified.getAuthor().isEmpty();
@@ -63,8 +59,8 @@ public class QuoteService {
         }
     }
 
-    public Quote delete( int id ) {
-        Optional<Quote> toFind = quoteRepository.findById(id);
+    public Quote delete( long id ) {
+        Optional<Quote> toFind = quoteRepository.findById( id );
         if (toFind.isPresent()) {  // check if quote exists
             Quote toDelete = toFind.get();
             quoteRepository.delete( toDelete );

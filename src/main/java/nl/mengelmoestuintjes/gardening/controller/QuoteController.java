@@ -23,18 +23,16 @@ public class QuoteController {
         this.quoteService = quoteService;
     }
 
-    // Create
     @PostMapping
     public QuoteResponseDto newQuote(@Valid @RequestBody QuoteRequestDto toAdd ) {
         Quote quote = quoteService.newQuote( toAdd.toQuote() );
         return QuoteResponseDto.fromQuote(quote);
     }
 
-    // Read
     @GetMapping
     public List<QuoteResponseDto> getAllQuotes() {
         List<QuoteResponseDto> all = new ArrayList<QuoteResponseDto>();
-        Iterable<Quote> quotes = quoteService.getAllQuotes();
+        Iterable<Quote> quotes = quoteService.getAll();
 
         for ( Quote q : quotes ) {
             all.add( QuoteResponseDto.fromQuote( q ) );
@@ -43,8 +41,8 @@ public class QuoteController {
     }
 
     @GetMapping(value = "/{id}")
-    public QuoteResponseDto getQuoteById(@PathVariable( "id" ) int id) {
-        Quote quote = quoteService.getQuoteById(id);
+    public QuoteResponseDto getById(@PathVariable( "id" ) long id) {
+        Quote quote = quoteService.getById( id );
         return QuoteResponseDto.fromQuote(quote);
     }
 
@@ -53,15 +51,14 @@ public class QuoteController {
         return ResponseEntity.ok(quoteService.getRandomQuote());
     }
 
-    // Update
     @PutMapping(value = "/{id}")
-    public QuoteResponseDto updateQuote( @PathVariable( "id" ) int id, @RequestBody Quote modifiedQuote ) {
-        quoteService.updateQuote(id, modifiedQuote);
-        return QuoteResponseDto.fromQuote(modifiedQuote);
+    public QuoteResponseDto update( @PathVariable( "id" ) long id, @RequestBody Quote modified ) {
+        quoteService.updateQuote( id, modified );
+        return QuoteResponseDto.fromQuote( modified );
     }
 
     @DeleteMapping(value = "/{id}")
-    public QuoteResponseDto delete(@PathVariable( "id" ) int id) {
+    public QuoteResponseDto delete(@PathVariable( "id" ) long id) {
         return QuoteResponseDto.fromQuote( quoteService.delete( id ) );
     }
 }

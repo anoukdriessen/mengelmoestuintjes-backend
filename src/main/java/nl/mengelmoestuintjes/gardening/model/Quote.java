@@ -6,17 +6,9 @@ import javax.persistence.*;
 @Table(name = "quotes")
 public class Quote {
 
-    /*
-      Quote bestaat uit:
-      - naam van de auteur
-      - text
-      TODO link implementeren naar profiel / social
-
-      alleen moderators kunnen quotes toevoegen in hun dashboard
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     private String author;
     private String text;
 
@@ -26,7 +18,7 @@ public class Quote {
         this.text = text;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
     public String getAuthor() {
@@ -36,7 +28,7 @@ public class Quote {
         return text;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
     public void setAuthor(String author) {

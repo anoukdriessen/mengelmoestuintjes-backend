@@ -4,7 +4,7 @@ import nl.mengelmoestuintjes.gardening.model.Quote;
 
 public class QuoteResponseDto {
 
-    public int id;
+    public long id;
     public String author;
     public String text;
 
