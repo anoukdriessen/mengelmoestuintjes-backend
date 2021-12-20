@@ -50,3 +50,13 @@ VALUES (0, 'bloem', 'ik ben een bloem'),
        (3, 'fruit', 'ik ben fruit'),
        (2, 'kruid', 'ik ben een kruid'),
        (1, 'groenten', 'ik ben groeten');
+
+INSERT INTO users( id, name, password, role )
+VALUES ('vivalanouk', 'anouk', 'geheim123', 4),
+       ('luminousNodes', 'kevin', 'qwerty999', 1),
+       ('zonnestraal80', 'guus', 'wachtwoord', 0);
+
+INSERT INTO milestones( title, points, url_to_badge )
+VALUES ('eerste login', 1000, '/afbeelding'),
+       ('eerste seizoen', 1000, '/afbeelding'),
+       ('eerste vriend', 1000, '/afbeelding');
