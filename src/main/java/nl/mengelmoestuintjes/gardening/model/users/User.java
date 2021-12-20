@@ -1,7 +1,6 @@
 package nl.mengelmoestuintjes.gardening.model.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
 import nl.mengelmoestuintjes.gardening.model.tasks.ToDoTask;
 
@@ -55,8 +54,8 @@ public class User {
     @OneToMany( mappedBy = "owner",  fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
      private List<ToDoTask> tasks;
 
-    @OneToMany( mappedBy = "owner",  fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
-     private List<Garden> gardens;
+//    @OneToMany( mappedBy = "owner",  fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
+//     private List<Garden> gardens;
 
 // TODO add relations
     // TODO ManyToMany
