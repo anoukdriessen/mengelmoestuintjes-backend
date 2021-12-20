@@ -53,8 +53,8 @@ public class GardenController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void delete( @PathVariable( "id" ) long id ) {
-        service.delete( id );
+    public GardenResponseDto delete( @PathVariable( "id" ) long id ) {
+        return GardenResponseDto.fromGarden( service.delete( id ) );
     }
 
 }

@@ -84,8 +84,8 @@ public class PlantController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable( "id" ) int id) {
-        service.delete(id);
+    public PlantResponseDto delete(@PathVariable( "id" ) int id) {
+        return PlantResponseDto.fromPlant( service.delete( id ) );
     }
 
 }

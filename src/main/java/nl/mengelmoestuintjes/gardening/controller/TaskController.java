@@ -60,8 +60,8 @@ public class TaskController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void delete( @PathVariable( "id" ) long id ) {
-        service.delete( id );
+    public TaskResponseDto delete( @PathVariable( "id" ) long id ) {
+        return TaskResponseDto.fromTask( service.delete( id ) );
     }
 
 

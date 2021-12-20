@@ -106,12 +106,12 @@ public class PostService {
         }
     }
 
-    // Delete
-    public void deletePostById(int id) {
-        Optional<Post> toFind = postRepository.findById(id);
-
+    public Post delete( int id ) {
+        Optional<Post> toFind = postRepository.findById( id );
         if (toFind.isPresent()) { // check if post exists
-            postRepository.deleteById(id);
+            Post toDelete = toFind.get();
+            postRepository.delete( toDelete );
+            return toDelete;
         } else { // post does not exists
             throw new RecordNotFoundException(NOT_FOUND);
         }

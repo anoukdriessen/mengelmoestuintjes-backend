@@ -63,13 +63,13 @@ public class QuoteService {
         }
     }
 
-    // Delete
-    public void deleteQuoteById(int id) {
+    public Quote delete( int id ) {
         Optional<Quote> toFind = quoteRepository.findById(id);
-
         if (toFind.isPresent()) {  // check if quote exists
-            quoteRepository.deleteById(id);
-        } else {  // post does not exists
+            Quote toDelete = toFind.get();
+            quoteRepository.delete( toDelete );
+            return toDelete;
+        } else {  // quote does not exists
             throw new RecordNotFoundException(NOT_FOUND);
         }
     }

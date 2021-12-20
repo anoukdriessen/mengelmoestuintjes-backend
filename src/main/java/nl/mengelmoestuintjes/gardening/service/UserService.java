@@ -66,11 +66,13 @@ public class UserService {
         }
     }
 
-    public void delete( String id ) {
+    public User delete( String id ) {
         Optional<User> toFind = repository.findById( id );
-        if (toFind.isPresent()) {  // check if quote exists
-            repository.delete( toFind.get() );
-        } else {  // post does not exists
+        if (toFind.isPresent()) {  // check if user exists
+            User toDelete = toFind.get();
+            repository.delete( toDelete );
+            return toDelete;
+        } else {  // user does not exists
             throw new RecordNotFoundException(NOT_FOUND);
         }
     }

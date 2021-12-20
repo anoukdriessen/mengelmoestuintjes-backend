@@ -52,11 +52,13 @@ public class GardenService {
         }
     }
 
-    public void delete( long id ) {
+    public Garden delete( long id ) {
         Optional<Garden> toFind = repository.findById( id );
-        if (toFind.isPresent()) {  // check if quote exists
-            repository.delete(toFind.get() );
-        } else {  // post does not exists
+        if (toFind.isPresent()) {  // check if garden exists
+            Garden toDelete = toFind.get();
+            repository.delete( toDelete );
+            return toDelete;
+        } else {  // garden does not exists
             throw new RecordNotFoundException(NOT_FOUND);
         }
     }

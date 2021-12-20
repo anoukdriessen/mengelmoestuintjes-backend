@@ -60,9 +60,8 @@ public class QuoteController {
         return QuoteResponseDto.fromQuote(modifiedQuote);
     }
 
-    // Delete
     @DeleteMapping(value = "/{id}")
-    public void deleteQuote(@PathVariable( "id" ) int id) {
-        quoteService.deleteQuoteById(id);
+    public QuoteResponseDto delete(@PathVariable( "id" ) int id) {
+        return QuoteResponseDto.fromQuote( quoteService.delete( id ) );
     }
 }

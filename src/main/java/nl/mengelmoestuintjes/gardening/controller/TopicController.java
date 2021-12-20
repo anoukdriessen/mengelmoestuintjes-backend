@@ -2,6 +2,7 @@ package nl.mengelmoestuintjes.gardening.controller;
 
 import nl.mengelmoestuintjes.gardening.controller.dto.TopicRequestDto;
 import nl.mengelmoestuintjes.gardening.controller.dto.TopicResponseDto;
+import nl.mengelmoestuintjes.gardening.controller.dto.UserResponseDto;
 import nl.mengelmoestuintjes.gardening.model.academy.Topic;
 import nl.mengelmoestuintjes.gardening.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +53,8 @@ public class TopicController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void delete( @PathVariable( "id" ) long id ) {
-        service.delete( id );
+    public TopicResponseDto delete( @PathVariable( "id" ) long id ) {
+        return TopicResponseDto.fromTopic( service.delete( id ) );
     }
 
 

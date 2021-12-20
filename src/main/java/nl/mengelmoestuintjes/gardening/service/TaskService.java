@@ -68,11 +68,13 @@ public class TaskService {
         }
     }
 
-    public void delete( long id ) {
+    public Task delete( long id ) {
         Optional<Task> toFind = repository.findById( id );
-        if (toFind.isPresent()) {  // check if quote exists
+        if (toFind.isPresent()) {  // check if task exists
+            Task toDelete = toFind.get();
             repository.deleteById( id );
-        } else {  // post does not exists
+            return toDelete;
+        } else {  // task does not exists
             throw new RecordNotFoundException(NOT_FOUND);
         }
     }
