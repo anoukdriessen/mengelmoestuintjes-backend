@@ -50,4 +50,3 @@ VALUES (0, 'bloem', 'ik ben een bloem'),
        (3, 'fruit', 'ik ben fruit'),
        (2, 'kruid', 'ik ben een kruid'),
        (1, 'groenten', 'ik ben groeten');
-

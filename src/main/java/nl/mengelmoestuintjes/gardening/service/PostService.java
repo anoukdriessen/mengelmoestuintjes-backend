@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class PostService {
@@ -17,12 +18,12 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository) {
+    public PostService( PostRepository postRepository ) {
         this.postRepository = postRepository;
     }
 
     // Create
-    public Post newPost(Post toAdd) {
+    public Post newPost( Post toAdd ) {
         return postRepository.save( toAdd );
     }
 
@@ -50,6 +51,12 @@ public class PostService {
         } else {  // post does not exists
             throw new RecordNotFoundException(NOT_FOUND);
         }
+    }
+    public Post getRandom() {
+        long bound = postRepository.count();
+        Random r = new Random();
+        int id = r.nextInt( (int) bound );
+        return getPostById( id );
     }
 
     // Update
