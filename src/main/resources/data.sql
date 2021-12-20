@@ -1,5 +1,5 @@
 INSERT INTO quotes ( author, text )
-VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhalen'),
+    VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhalen'),
        ('gertraude beese', 'Een leven zonder dromen is als een tuin zonder bloemen'),
        ('phil bosman', 'De wonderen van heel de wereld vind je terug in je eigen tuin'),
        ('ireen_boerderijgeluk', 'Wat met liefde is geplant raakt nooit uitgebloeid'),
@@ -45,4 +45,8 @@ INSERT INTO tasks( title, type, description, done, starting, due_date, points )
        ('hello', 2, 'lala', false, null, null, 100),
        ('byebye', 2, 'lala', true, null, null, 100);
 
-
+INSERT INTO plants( category, name, description )
+    VALUES (0, 'bloem', 'ik ben een bloem'),
+       (3, 'fruit', 'ik ben fruit'),
+       (2, 'kruid', 'ik ben een kruid'),
+       (1, 'groenten', 'ik ben groeten');
