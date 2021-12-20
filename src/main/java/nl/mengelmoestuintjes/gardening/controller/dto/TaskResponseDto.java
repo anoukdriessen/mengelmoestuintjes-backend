@@ -10,7 +10,7 @@ public class TaskResponseDto {
     public TypeTask type;
     public String title;
     public String description;
-    public boolean isDone;
+    public boolean done;
     public LocalDate starting;
     public LocalDate dueDate;
     public long points;
@@ -22,7 +22,7 @@ public class TaskResponseDto {
         dto.type = toUse.getType();
         dto.title = toUse.getTitle();
         dto.description = toUse.getDescription();
-        dto.isDone = toUse.getIsDone();
+        dto.done = toUse.getIsDone();
         dto.starting = toUse.getStarting();
         dto.dueDate = toUse.getDueDate();
         dto.points = toUse.getPoints();

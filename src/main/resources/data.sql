@@ -1,4 +1,4 @@
-INSERT INTO quotes (author, text)
+INSERT INTO quotes ( author, text )
 VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhalen'),
        ('gertraude beese', 'Een leven zonder dromen is als een tuin zonder bloemen'),
        ('phil bosman', 'De wonderen van heel de wereld vind je terug in je eigen tuin'),
@@ -23,7 +23,7 @@ VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhal
        ('b. nichols', 'Overweldigd worden door de geur van bloemen is een heerlijk soort nederlaag'),
        ('f. bacon', 'De adem van bloemen is veel zoeter in de lucht dan in de hand');
 
-INSERT INTO posts (title, category, description, image_url, author, visible)
+INSERT INTO posts ( title, category, description, image_url, author, visible )
     VALUES ('Mijn eerste POST','0','blablablablablablablablablablablabla','url_naar_afbeelding','anouk','true'),
            ('Mijn tweede POST','0','blablablablablablablablablablablabla','url_naar_afbeelding','anouk','false'),
            ('Mijn eerste NOTE','1','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','true'),
@@ -37,12 +37,12 @@ INSERT INTO posts (title, category, description, image_url, author, visible)
            ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','false'),
            ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','false');
 
+INSERT INTO tasks( title, type, description, done, starting, due_date, points )
+    VALUES ('hello', 0, 'lala', false, null, null, 100),
+       ('byebye', 0, 'lala', true, null, null, 100),
+       ('hello', 1, 'lala', false, null, null, 100),
+       ('byebye', 1, 'lala', true, null, null, 100),
+       ('hello', 2, 'lala', false, null, null, 100),
+       ('byebye', 2, 'lala', true, null, null, 100);
 
-
-INSERT INTO authorities( role , username )
-VALUES (0, 'vivalanouk'),
-       (1, 'guus'),
-       (2, 'zonnestraal80'),
-       (3, 'luminousnodes'),
-       (4, 'zorro');
 
