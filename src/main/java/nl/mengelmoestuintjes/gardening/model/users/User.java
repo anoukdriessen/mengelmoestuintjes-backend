@@ -1,7 +1,7 @@
 package nl.mengelmoestuintjes.gardening.model.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import nl.mengelmoestuintjes.gardening.model.garden.Garden;
+import nl.mengelmoestuintjes.gardening.model.Milestone;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
 import nl.mengelmoestuintjes.gardening.model.tasks.Task;
 
@@ -27,7 +27,9 @@ public class User {
 //    @Column(nullable = false)
 //    private String email;
 
+    @Column(columnDefinition = "integer default 0")
     private int lvl;
+    @Column(columnDefinition = "bigint default 0")
     private long xp;
     private String name;
     private LocalDate birthday;
@@ -55,8 +57,9 @@ public class User {
     @OneToMany( mappedBy = "owner" )
      private List<Task> tasks;
 
-    @OneToMany( mappedBy = "owner" )
-     private List<Garden> gardens;
+
+//    @OneToMany( mappedBy = "owner",  fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
+//     private List<Garden> gardens;
 
 // TODO add relations
     // TODO ManyToMany
@@ -65,6 +68,7 @@ public class User {
     // private List<Plant> favoritePlants;
 
     @JsonIgnore
+    @Column(columnDefinition = "bigint default 0")
     private long levelUpLimit; // starting at 1000 xp
 
     public User(){};
@@ -110,7 +114,7 @@ public class User {
         this.role = role;
     }
 
-    public long getLvl() {
+    public int getLvl() {
         return lvl;
     }
     public long getXp() {
