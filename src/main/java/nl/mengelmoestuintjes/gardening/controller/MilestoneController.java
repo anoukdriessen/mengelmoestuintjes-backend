@@ -53,8 +53,8 @@ public class MilestoneController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void delete( @PathVariable( "id" ) long id ) {
-        service.delete( id );
+    public MilestoneResponseDto delete( @PathVariable( "id" ) long id ) {
+        return MilestoneResponseDto.fromMilestone( service.delete( id ) );
     }
 
 }

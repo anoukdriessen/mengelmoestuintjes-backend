@@ -64,11 +64,13 @@ public class TopicService {
         }
     }
 
-    public void delete( long id ) {
+    public Topic delete( long id ) {
         Optional<Topic> toFind = repository.findById( id );
-        if (toFind.isPresent()) {  // check if quote exists
-            repository.delete(toFind.get() );
-        } else {  // post does not exists
+        if (toFind.isPresent()) {  // check if topic exists
+            Topic toDelete = toFind.get();
+            repository.delete( toDelete );
+            return toDelete;
+        } else {  // topic does not exists
             throw new RecordNotFoundException(NOT_FOUND);
         }
     }

@@ -65,9 +65,8 @@ public class PostController {
         return PostResponseDto.fromPost(modifiedPost);
     }
 
-    // Delete
     @DeleteMapping(value = "/{id}")
-    public void deletePostById(@PathVariable( "id" ) int id) {
-        postService.deletePostById(id);
+    public PostResponseDto delete(@PathVariable( "id" ) int id) {
+        return PostResponseDto.fromPost( postService.delete( id ) );
     }
 }

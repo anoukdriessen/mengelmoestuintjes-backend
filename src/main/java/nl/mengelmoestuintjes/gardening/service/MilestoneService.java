@@ -54,11 +54,13 @@ public class MilestoneService {
         }
     }
 
-    public void delete( long id ) {
+    public Milestone delete( long id ) {
         Optional<Milestone> toFind = repository.findById( id );
-        if (toFind.isPresent()) {  // check if quote exists
-            repository.delete( toFind.get() );
-        } else {  // post does not exists
+        if (toFind.isPresent()) {  // check if milestone exists
+            Milestone toDelete = toFind.get();
+            repository.delete( toDelete );
+            return toDelete;
+        } else {  // milestone does not exists
             throw new RecordNotFoundException(NOT_FOUND);
         }
     }

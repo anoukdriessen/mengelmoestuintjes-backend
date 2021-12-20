@@ -70,3 +70,8 @@ INSERT INTO tuintjes( name, x, y )
 VALUES ('voortuin', 5, 5),
        ('achtertuin', 10, 5),
        ('volkstuin', 5, 15);
+
+INSERT INTO topics( title, category, description)
+VALUES ('plant een pit', 0, 'lalala'),
+       ('permaculture 101', 1, 'lalala'),
+       ('creatief met...', 2, 'lalala');

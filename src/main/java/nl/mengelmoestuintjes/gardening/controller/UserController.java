@@ -53,8 +53,8 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void delete( @PathVariable( "id" ) String id ) {
-        service.delete( id );
+    public UserResponseDto delete( @PathVariable( "id" ) String id ) {
+        return UserResponseDto.fromUser( service.delete( id ) );
     }
 
 

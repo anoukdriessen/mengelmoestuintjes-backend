@@ -72,11 +72,13 @@ public class PlantService {
         }
     }
 
-    public void delete( long id ) {
+    public Plant delete( long id ) {
         Optional<Plant> toFind = repository.findById( id );
-        if (toFind.isPresent()) {  // check if quote exists
-            repository.delete( repository.getById( id ) );
-        } else {  // post does not exists
+        if (toFind.isPresent()) {  // check if plant exists
+            Plant toDelete = toFind.get();
+            repository.delete( toDelete );
+            return toDelete;
+        } else {  // plant does not exists
             throw new RecordNotFoundException(NOT_FOUND);
         }
     }
