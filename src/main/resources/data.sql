@@ -37,34 +37,7 @@ INSERT INTO posts (title, category, description, image_url, author, visible)
            ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','false'),
            ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','false');
 
-INSERT INTO tasks(
-    type, title, description, done )
-VALUES ('TODO', 'hello', 'lala', false),
-       ('TODO', 'bye', ''lala, true),
-       ('GARDENING', 'hello', 'lala', false),
-       ('GARDENING', 'bye', ''lala, true)
 
-INSERT INTO plant_flowers (name, bloom)
-    VALUES ('roos', ''),
-           ('chrisant',''),
-           ('zonnehoed',''),
-           ('Dahlia', ''),
-           ('Goudsbloem', '');
-
-INSERT INTO plant_fruits (name, length)
-VALUES ('manderijn', '0'),
-       ('appels','0'),
-       ('kersen','0');
-
-INSERT INTO plant_herbs (name, good_for_tea)
-VALUES ('rozemarijn','true'),
-       ('dille', 'true'),
-       ('kamille', 'true');
-
-INSERT INTO PLANT_VEGETABLES (name)
-VALUES ('tomaat'),
-       ('wortel'),
-       ('pompoen');
 
 INSERT INTO authorities( role , username )
 VALUES (0, 'vivalanouk'),
