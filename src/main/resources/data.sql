@@ -23,19 +23,29 @@ VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhal
        ('b. nichols', 'Overweldigd worden door de geur van bloemen is een heerlijk soort nederlaag'),
        ('f. bacon', 'De adem van bloemen is veel zoeter in de lucht dan in de hand');
 
+INSERT INTO users( id, name, password, role )
+VALUES ('vivalanouk', 'anouk', 'geheim123', 4),
+       ('luminousNodes', 'kevin', 'qwerty999', 1),
+       ('zonnestraal80', 'guus', 'wachtwoord', 0);
+
+INSERT INTO authorities( role , username )
+VALUES (4, 'vivalanouk'),
+       (1, 'luminousNodes'),
+       (0, 'zonnestraal80');
+
 INSERT INTO posts ( title, category, description, image_url, author, visible )
-VALUES ('Mijn eerste POST','0','blablablablablablablablablablablabla','url_naar_afbeelding','anouk','true'),
-       ('Mijn tweede POST','0','blablablablablablablablablablablabla','url_naar_afbeelding','anouk','false'),
-       ('Mijn eerste NOTE','1','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','true'),
-       ('Mijn tweede NOTE','1','blablablablablablablablablablablabla','url_naar_afbeelding','guus','false'),
-       ('MIJN EERSTE MILESTONE','2','blablablablablablablablablablablabla','url_naar_afbeelding','guus','true'),
-       ('MIJN TWEEDE MILESTONE','2','blablablablablablablablablablablabla','url_naar_afbeelding','guus','true'),
-       ('Project','3','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','false'),
-       ('Project','3','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','false'),
-       ('BLOG','4','blablablablablablablablablablablabla','url_naar_afbeelding','anouk','true'),
-       ('BLOG','4','blablablablablablablablablablablabla','url_naar_afbeelding','anouk','true'),
-       ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','false'),
-       ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','false');
+VALUES ('Mijn eerste POST','0','blablablablablablablablablablablabla','url_naar_afbeelding','zonnestraal80','true'),
+       ('Mijn tweede POST','0','blablablablablablablablablablablabla','url_naar_afbeelding','zonnestraal80','false'),
+       ('Mijn eerste NOTE','1','blablablablablablablablablablablabla','url_naar_afbeelding','zonnestraal80','true'),
+       ('Mijn tweede NOTE','1','blablablablablablablablablablablabla','url_naar_afbeelding','zonnestraal80','false'),
+       ('MIJN EERSTE MILESTONE','2','blablablablablablablablablablablabla','url_naar_afbeelding','luminousNodes','true'),
+       ('MIJN TWEEDE MILESTONE','2','blablablablablablablablablablablabla','url_naar_afbeelding','zonnestraal80','true'),
+       ('Project','3','blablablablablablablablablablablabla','url_naar_afbeelding','vivalanouk','false'),
+       ('Project','3','blablablablablablablablablablablabla','url_naar_afbeelding','vivalanouk','false'),
+       ('BLOG','4','blablablablablablablablablablablabla','url_naar_afbeelding','luminousNodes','true'),
+       ('BLOG','4','blablablablablablablablablablablabla','url_naar_afbeelding','luminousNodes','true'),
+       ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','vivalanouk','false'),
+       ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','vivalanouk','false');
 
 INSERT INTO tasks( title, type, description, done, starting, due_date, points )
 VALUES ('hello', 0, 'lala', false, null, null, 100),
@@ -51,12 +61,12 @@ VALUES (0, 'bloem', 'ik ben een bloem'),
        (2, 'kruid', 'ik ben een kruid'),
        (1, 'groenten', 'ik ben groeten');
 
-INSERT INTO users( id, name, password, role )
-VALUES ('vivalanouk', 'anouk', 'geheim123', 4),
-       ('luminousNodes', 'kevin', 'qwerty999', 1),
-       ('zonnestraal80', 'guus', 'wachtwoord', 0);
-
 INSERT INTO milestones( title, points, url_to_badge )
 VALUES ('eerste login', 1000, '/afbeelding'),
        ('eerste seizoen', 1000, '/afbeelding'),
        ('eerste vriend', 1000, '/afbeelding');
+
+INSERT INTO tuintjes( name, x, y )
+VALUES ('voortuin', 5, 5),
+       ('achtertuin', 10, 5),
+       ('volkstuin', 5, 15);

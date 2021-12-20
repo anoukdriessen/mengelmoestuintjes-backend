@@ -5,20 +5,23 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "name_of_table")
+@Table(name = "topics")
 public class Topic {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private Category category;
     private String title;
     private String description;
-    // TODO implement relation
-    // private List<Post> posts;
-
     private LocalDate createdAt;
     private LocalDate modifiedAt;
+
+    // TODO implement relation
+    // private List<Post> posts;
+    // private List<User> students;
+
+
 
     public Topic() {}
     public Topic( long id, Category category, String title, String description ) {
