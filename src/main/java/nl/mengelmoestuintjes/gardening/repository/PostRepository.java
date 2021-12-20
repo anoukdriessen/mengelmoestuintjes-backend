@@ -11,5 +11,4 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     Iterable<Post> findAllByAuthor(String authorName);
     Iterable<Post> findAllByCategory(PostCategory category);
-
 }
