@@ -1,19 +1,19 @@
 package nl.mengelmoestuintjes.gardening.model.tasks;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import nl.mengelmoestuintjes.gardening.model.users.Milestone;
 import nl.mengelmoestuintjes.gardening.model.users.User;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tasks")
 public class Task {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private TypeTask type;
     private String title;
@@ -24,29 +24,36 @@ public class Task {
     private long points;
 
     public Task() {}
-    public Task(long id, TypeTask type, String title, String description, boolean done) {
+
+    public Task(long id, TypeTask type, String title, String description, boolean done, LocalDate starting, LocalDate dueDate, long points, User owner) {
         this.id = id;
         this.type = type;
         this.title = title;
         this.description = description;
         this.done = done;
+        this.starting = starting;
+        this.dueDate = dueDate;
+        this.points = points;
+        this.owner = owner;
     }
-    public Task(TypeTask type, String title, String description, LocalDate starting, LocalDate dueDate, long points) {
+
+//    public Task(TypeTask type, String title, String description, LocalDate starting, LocalDate dueDate, long points, User owner) {
+    public Task(String title, TypeTask type, String description, boolean done, LocalDate starting, LocalDate dueDate, long points) {
         this.title = title;
-        this.description = description;
-        this.done = false;
         this.type = type;
-        switch ( type ) {
-            case TODO:
-                this.dueDate = dueDate;
-                break;
-            case SEASONAL:
-            case GARDENING:
-                this.starting = starting;
-                this.dueDate = dueDate;
-                this.points = points;
-                break;
+        this.description = description;
+        this.done = done;
+        if ( Objects.isNull( starting ) ) {
+            this.starting = LocalDate.now();
+        } else {
+            this.starting = starting;
         }
+        if ( Objects.isNull( dueDate ) ) {
+            this.dueDate = LocalDate.now();
+        } else {
+            this.dueDate = dueDate;
+        }
+        this.points = points;
     }
 
     @JsonIgnoreProperties("tasks")
@@ -95,21 +102,17 @@ public class Task {
         this.description = description;
     }
     public void setIsDone(boolean done) {
-        done = done;
+        this.done = done;
     }
-
     public void setOwner(User owner) {
         this.owner = owner;
     }
-
     public void setStarting(LocalDate starting) {
         this.starting = starting;
     }
-
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
-
     public void setPoints(long points) {
         this.points = points;
     }

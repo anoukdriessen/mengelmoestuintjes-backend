@@ -2,7 +2,9 @@ package nl.mengelmoestuintjes.gardening.controller;
 
 import nl.mengelmoestuintjes.gardening.controller.dto.TaskRequestDto;
 import nl.mengelmoestuintjes.gardening.controller.dto.TaskResponseDto;
+import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
 import nl.mengelmoestuintjes.gardening.model.tasks.Task;
+import nl.mengelmoestuintjes.gardening.model.tasks.TypeTask;
 import nl.mengelmoestuintjes.gardening.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +30,13 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<TaskResponseDto> getAll() {
+    public List<TaskResponseDto> getAll(
+            @RequestParam(name = "done", required = false) boolean done,
+            @RequestParam(name = "type", required = false) TypeTask type
+    ) {
         List<TaskResponseDto> all = new ArrayList<>();
-        Iterable<Task> tasks = service.getAll(false);
+        Iterable<Task> tasks = service.getAll( done, type );
+
 
         for ( Task t : tasks) {
             all.add(

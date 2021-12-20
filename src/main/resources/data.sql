@@ -1,4 +1,4 @@
-INSERT INTO quotes (author, text)
+INSERT INTO quotes ( author, text )
 VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhalen'),
        ('gertraude beese', 'Een leven zonder dromen is als een tuin zonder bloemen'),
        ('phil bosman', 'De wonderen van heel de wereld vind je terug in je eigen tuin'),
@@ -23,7 +23,7 @@ VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhal
        ('b. nichols', 'Overweldigd worden door de geur van bloemen is een heerlijk soort nederlaag'),
        ('f. bacon', 'De adem van bloemen is veel zoeter in de lucht dan in de hand');
 
-INSERT INTO posts (title, category, description, image_url, author, visible)
+INSERT INTO posts ( title, category, description, image_url, author, visible )
     VALUES ('Mijn eerste POST','0','blablablablablablablablablablablabla','url_naar_afbeelding','anouk','true'),
            ('Mijn tweede POST','0','blablablablablablablablablablablabla','url_naar_afbeelding','anouk','false'),
            ('Mijn eerste NOTE','1','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','true'),
@@ -37,39 +37,11 @@ INSERT INTO posts (title, category, description, image_url, author, visible)
            ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','false'),
            ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','false');
 
-INSERT INTO tasks(
-    type, title, description, done )
-VALUES ('TODO', 'hello', 'lala', false),
-       ('TODO', 'bye', ''lala, true),
-       ('GARDENING', 'hello', 'lala', false),
-       ('GARDENING', 'bye', ''lala, true)
-
-INSERT INTO plant_flowers (name, bloom)
-    VALUES ('roos', ''),
-           ('chrisant',''),
-           ('zonnehoed',''),
-           ('Dahlia', ''),
-           ('Goudsbloem', '');
-
-INSERT INTO plant_fruits (name, length)
-VALUES ('manderijn', '0'),
-       ('appels','0'),
-       ('kersen','0');
-
-INSERT INTO plant_herbs (name, good_for_tea)
-VALUES ('rozemarijn','true'),
-       ('dille', 'true'),
-       ('kamille', 'true');
-
-INSERT INTO PLANT_VEGETABLES (name)
-VALUES ('tomaat'),
-       ('wortel'),
-       ('pompoen');
-
-INSERT INTO authorities( role , username )
-VALUES (0, 'vivalanouk'),
-       (1, 'guus'),
-       (2, 'zonnestraal80'),
-       (3, 'luminousnodes'),
-       (4, 'zorro');
+INSERT INTO tasks( title, type, description, done, starting, due_date, points )
+    VALUES ('hello', 0, 'lala', false, null, null, 100),
+       ('byebye', 0, 'lala', true, null, null, 100),
+       ('hello', 1, 'lala', false, null, null, 100),
+       ('byebye', 1, 'lala', true, null, null, 100),
+       ('hello', 2, 'lala', false, null, null, 100),
+       ('byebye', 2, 'lala', true, null, null, 100);
 

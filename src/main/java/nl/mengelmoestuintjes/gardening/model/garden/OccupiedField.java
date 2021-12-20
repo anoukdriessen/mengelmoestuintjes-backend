@@ -24,19 +24,19 @@ public class OccupiedField {
     @JsonManagedReference
     private Field field;
 
-    @OneToMany
-    @JsonIgnore
-    private List<Flower> flowers;
-
-    @OneToMany
-    @JsonIgnore
-    private List<Fruit> fruits;
-
-    @OneToMany
-    @JsonIgnore
-    private List<Herb> herbs;
-
-    @OneToMany
-    @JsonIgnore
-    private List<Vegetable> vegetables;
+//    @OneToMany
+//    @JsonIgnore
+//    private List<Flower> flowers;
+//
+//    @OneToMany
+//    @JsonIgnore
+//    private List<Fruit> fruits;
+//
+//    @OneToMany
+//    @JsonIgnore
+//    private List<Herb> herbs;
+//
+//    @OneToMany
+//    @JsonIgnore
+//    private List<Vegetable> vegetables;
 }
