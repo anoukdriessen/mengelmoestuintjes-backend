@@ -17,11 +17,11 @@ public class Plant {
 
     @Column(columnDefinition = "integer default 0")
     private Location location;            // de standplaats van de plant
-    @Column(columnDefinition = "varchar(255) default 'harvest months'")
+    @Column(columnDefinition = "varchar(255) default 'outdoor'")
     private String outdoors;              // maanden voor buiten zaaien
-    @Column(columnDefinition = "varchar(255) default 'harvest months'")
+    @Column(columnDefinition = "varchar(255) default 'indoor'")
     private String indoors;               // maanden voor binnen zaaien
-    @Column(columnDefinition = "varchar(255) default 'harvest months'")
+    @Column(columnDefinition = "varchar(255) default 'harvest'")
     private String harvest;               // maanden voor oogst
     @Column(columnDefinition = "integer default 0")
     private Requirement frostResistance;  // is de plant vorstbestendig
