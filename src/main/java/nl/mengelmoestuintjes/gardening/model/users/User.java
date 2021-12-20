@@ -3,7 +3,7 @@ package nl.mengelmoestuintjes.gardening.model.users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
-import nl.mengelmoestuintjes.gardening.model.tasks.ToDoTask;
+import nl.mengelmoestuintjes.gardening.model.tasks.Task;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -16,7 +16,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @Column(nullable = false, unique = true)
+    @Column(name = "id",nullable = false, unique = true)
     private String username;
 
 // TODO password encryption
@@ -43,19 +43,19 @@ public class User {
 
     private UserRole role;
 
-    @OneToMany( mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
+    @OneToMany( mappedBy = "owner" )
      private List<Milestone> milestones;
 
-    @OneToMany( mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
+    @OneToMany( mappedBy = "owner" )
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany( mappedBy = "owner",  fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
+    @OneToMany( mappedBy = "owner")
      private List<Post> favoritePosts;
 
-    @OneToMany( mappedBy = "owner",  fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
-     private List<ToDoTask> tasks;
+    @OneToMany( mappedBy = "owner" )
+     private List<Task> tasks;
 
-    @OneToMany( mappedBy = "owner",  fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
+    @OneToMany( mappedBy = "owner" )
      private List<Garden> gardens;
 
 // TODO add relations
