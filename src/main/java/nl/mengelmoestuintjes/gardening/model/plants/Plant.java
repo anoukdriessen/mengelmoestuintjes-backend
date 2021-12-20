@@ -1,51 +1,49 @@
 package nl.mengelmoestuintjes.gardening.model.plants;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
+@Entity
+@Table( name = "plants")
 public class Plant {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    private Category type;
+    private String name;
     private String family;              // de familie waar de plant bij hoort
     private String description;         // de beschrijving van de plant
     private String location;            // de standplaats van de plant
     private String ground;              // de grondbehoefte van de plant
-//    @Column(name = "pre_sow")
     private Boolean forPreSow;          // geschikt voor voorzaaien
-//    @Column(name = "seed_collecting")
     private Boolean forSeedCollecting;  // geschikt voor het verzamelen van zaad
     private Boolean forPot;             // geschikt voor pot
     private Boolean forOutside;         // geschikt voor buiten
     private Boolean forIndoor;         // geschikt voor buiten
     private Boolean forGreenhouse;      // geschikt voor kas
-//    @Column(name = "for_vertical")
     private Boolean forVerticalGarden;  // geschikt voor verticale tuin
-//    @Column(name = "outdoor")
     private String sowOutdoors;          // maanden waarin de plant buiten gezaaid kan worden
-//    @Column(name = "indoor")
     private String sowIndoors;           // maanden waarin de plant binnen gezaaid kan worden
     private String harvest;              // maanden waarin de plant geoogst kan worden
-
     private boolean frostResistance;    // de winterhardheid van de plant
     private int waterRequirement;       // de waterbehoefte van de plant
     private int depth;                  // de zaaidiepte
-//    @Column(name = "between_plants")
     private int distanceBetweenPlants;  // de afstand tussen planten
-//    @Column(name = "between_rows")
     private int distanceBetweenRows;    // de afstand tussen rijen
     private int plantsPerMeter;         // planten per meter
     private int plantsPerSquare;        // planten per vierkante meter
-//    @Column(name = "germinatation_days")
     private int avgDaysGermination;     // gemiddelde tijd tot ontkiemen
-//    @Column(name = "harvest_days")
     private int avgDaysHarvest;         // gemiddelde tijd tot oogst
 
+    // TODO IMPLEMENT RELATION
 //    ListOfPlants friends;   // vrienden van de plant (compagnion-planting)
 //    ListOfEnemies enemies  // vijanden van de plant (compagnion-planting)
 
-    public Plant() {
-    }
-
-    public Plant(String family, String description, String location, String ground, Boolean forPreSow, Boolean forSeedCollecting, Boolean forPot, Boolean forOutside, Boolean forIndoor, Boolean forGreenhouse, Boolean forVerticalGarden, String sowOutdoors, String sowIndoors, String harvest, boolean frostResistance, int waterRequirement, int depth, int distanceBetweenPlants, int distanceBetweenRows, int plantsPerMeter, int plantsPerSquare, int avgDaysGermination, int avgDaysHarvest) {
+    public Plant() {}
+    public Plant(int id, Category type, String name, String family, String description, String location, String ground, Boolean forPreSow, Boolean forSeedCollecting, Boolean forPot, Boolean forOutside, Boolean forIndoor, Boolean forGreenhouse, Boolean forVerticalGarden, String sowOutdoors, String sowIndoors, String harvest, boolean frostResistance, int waterRequirement, int depth, int distanceBetweenPlants, int distanceBetweenRows, int plantsPerMeter, int plantsPerSquare, int avgDaysGermination, int avgDaysHarvest) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
         this.family = family;
         this.description = description;
         this.location = location;
@@ -70,22 +68,14 @@ public class Plant {
         this.avgDaysGermination = avgDaysGermination;
         this.avgDaysHarvest = avgDaysHarvest;
     }
-
-    public Plant(String family, String description, String location, String ground, String sowOutdoors, String sowIndoors, String harvest, int depth, int distanceBetweenPlants, int distanceBetweenRows, int avgDaysGermination, int avgDaysHarvest) {
-        this.family = family;
+    public Plant(Category type, String name, String description ) {
+        this.type = type;
+        this.name = name;
         this.description = description;
-        this.location = location;
-        this.ground = ground;
-        this.sowOutdoors = sowOutdoors;
-        this.sowIndoors = sowIndoors;
-        this.harvest = harvest;
-        this.depth = depth;
-        this.distanceBetweenPlants = distanceBetweenPlants;
-        this.distanceBetweenRows = distanceBetweenRows;
-        this.plantsPerSquare = 0;
-        this.plantsPerMeter = 0;
-        this.avgDaysGermination = avgDaysGermination;
-        this.avgDaysHarvest = avgDaysHarvest;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getFamily() {
@@ -158,6 +148,15 @@ public class Plant {
         return avgDaysHarvest;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+    public void setType(Category type) {
+        this.type = type;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
     public void setFamily(String family) {
         this.family = family;
     }
@@ -227,5 +226,6 @@ public class Plant {
     public void setAvgDaysHarvest(int avgDaysHarvest) {
         this.avgDaysHarvest = avgDaysHarvest;
     }
+
 }
 

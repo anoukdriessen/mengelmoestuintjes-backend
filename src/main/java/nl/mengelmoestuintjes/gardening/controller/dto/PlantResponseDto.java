@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.controller.dto.plant;
+package nl.mengelmoestuintjes.gardening.controller.dto;
 
 import nl.mengelmoestuintjes.gardening.model.plants.*;
 

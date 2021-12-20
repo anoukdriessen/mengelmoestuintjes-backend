@@ -37,35 +37,12 @@ INSERT INTO posts (title, category, description, image_url, author, visible)
            ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','false'),
            ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','kevin','false');
 
-INSERT INTO tasks_garden (title, description, done, points, month)
-    VALUES ('De grote schoonmaak #1','Maak je tuin klaar voor het nieuwe seizoen.','false','50','1'),
-           ('Appelboom gesnoeid','Attention, Interest, Desire, Action','false','500','1'),
-           ('Klimop gesnoeid','Attention, Interest, Desire, Action','false','500','1'),
-           ('Planten water geven','Attention, Interest, Desire, Action','false','100','0'),
-           ('Vogels een handje geholpen','Bijgevoerd Attention, Interest, Desire, Action','false','100','2'),
-           ('Eerste maand in seizoen #1','Attention, Interest, Desire, Action','false','1000','3'),
-           ('Mijn eerste tomaat','Attention, Interest, Desire, Action','false','250','3'),
-           ('Mijn eerste komkommer','Attention, Interest, Desire, Action','false','250','4'),
-           ('Mijn eerste pompoen','Attention, Interest, Desire, Action','false','250','5'),
-           ('Mijn eerste halloween','Attention, Interest, Desire, Action','false','250','10'),
-           ('Mijn eerste kerst','Attention, Interest, Desire, Action','false','250','12'),
-           ('Voor de eerste x deze Vogel of Nest gespot','In Mei leggen alle vogels een ei','false','250','5'),
-           ('Vergeten Groenten Geplant','Attention, Interest, Desire, Action','false','250','5'),
-           ('Vergeten Groenten Geoogst','Attention, Interest, Desire, Action','false','250','8'),
-           ('Mijn vergeten groeten creatie','Attention, Interest, Desire, Action','false','150','8'),
-           ('Vogels een handje geholpen','Attention, Interest, Desire, Action','false','100','12'),
-           ('Deze hoor je niet te zien','error','false','0','13'),
-           ('De grote schoonmaak #2','Maak je tuin klaar voor het nieuwe seizoen.','false','50','4'),
-           ('De grote schoonmaak #3','Maak je tuin klaar voor het nieuwe seizoen.','false','50','7'),
-           ('De grote schoonmaak #4','Maak je tuin klaar voor het nieuwe seizoen.','false','50','10'),
-           ('Deze is maandofhankelijk','jaja','false','0','0');
-
-INSERT INTO tasks_todo (title, description, done, due_date)
-    VALUES ('Water geven','lala','false','16-12-2021'),
-           ('Het zaaien van X','lala','false','17-12-2021'),
-           ('Het voorzaaien van X','lala','false','18-12-2021'),
-           ('Onkruid weghalen','lala','false','15-12-2021');
-
+INSERT INTO tasks(
+    type, title, description, done )
+VALUES ('TODO', 'hello', 'lala', false),
+       ('TODO', 'bye', ''lala, true),
+       ('GARDENING', 'hello', 'lala', false),
+       ('GARDENING', 'bye', ''lala, true)
 
 INSERT INTO plant_flowers (name, bloom)
     VALUES ('roos', ''),
