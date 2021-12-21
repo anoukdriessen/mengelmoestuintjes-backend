@@ -19,7 +19,6 @@ public class Authority implements Serializable {
     private UserRole role;
 
     public Authority() {}
-
     public Authority(String username, UserRole role) {
         this.username = username;
         this.role = role;
