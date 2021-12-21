@@ -1,7 +1,6 @@
-package nl.mengelmoestuintjes.gardening.model.users.security;
+package nl.mengelmoestuintjes.gardening.security;
 
 import lombok.NonNull;
-import nl.mengelmoestuintjes.gardening.service.JwtUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,13 +21,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
     @Autowired
-    private JwtUtilService jwtUtil;
+    private JwtUtil jwtUtil;
+
     @Override
-    protected void doFilterInternal(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain ) throws ServletException, IOException {
+    protected void doFilterInternal( @NonNull HttpServletRequest request,
+                                     @NonNull HttpServletResponse response,
+                                     @NonNull FilterChain filterChain ) throws ServletException, IOException {
         final String authorizationHeader = request.getHeader( "Authorization" );
 
         String username = null;

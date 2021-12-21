@@ -1,6 +1,6 @@
 package nl.mengelmoestuintjes.gardening.config;
 
-import nl.mengelmoestuintjes.gardening.model.users.security.JwtRequestFilter;
+import nl.mengelmoestuintjes.gardening.security.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.service;
+package nl.mengelmoestuintjes.gardening.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtUtilService {
-    private final static String SECRET_KEY = "ad@30mmt12gjrai";
+public class JwtUtil {
+    private final static String SECRET_KEY = "supersecret";
 
     public String extractUsername( String token ) {
         return extractClaim( token, Claims::getSubject );
