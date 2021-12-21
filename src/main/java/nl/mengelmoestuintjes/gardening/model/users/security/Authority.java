@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.model.users.Authority;
+package nl.mengelmoestuintjes.gardening.model.users.security;
 
 import nl.mengelmoestuintjes.gardening.model.users.UserRole;
 

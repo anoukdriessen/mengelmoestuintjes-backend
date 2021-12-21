@@ -5,8 +5,7 @@ import nl.mengelmoestuintjes.gardening.model.Milestone;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
 import nl.mengelmoestuintjes.gardening.model.tasks.Task;
-import nl.mengelmoestuintjes.gardening.model.users.Authority.Authority;
-import org.springframework.context.annotation.Bean;
+import nl.mengelmoestuintjes.gardening.model.users.security.Authority;
 
 import javax.persistence.*;
 import java.time.LocalDate;
