@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.controller.dto;
+package nl.mengelmoestuintjes.gardening.dto;
 
 import nl.mengelmoestuintjes.gardening.model.academy.Category;
 import nl.mengelmoestuintjes.gardening.model.academy.Topic;

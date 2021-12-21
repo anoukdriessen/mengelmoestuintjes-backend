@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.controller.dto;
+package nl.mengelmoestuintjes.gardening.dto;
 
 import nl.mengelmoestuintjes.gardening.model.Milestone;
 import nl.mengelmoestuintjes.gardening.model.users.User;

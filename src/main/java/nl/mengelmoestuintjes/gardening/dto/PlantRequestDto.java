@@ -1,6 +1,5 @@
-package nl.mengelmoestuintjes.gardening.controller.dto;
+package nl.mengelmoestuintjes.gardening.dto;
 
-import lombok.Builder;
 import nl.mengelmoestuintjes.gardening.model.plants.*;
 
 public class PlantRequestDto {
