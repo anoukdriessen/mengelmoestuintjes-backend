@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.model.users.Authority;
+package nl.mengelmoestuintjes.gardening.model.users.security;
 
 import nl.mengelmoestuintjes.gardening.model.users.UserRole;
 
@@ -19,7 +19,6 @@ public class Authority implements Serializable {
     private UserRole role;
 
     public Authority() {}
-
     public Authority(String username, UserRole role) {
         this.username = username;
         this.role = role;

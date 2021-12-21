@@ -5,24 +5,35 @@ import nl.mengelmoestuintjes.gardening.model.Milestone;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
 import nl.mengelmoestuintjes.gardening.model.tasks.Task;
+import nl.mengelmoestuintjes.gardening.model.users.security.Authority;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "gebruikers")
 public class User {
 
     @Id
     @Column(name = "id",nullable = false, unique = true)
     private String username;
-
-// TODO password encryption
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
+    private boolean enabled = true;
+
+    @OneToMany( targetEntity = Authority.class,
+                mappedBy = "username",
+                cascade = CascadeType.ALL,
+                orphanRemoval = true,
+                fetch = FetchType.EAGER )
+    private Set<Authority> authorities = new HashSet<>();
+
 
 //    TODO implement email
 //    @Column(nullable = false)
@@ -73,18 +84,24 @@ public class User {
     private long levelUpLimit; // starting at 1000 xp
 
     public User(){};
-    public User(int lvl, long xp, String username, String password, String name, LocalDate birthday, Province province, LocalDateTime memberSince, LocalDateTime lastActivity, UserRole role, long levelUpLimit) {
+    public User(String username, String password, boolean enabled, Set<Authority> authorities, int lvl, long xp, String name, LocalDate birthday, Province province, LocalDateTime memberSince, LocalDateTime lastActivity, UserRole role, List<Milestone> milestones, List<Post> posts, List<Post> favoritePosts, List<Task> tasks, List<Garden> gardens, long levelUpLimit) {
+        this.username = username;
+        this.password = password;
+        this.enabled = enabled;
+        this.authorities = authorities;
         this.lvl = lvl;
         this.xp = xp;
-        this.username = username;
-//        this.email = email;
-        this.password = password;
         this.name = name;
         this.birthday = birthday;
         this.province = province;
         this.memberSince = memberSince;
         this.lastActivity = lastActivity;
         this.role = role;
+        this.milestones = milestones;
+        this.posts = posts;
+        this.favoritePosts = favoritePosts;
+        this.tasks = tasks;
+        this.gardens = gardens;
         this.levelUpLimit = levelUpLimit;
     }
 
@@ -148,6 +165,28 @@ public class User {
     public long getLevelUpLimit() {
         return levelUpLimit;
     }
+    public boolean isEnabled() {
+        return enabled;
+    }
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+    public List<Milestone> getMilestones() {
+        return milestones;
+    }
+    public List<Post> getPosts() {
+        return posts;
+    }
+    public List<Post> getFavoritePosts() {
+        return favoritePosts;
+    }
+    public List<Task> getTasks() {
+        return tasks;
+    }
+    public List<Garden> getGardens() {
+        return gardens;
+    }
+
 
     public void setLvl(int lvl) {
         this.lvl = lvl;
@@ -181,6 +220,27 @@ public class User {
     }
     public void setLevelUpLimit(long levelUpLimit) {
         this.levelUpLimit = levelUpLimit;
+    }
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
+    public void setMilestones(List<Milestone> milestones) {
+        this.milestones = milestones;
+    }
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+    public void setFavoritePosts(List<Post> favoritePosts) {
+        this.favoritePosts = favoritePosts;
+    }
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+    public void setGardens(List<Garden> gardens) {
+        this.gardens = gardens;
     }
 
     @Override

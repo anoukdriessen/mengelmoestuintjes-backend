@@ -23,15 +23,10 @@ VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhal
        ('b. nichols', 'Overweldigd worden door de geur van bloemen is een heerlijk soort nederlaag'),
        ('f. bacon', 'De adem van bloemen is veel zoeter in de lucht dan in de hand');
 
-INSERT INTO users( id, name, password, role )
-VALUES ('vivalanouk', 'anouk', 'geheim123', 4),
-       ('luminousNodes', 'kevin', 'qwerty999', 1),
-       ('zonnestraal80', 'guus', 'wachtwoord', 0);
-
-INSERT INTO authorities( role , username )
-VALUES (4, 'vivalanouk'),
-       (1, 'luminousNodes'),
-       (0, 'zonnestraal80');
+INSERT INTO gebruikers( id, name, password, enabled, role )
+VALUES ('vivalanouk', 'anouk', 'geheim123', true, 4),
+       ('luminousNodes', 'kevin', 'qwerty999', true , 1),
+       ('zonnestraal80', 'guus', 'wachtwoord', true, 0);
 
 INSERT INTO posts ( title, category, description, image_url, author, visible )
 VALUES ('Mijn eerste POST','0','blablablablablablablablablablablabla','url_naar_afbeelding','zonnestraal80','true'),
