@@ -1,11 +1,10 @@
 package nl.mengelmoestuintjes.gardening.model.users;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import nl.mengelmoestuintjes.gardening.model.Milestone;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
+import nl.mengelmoestuintjes.gardening.model.plants.Plant;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
 import nl.mengelmoestuintjes.gardening.model.tasks.Task;
-import nl.mengelmoestuintjes.gardening.model.users.security.Authority;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -16,16 +15,21 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "gebruikers")
+@Table(name = "users")
 public class User {
 
     @Id
     @Column(name = "id",nullable = false, unique = true)
     private String username;
+
     @Column(nullable = false)
     private String password;
+
     @Column(nullable = false)
     private boolean enabled = true;
+
+    @Column(nullable = false)
+    private String email;
 
     @OneToMany( targetEntity = Authority.class,
                 mappedBy = "username",
@@ -34,15 +38,10 @@ public class User {
                 fetch = FetchType.EAGER )
     private Set<Authority> authorities = new HashSet<>();
 
+    private int lvl = 1;
+    private long xp = 0;
+    private long levelUpLimit = 1000;
 
-//    TODO implement email
-//    @Column(nullable = false)
-//    private String email;
-
-    @Column(columnDefinition = "integer default 0")
-    private int lvl;
-    @Column(columnDefinition = "bigint default 0")
-    private long xp;
     private String name;
     private LocalDate birthday;
     private Province province;
@@ -55,94 +54,71 @@ public class User {
     private LocalDateTime memberSince;
     private LocalDateTime lastActivity;
 
-    private UserRole role;
-
     @OneToMany( mappedBy = "owner" )
-     private List<Milestone> milestones;
+     private List<Milestone> milestones = new ArrayList<>();
 
     @OneToMany( mappedBy = "owner" )
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany( mappedBy = "owner")
-     private List<Post> favoritePosts;
+    @OneToMany( mappedBy = "owner" )
+     private List<Post> favoritePosts =  new ArrayList<>();
 
     @OneToMany( mappedBy = "owner" )
-     private List<Task> tasks;
+     private List<Task> tasks = new ArrayList<>();
 
+    @OneToMany( mappedBy = "owner" )
+     private List<Garden> gardens = new ArrayList<>();
 
-    @OneToMany( mappedBy = "owner",  fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )
-     private List<Garden> gardens;
+    @OneToMany( mappedBy = "owner" )
+     private List<Plant> favoritePlants = new ArrayList<>();
 
-// TODO add relations
     // TODO ManyToMany
     // private List<User> friends;
-    // TODO implement Plant
-    // private List<Plant> favoritePlants;
 
-    @JsonIgnore
-    @Column(columnDefinition = "bigint default 0")
-    private long levelUpLimit; // starting at 1000 xp
-
-    public User(){};
-    public User(String username, String password, boolean enabled, Set<Authority> authorities, int lvl, long xp, String name, LocalDate birthday, Province province, LocalDateTime memberSince, LocalDateTime lastActivity, UserRole role, List<Milestone> milestones, List<Post> posts, List<Post> favoritePosts, List<Task> tasks, List<Garden> gardens, long levelUpLimit) {
+    public User(){}
+    public User(String username, String password, boolean enabled, String email, Set<Authority> authorities, int lvl, long xp, long levelUpLimit, String name, LocalDate birthday, Province province, LocalDateTime memberSince, LocalDateTime lastActivity, List<Milestone> milestones, List<Post> posts, List<Post> favoritePosts, List<Task> tasks, List<Garden> gardens, List<Plant> favoritePlants) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
+        this.email = email;
         this.authorities = authorities;
         this.lvl = lvl;
         this.xp = xp;
+        this.levelUpLimit = levelUpLimit;
         this.name = name;
         this.birthday = birthday;
         this.province = province;
         this.memberSince = memberSince;
         this.lastActivity = lastActivity;
-        this.role = role;
         this.milestones = milestones;
         this.posts = posts;
         this.favoritePosts = favoritePosts;
         this.tasks = tasks;
         this.gardens = gardens;
-        this.levelUpLimit = levelUpLimit;
+        this.favoritePlants = favoritePlants;
     }
+    // TODO CUSTOM CONSTRUCTOR
 
-    /**
-     * Custom Constructor, the user is created with level 1 and 0 xp the first limit level is 1000 xp.
-     * The date for memberSince and lastActivity is set to current Date and Time
-     * @param username the chosen username
-     *                 // TODO EMAIL
-     * @param password the chosen password TODO ENCRYPTION
-     * @param role the role for the user
-     */
-    public User( String username, String password, UserRole role ) {
-        this.lvl = 1;                           // starting at level 1
-        this.xp = 0;                            // starting at 0 xp
-        this.levelUpLimit = 1000;               // starting at 1000 xp
-
-        // today
-        this.memberSince = getCurrentDate();
-        this.lastActivity = getCurrentDate();
-
-        this.username = username;
-//        this.email = email;
-        this.password = password;
-
-//      // set to null, will be set on create Profile
-        createProfile(null, null, null);
-
-        this.role = role;
+    public String getUsername() {
+        return username;
     }
-
+    public String getPassword() {
+        return password;
+    }
+    public boolean isEnabled() {
+        return enabled;
+    }
+    public String getEmail() {
+        return email;
+    }
     public int getLvl() {
         return lvl;
     }
     public long getXp() {
         return xp;
     }
-    public String getUsername() {
-        return username;
-    }
-    public String getPassword() {
-        return password;
+    public long getLevelUpLimit() {
+        return levelUpLimit;
     }
     public String getName() {
         return name;
@@ -159,18 +135,6 @@ public class User {
     public LocalDateTime getLastActivity() {
         return lastActivity;
     }
-    public UserRole getRole() {
-        return role;
-    }
-    public long getLevelUpLimit() {
-        return levelUpLimit;
-    }
-    public boolean isEnabled() {
-        return enabled;
-    }
-    public Set<Authority> getAuthorities() {
-        return authorities;
-    }
     public List<Milestone> getMilestones() {
         return milestones;
     }
@@ -186,19 +150,33 @@ public class User {
     public List<Garden> getGardens() {
         return gardens;
     }
+    public List<Plant> getFavoritePlants() {
+        return favoritePlants;
+    }
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
 
-
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public void setLvl(int lvl) {
         this.lvl = lvl;
     }
     public void setXp(long xp) {
         this.xp = xp;
     }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public void setPassword(String password) {
-        this.password = password;
+    public void setLevelUpLimit(long levelUpLimit) {
+        this.levelUpLimit = levelUpLimit;
     }
     public void setName(String name) {
         this.name = name;
@@ -212,20 +190,8 @@ public class User {
     public void setMemberSince(LocalDateTime memberSince) {
         this.memberSince = memberSince;
     }
-    public void setLastActivity(LocalDateTime lastActivity) {
-        this.lastActivity = lastActivity;
-    }
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
-    public void setLevelUpLimit(long levelUpLimit) {
-        this.levelUpLimit = levelUpLimit;
-    }
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
+    public void setLastActivity() {
+        this.lastActivity = LocalDateTime.now();
     }
     public void setMilestones(List<Milestone> milestones) {
         this.milestones = milestones;
@@ -242,27 +208,32 @@ public class User {
     public void setGardens(List<Garden> gardens) {
         this.gardens = gardens;
     }
-
-    @Override
-    public String toString() {
-        return String.format("%d ) [ %d - %d ] - %s \n %s / %s / %s \n %s / %s \n %s ",
-                this.lvl, this.xp, this.username,
-                this.name, this.birthday, this.province,
-                this.memberSince, this.lastActivity,
-                this.role);
+    public void setFavoritePlants(List<Plant> favoritePlants) {
+        this.favoritePlants = favoritePlants;
+    }
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
     }
 
-    /**
-     * Method to run when creating a new profile
-     * @param name name of user
-     * @param birthday birthday of user
-     * @param province province that is selected
-     */
-    public void createProfile( String name, LocalDate birthday, Province province ) {
-        this.setName(name);
-        this.setBirthday(birthday);
-        this.setProvince(province);
+    public void addAuthority(Authority authority) {
+        this.authorities.add(authority);
     }
+    public void addAuthority(String authorityString) {
+        this.authorities.add(new Authority(this.username, authorityString));
+    }
+    public void removeAuthority(Authority authority) {
+        this.authorities.remove(authority);
+    }
+    public void removeAuthority(String authorityString) {
+        this.authorities.removeIf(authority -> authority.getAuthority().equalsIgnoreCase(authorityString));
+    }
+
+    // TODO add / remove milestone
+    // TODO add / remove favoriteposts
+    // TODO add / remove tasks
+    // TODO add / remove gardens
+    // TODO add / remove favoriteplants
+
 
     /**
      * Method to return the currentDate
