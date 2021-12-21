@@ -5,6 +5,7 @@ import nl.mengelmoestuintjes.gardening.model.Milestone;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
 import nl.mengelmoestuintjes.gardening.model.tasks.Task;
+import org.springframework.context.annotation.Bean;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -20,7 +21,6 @@ public class User {
     @Column(name = "id",nullable = false, unique = true)
     private String username;
 
-// TODO password encryption
     @Column(nullable = false)
     private String password;
 
