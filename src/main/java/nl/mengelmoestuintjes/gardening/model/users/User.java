@@ -76,7 +76,7 @@ public class User {
     // private List<User> friends;
 
     public User(){}
-    public User(String username, String password, boolean enabled, String email, Set<Authority> authorities, int lvl, long xp, long levelUpLimit, String name, LocalDate birthday, Province province, LocalDateTime memberSince, LocalDateTime lastActivity, List<Milestone> milestones, List<Post> posts, List<Post> favoritePosts, List<Task> tasks, List<Garden> gardens, List<Plant> favoritePlants) {
+    public User(String username, String password, boolean enabled, String email, Set<Authority> authorities, int lvl, long xp, long levelUpLimit, String name, LocalDate birthday, Province province, LocalDateTime memberSince, List<Milestone> milestones, List<Post> posts, List<Post> favoritePosts, List<Task> tasks, List<Garden> gardens, List<Plant> favoritePlants) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
@@ -89,7 +89,7 @@ public class User {
         this.birthday = birthday;
         this.province = province;
         this.memberSince = memberSince;
-        this.lastActivity = lastActivity;
+        setLastActivity();
         this.milestones = milestones;
         this.posts = posts;
         this.favoritePosts = favoritePosts;

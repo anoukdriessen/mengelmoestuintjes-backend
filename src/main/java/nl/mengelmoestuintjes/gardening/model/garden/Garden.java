@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="tuintjes")
+@Table(name="gardens")
 public class Garden {
 
     @Id

@@ -1,7 +1,7 @@
 package nl.mengelmoestuintjes.gardening.controller;
 
-import nl.mengelmoestuintjes.gardening.controller.dto.MilestoneRequestDto;
-import nl.mengelmoestuintjes.gardening.controller.dto.MilestoneResponseDto;
+import nl.mengelmoestuintjes.gardening.dto.MilestoneRequestDto;
+import nl.mengelmoestuintjes.gardening.dto.MilestoneResponseDto;
 import nl.mengelmoestuintjes.gardening.model.Milestone;
 import nl.mengelmoestuintjes.gardening.service.MilestoneService;
 import org.springframework.beans.factory.annotation.Autowired;

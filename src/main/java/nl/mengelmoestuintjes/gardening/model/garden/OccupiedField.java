@@ -12,7 +12,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "tuintjes")
+@Table(name = "gardens")
 public class OccupiedField {
 
     @Id

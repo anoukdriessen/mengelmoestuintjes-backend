@@ -1,7 +1,7 @@
 package nl.mengelmoestuintjes.gardening.controller;
 
-import nl.mengelmoestuintjes.gardening.controller.dto.QuoteRequestDto;
-import nl.mengelmoestuintjes.gardening.controller.dto.QuoteResponseDto;
+import nl.mengelmoestuintjes.gardening.dto.QuoteRequestDto;
+import nl.mengelmoestuintjes.gardening.dto.QuoteResponseDto;
 import nl.mengelmoestuintjes.gardening.model.Quote;
 import nl.mengelmoestuintjes.gardening.service.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;

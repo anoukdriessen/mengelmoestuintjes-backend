@@ -1,7 +1,7 @@
 package nl.mengelmoestuintjes.gardening.controller;
 
-import nl.mengelmoestuintjes.gardening.controller.dto.PlantRequestDto;
-import nl.mengelmoestuintjes.gardening.controller.dto.PlantResponseDto;
+import nl.mengelmoestuintjes.gardening.dto.PlantRequestDto;
+import nl.mengelmoestuintjes.gardening.dto.PlantResponseDto;
 import nl.mengelmoestuintjes.gardening.model.plants.*;
 import nl.mengelmoestuintjes.gardening.service.PlantService;
 import org.springframework.beans.factory.annotation.*;

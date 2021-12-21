@@ -1,5 +1,7 @@
 package nl.mengelmoestuintjes.gardening.model.plants;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import nl.mengelmoestuintjes.gardening.model.users.User;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -63,6 +65,11 @@ public class Plant {
     // TODO IMPLEMENT RELATION
 //    ListOfPlants friends;   // vrienden van de plant (compagnion-planting)
 //    ListOfEnemies enemies  // vijanden van de plant (compagnion-planting)
+
+    @JsonIgnoreProperties("plants")
+    @ManyToOne
+    @JoinColumn( name = "user_id", referencedColumnName = "id")
+    private User owner;
 
     public Plant(){}
     public Plant(long id, Category category, String name, String description, Location location, String outdoors, String indoors, String harvest, Requirement frostResistance, Requirement waterRequirement, boolean forPreSow, boolean forSeedCollecting, boolean forPot, boolean forOutdoors, boolean forIndoors, boolean forGreenhouse, boolean forVertical, int depth, int distanceBetweenPlants, int distanceBetweenRows, int avgDaysGermination, int avgDaysHarvest, boolean visible) {

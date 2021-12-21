@@ -1,13 +1,11 @@
-package nl.mengelmoestuintjes.gardening.model.users.security;
-
-import nl.mengelmoestuintjes.gardening.model.users.UserRole;
+package nl.mengelmoestuintjes.gardening.model.users;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 public class AuthorityKey implements Serializable {
     private String username;
-    private UserRole role;
+    private String authority;
 
     @Override
     public boolean equals( Object o ) {
@@ -18,13 +16,13 @@ public class AuthorityKey implements Serializable {
         if ( objectIsNullOrNoMatch ) return false;
 
         AuthorityKey that = ( AuthorityKey ) o;
-        return username.equals(that.username) && role.equals(that.role);
+        return username.equals(that.username) && authority.equals(that.authority);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-                username, role
+                username, authority
         );
     }
 }

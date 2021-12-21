@@ -1,7 +1,6 @@
 package nl.mengelmoestuintjes.gardening.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import nl.mengelmoestuintjes.gardening.controller.dto.MilestoneResponseDto;
 import nl.mengelmoestuintjes.gardening.model.users.User;
 
 import javax.persistence.*;

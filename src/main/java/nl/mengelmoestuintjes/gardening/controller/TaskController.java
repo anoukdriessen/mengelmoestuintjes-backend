@@ -1,8 +1,7 @@
 package nl.mengelmoestuintjes.gardening.controller;
 
-import nl.mengelmoestuintjes.gardening.controller.dto.TaskRequestDto;
-import nl.mengelmoestuintjes.gardening.controller.dto.TaskResponseDto;
-import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
+import nl.mengelmoestuintjes.gardening.dto.TaskRequestDto;
+import nl.mengelmoestuintjes.gardening.dto.TaskResponseDto;
 import nl.mengelmoestuintjes.gardening.model.tasks.Task;
 import nl.mengelmoestuintjes.gardening.model.tasks.TypeTask;
 import nl.mengelmoestuintjes.gardening.service.TaskService;

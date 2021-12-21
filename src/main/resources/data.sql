@@ -23,10 +23,10 @@ VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhal
        ('b. nichols', 'Overweldigd worden door de geur van bloemen is een heerlijk soort nederlaag'),
        ('f. bacon', 'De adem van bloemen is veel zoeter in de lucht dan in de hand');
 
-INSERT INTO gebruikers( id, name, password, enabled, role )
-VALUES ('vivalanouk', 'anouk', 'geheim123', true, 4),
-       ('luminousNodes', 'kevin', 'qwerty999', true , 1),
-       ('zonnestraal80', 'guus', 'wachtwoord', true, 0);
+-- INSERT INTO users( id, name, password, email, enabled )
+-- VALUES ('vivalanouk', 'anouk', 'geheim123', 'info@anoukdriessen.nl', true ),
+--        ('luminousNodes', 'kevin', 'qwerty999', 'kevin@kevinspaleis.nl', true ),
+--        ('zonnestraal80', 'guus', 'wachtwoord', 'gustavolimo@mail.nl', true );
 
 INSERT INTO posts ( title, category, description, image_url, author, visible )
 VALUES ('Mijn eerste POST','0','blablablablablablablablablablablabla','url_naar_afbeelding','zonnestraal80','true'),
@@ -61,7 +61,7 @@ VALUES ('eerste login', 1000, '/afbeelding'),
        ('eerste seizoen', 1000, '/afbeelding'),
        ('eerste vriend', 1000, '/afbeelding');
 
-INSERT INTO tuintjes( name, x, y )
+INSERT INTO gardens( name, x, y )
 VALUES ('voortuin', 5, 5),
        ('achtertuin', 10, 5),
        ('volkstuin', 5, 15);
