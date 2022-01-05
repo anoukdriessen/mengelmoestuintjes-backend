@@ -23,50 +23,12 @@ VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhal
        ('b. nichols', 'Overweldigd worden door de geur van bloemen is een heerlijk soort nederlaag'),
        ('f. bacon', 'De adem van bloemen is veel zoeter in de lucht dan in de hand');
 
--- INSERT INTO users( id, name, password, email, enabled )
--- VALUES ('vivalanouk', 'anouk', 'geheim123', 'info@anoukdriessen.nl', true ),
---        ('luminousNodes', 'kevin', 'qwerty999', 'kevin@kevinspaleis.nl', true ),
---        ('zonnestraal80', 'guus', 'wachtwoord', 'gustavolimo@mail.nl', true );
+INSERT INTO users(id, password, enabled)
+VALUES  ('user', 'p4ssw0rd', true),
+        ('moderator', 'p4ssw0rd', true),
+        ('admin', 'p4ssw0rd', true);
 
-INSERT INTO posts ( title, category, description, image_url, author, visible )
-VALUES ('Mijn eerste POST','0','blablablablablablablablablablablabla','url_naar_afbeelding','zonnestraal80','true'),
-       ('Mijn tweede POST','0','blablablablablablablablablablablabla','url_naar_afbeelding','zonnestraal80','false'),
-       ('Mijn eerste NOTE','1','blablablablablablablablablablablabla','url_naar_afbeelding','zonnestraal80','true'),
-       ('Mijn tweede NOTE','1','blablablablablablablablablablablabla','url_naar_afbeelding','zonnestraal80','false'),
-       ('MIJN EERSTE MILESTONE','2','blablablablablablablablablablablabla','url_naar_afbeelding','luminousNodes','true'),
-       ('MIJN TWEEDE MILESTONE','2','blablablablablablablablablablablabla','url_naar_afbeelding','zonnestraal80','true'),
-       ('Project','3','blablablablablablablablablablablabla','url_naar_afbeelding','vivalanouk','false'),
-       ('Project','3','blablablablablablablablablablablabla','url_naar_afbeelding','vivalanouk','false'),
-       ('BLOG','4','blablablablablablablablablablablabla','url_naar_afbeelding','luminousNodes','true'),
-       ('BLOG','4','blablablablablablablablablablablabla','url_naar_afbeelding','luminousNodes','true'),
-       ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','vivalanouk','false'),
-       ('Learning','5','blablablablablablablablablablablabla','url_naar_afbeelding','vivalanouk','false');
-
-INSERT INTO tasks( title, type, description, done, starting, due_date, points )
-VALUES ('hello', 0, 'lala', false, null, null, 100),
-       ('byebye', 0, 'lala', true, null, null, 100),
-       ('hello', 1, 'lala', false, null, null, 100),
-       ('byebye', 1, 'lala', true, null, null, 100),
-       ('hello', 2, 'lala', false, null, null, 100),
-       ('byebye', 2, 'lala', true, null, null, 100);
-
-INSERT INTO plants( category, name, description )
-VALUES (0, 'bloem', 'ik ben een bloem'),
-       (3, 'fruit', 'ik ben fruit'),
-       (2, 'kruid', 'ik ben een kruid'),
-       (1, 'groenten', 'ik ben groeten');
-
-INSERT INTO milestones( title, points, url_to_badge )
-VALUES ('eerste login', 1000, '/afbeelding'),
-       ('eerste seizoen', 1000, '/afbeelding'),
-       ('eerste vriend', 1000, '/afbeelding');
-
-INSERT INTO gardens( name, x, y )
-VALUES ('voortuin', 5, 5),
-       ('achtertuin', 10, 5),
-       ('volkstuin', 5, 15);
-
-INSERT INTO topics( title, category, description)
-VALUES ('plant een pit', 0, 'lalala'),
-       ('permaculture 101', 1, 'lalala'),
-       ('creatief met...', 2, 'lalala');
+INSERT INTO authorities(username, authority)
+VALUES ('user', 'ROLE_USER'),
+       ('moderator', 'ROLE_MODERATOR'),
+       ('admin', 'ROLE_ADMIN');

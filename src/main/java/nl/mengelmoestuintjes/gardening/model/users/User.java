@@ -28,7 +28,6 @@ public class User {
     @Column(nullable = false)
     private boolean enabled = true;
 
-    @Column(nullable = false)
     private String email;
 
     @OneToMany( targetEntity = Authority.class,
@@ -38,9 +37,12 @@ public class User {
                 fetch = FetchType.EAGER )
     private Set<Authority> authorities = new HashSet<>();
 
-    private int lvl = 1;
-    private long xp = 0;
-    private long levelUpLimit = 1000;
+    @Column(nullable = true)
+    private int lvl;
+    @Column(nullable = true)
+    private long xp;
+    @Column(nullable = true)
+    private long levelUpLimit;
 
     private String name;
     private LocalDate birthday;

@@ -1,5 +1,6 @@
 package nl.mengelmoestuintjes.gardening.controller;
 
+import nl.mengelmoestuintjes.gardening.config.ErrorResponse;
 import nl.mengelmoestuintjes.gardening.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,32 +8,61 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @RestController
 @ControllerAdvice
 public class ExceptionController {
+    private ErrorResponse response;
+    private LocalDateTime timeStamp;
+
+    public ErrorResponse thisResponse(HttpStatus status, String message) {
+        timeStamp = LocalDateTime.now();
+        return new ErrorResponse(
+                status,
+                message,
+                timeStamp);
+    }
 
     @ExceptionHandler(value = RecordNotFoundException.class)
     public ResponseEntity<Object> exception(RecordNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        this.response = thisResponse( HttpStatus.NOT_FOUND, e.getMessage() );
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(response.getBody());
     }
 
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseEntity<Object> exception(BadRequestException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        this.response = thisResponse( HttpStatus.BAD_REQUEST, e.getMessage()  );
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(response.getBody());
     }
 
     @ExceptionHandler(value = InvalidPasswordException.class)
-    public ResponseEntity<Object> exception(InvalidPasswordException exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    public ResponseEntity<Object> exception(InvalidPasswordException e) {
+        this.response = thisResponse( HttpStatus.UNAUTHORIZED, e.getMessage() );
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(response.getBody());
     }
 
     @ExceptionHandler(value = UserNotFoundException.class)
-    public ResponseEntity<Object> exception(UserNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
+    public ResponseEntity<Object> exception(UserNotFoundException e) {
+        this.response = thisResponse( HttpStatus.NOT_FOUND, e.getMessage() );
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(response.getBody());
     }
 
     @ExceptionHandler(value = NotAuthorizedException.class)
-    public ResponseEntity<Object> exception(NotAuthorizedException exception) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
+    public ResponseEntity<Object> exception(NotAuthorizedException e) {
+        this.response = thisResponse( HttpStatus.UNAUTHORIZED, e.getMessage() );
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(response.getBody());
     }
+
+
 }
