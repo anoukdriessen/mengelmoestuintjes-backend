@@ -4,7 +4,6 @@ import nl.mengelmoestuintjes.gardening.security.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,10 +21,6 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class WebSecurityConfig
         extends WebSecurityConfigurerAdapter {
-    // TYPE OF ROLES
-    private static final String USER = "USER";
-    private static final String MODERATOR = "MODERATOR";
-    private static final String ADMIN = "ADMIN";
 
     @Autowired
     private DataSource securitySource;
@@ -35,7 +30,7 @@ public class WebSecurityConfig
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(10);
     }
 
     @Bean
@@ -63,12 +58,11 @@ public class WebSecurityConfig
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/quotes/**", "/plants/**").permitAll()
-                    .antMatchers("/tuintjes/**", "/topic/**", "/tasks/**", "/posts/**").hasAnyRole(USER, MODERATOR, ADMIN)
-                    .antMatchers("/actuator/**", "/milestones/**").hasRole(ADMIN)
-                    .antMatchers(HttpMethod.POST).hasAnyRole(MODERATOR, ADMIN)
-                    .antMatchers(HttpMethod.PUT).hasAnyRole(MODERATOR, ADMIN)
+                .antMatchers("/").permitAll()
+                .antMatchers("/actuator/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
+                .and()
+                .cors()
                 .and()
                 .csrf().disable()
                 .formLogin().disable()
@@ -84,6 +78,11 @@ public class WebSecurityConfig
 //                .httpBasic()
 //                .and()
 //                .authorizeRequests()
+//                        .antMatchers("/quotes/**", "/plants/**").permitAll()
+//                    .antMatchers("/tuintjes/**", "/topic/**", "/tasks/**", "/posts/**").hasAnyRole(USER, MODERATOR, ADMIN)
+//                    .antMatchers("/actuator/**", "/milestones/**").hasRole(ADMIN)
+//                    .antMatchers(HttpMethod.POST).hasAnyRole(MODERATOR, ADMIN)
+//                    .antMatchers(HttpMethod.PUT).hasAnyRole(MODERATOR, ADMIN)
 //                .antMatchers("/api/v1/users/**").hasRole("ADMIN")
 //                .antMatchers(HttpMethod.GET, "/api/v1/books/**").hasRole("USER")
 //                .antMatchers("/api/v1/books/**").hasRole("ADMIN")
