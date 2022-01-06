@@ -1,7 +1,5 @@
-package nl.mengelmoestuintjes.gardening.controller;
+package nl.mengelmoestuintjes.gardening.exceptions;
 
-import nl.mengelmoestuintjes.gardening.config.ErrorResponse;
-import nl.mengelmoestuintjes.gardening.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

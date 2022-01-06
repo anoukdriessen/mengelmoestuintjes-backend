@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.config;
+package nl.mengelmoestuintjes.gardening.exceptions;
 
 import org.springframework.http.HttpStatus;
 
