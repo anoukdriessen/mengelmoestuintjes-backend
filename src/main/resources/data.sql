@@ -25,8 +25,10 @@ VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhal
 
 INSERT INTO users(id, password, enabled)
 VALUES  ('guus', '$2a$10$uKGUS7jKVu5AFIeb9OgdKu8KFt.qwqhlKXimA27W0.pcjqMrnrVki', true),
-        ('anouk', '$2a$10$P1ssYzPmSevyoeZ7nngWlOboBJvwv/uW3IT3c1aKIy77ueOZz/IeS', true);
+        ('vivalanouk', '$2a$10$frj9vJsoTIvH/ok7QJPooO40LkPpu/dqKvUePgkkFrN.JCaZUmn.O', true);
 
 INSERT INTO authorities(username, authority)
 VALUES ('guus', 'ROLE_USER'),
-       ('anouk', 'ROLE_ADMIN');
+       ('vivalanouk', 'ROLE_USER'),
+       ('vivalanouk', 'ROLE_MODERATOR'),
+       ('vivalanouk', 'ROLE_ADMIN');
