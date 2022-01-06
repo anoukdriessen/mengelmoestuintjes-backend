@@ -24,11 +24,9 @@ VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhal
        ('f. bacon', 'De adem van bloemen is veel zoeter in de lucht dan in de hand');
 
 INSERT INTO users(id, password, enabled)
-VALUES  ('user', 'test123', true),
-        ('moderator', 'test123', true),
-        ('admin', 'test123', true);
+VALUES  ('guus', '$2a$10$uKGUS7jKVu5AFIeb9OgdKu8KFt.qwqhlKXimA27W0.pcjqMrnrVki', true),
+        ('anouk', '$2a$10$P1ssYzPmSevyoeZ7nngWlOboBJvwv/uW3IT3c1aKIy77ueOZz/IeS', true);
 
 INSERT INTO authorities(username, authority)
-VALUES ('user', 'ROLE_USER'),
-       ('moderator', 'ROLE_MODERATOR'),
-       ('admin', 'ROLE_ADMIN');
+VALUES ('guus', 'ROLE_USER'),
+       ('anouk', 'ROLE_ADMIN');
