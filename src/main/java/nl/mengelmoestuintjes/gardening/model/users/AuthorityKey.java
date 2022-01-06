@@ -9,20 +9,18 @@ public class AuthorityKey implements Serializable {
 
     @Override
     public boolean equals( Object o ) {
-        boolean objectEqualsObject = this == o;
         boolean objectIsNullOrNoMatch = o == null || getClass() != o.getClass();
 
-        if ( objectEqualsObject ) return true;
+        if ( this == o ) return true;
         if ( objectIsNullOrNoMatch ) return false;
 
         AuthorityKey that = ( AuthorityKey ) o;
-        return username.equals(that.username) && authority.equals(that.authority);
+        return username.equals( that.username )
+                && authority.equals( that.authority );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                username, authority
-        );
+        return Objects.hash( username, authority );
     }
 }

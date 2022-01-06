@@ -24,9 +24,9 @@ VALUES ('mengelmoestuintjes', 'Je hebt iedere dag twee keuzes: Groeien of Herhal
        ('f. bacon', 'De adem van bloemen is veel zoeter in de lucht dan in de hand');
 
 INSERT INTO users(id, password, enabled)
-VALUES  ('user', 'p4ssw0rd', true),
-        ('moderator', 'p4ssw0rd', true),
-        ('admin', 'p4ssw0rd', true);
+VALUES  ('user', 'test123', true),
+        ('moderator', 'test123', true),
+        ('admin', 'test123', true);
 
 INSERT INTO authorities(username, authority)
 VALUES ('user', 'ROLE_USER'),

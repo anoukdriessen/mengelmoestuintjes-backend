@@ -1,12 +1,11 @@
 package nl.mengelmoestuintjes.gardening.model.users;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "authorities")
 @IdClass(AuthorityKey.class)
-public class Authority implements Serializable {
+public class Authority {
 
     @Id
     @Column(nullable = false)

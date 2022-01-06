@@ -19,9 +19,9 @@ public class UserResponseDto {
     public boolean enabled;
     public String email;
     public Set<String> authorities;
-    public int lvl;
-    public long xp;
-    public long levelUpLimit;
+//    public int lvl;
+//    public long xp;
+//    public long levelUpLimit;
     public String name;
     public LocalDate birthday;
     public Province province;
@@ -44,9 +44,9 @@ public class UserResponseDto {
         dto.enabled = u.isEnabled();
         dto.email = u.getEmail();
 // TODO       dto.authorities = u.getAuthorities();
-        dto.lvl = u.getLvl();
-        dto.xp = u.getXp();
-        dto.levelUpLimit = u.getLevelUpLimit();
+//        dto.lvl = u.getLvl();
+//        dto.xp = u.getXp();
+//        dto.levelUpLimit = u.getLevelUpLimit();
         dto.name = u.getName();
         dto.birthday = u.getBirthday();
         dto.province = u.getProvince();

@@ -19,9 +19,9 @@ public class UserRequestDto {
     public boolean enabled;
     public String email;
     public Set<String> authorities;
-    public int lvl;
-    public long xp;
-    public long levelUpLimit;
+//    public int lvl;
+//    public long xp;
+//    public long levelUpLimit;
     public String name;
     public LocalDate birthday;
     public Province province;
@@ -48,15 +48,15 @@ public class UserRequestDto {
     public String getEmail() {
         return email;
     }
-    public int getLvl() {
-        return lvl;
-    }
-    public long getXp() {
-        return xp;
-    }
-    public long getLevelUpLimit() {
-        return levelUpLimit;
-    }
+//    public int getLvl() {
+//        return lvl;
+//    }
+//    public long getXp() {
+//        return xp;
+//    }
+//    public long getLevelUpLimit() {
+//        return levelUpLimit;
+//    }
     public String getName() {
         return name;
     }
@@ -106,9 +106,9 @@ public class UserRequestDto {
         u.setEnabled(enabled);
         u.setEmail(email);
 // TODO       u.setAuthorities(authorities);
-        u.setLvl(lvl);
-        u.setXp(xp);
-        u.setLevelUpLimit(levelUpLimit);
+//        u.setLvl(lvl);
+//        u.setXp(xp);
+//        u.setLevelUpLimit(levelUpLimit);
         u.setName(name);
         u.setBirthday(birthday);
         u.setProvince(province);

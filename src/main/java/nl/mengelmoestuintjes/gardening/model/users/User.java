@@ -10,9 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -35,14 +33,14 @@ public class User {
                 cascade = CascadeType.ALL,
                 orphanRemoval = true,
                 fetch = FetchType.EAGER )
-    private Set<Authority> authorities = new HashSet<>();
+    private List<Authority> authorities = new ArrayList<>();
 
-    @Column(nullable = true)
-    private int lvl;
-    @Column(nullable = true)
-    private long xp;
-    @Column(nullable = true)
-    private long levelUpLimit;
+//    @Column(nullable = true)
+//    private int lvl = 1;
+//    @Column(nullable = true)
+//    private long xp = 0;
+//    @Column(nullable = true)
+//    private long levelUpLimit = 1000;
 
     private String name;
     private LocalDate birthday;
@@ -78,15 +76,21 @@ public class User {
     // private List<User> friends;
 
     public User(){}
-    public User(String username, String password, boolean enabled, String email, Set<Authority> authorities, int lvl, long xp, long levelUpLimit, String name, LocalDate birthday, Province province, LocalDateTime memberSince, List<Milestone> milestones, List<Post> posts, List<Post> favoritePosts, List<Task> tasks, List<Garden> gardens, List<Plant> favoritePlants) {
+    public User(String username, String password, boolean enabled){
+        this.username = username;
+        this.password = password;
+        this.enabled = enabled;
+    }
+//    public User(String username, String password, boolean enabled, String email, List<Authority> authorities, int lvl, long xp, long levelUpLimit, String name, LocalDate birthday, Province province, LocalDateTime memberSince, List<Milestone> milestones, List<Post> posts, List<Post> favoritePosts, List<Task> tasks, List<Garden> gardens, List<Plant> favoritePlants) {
+    public User(String username, String password, boolean enabled, String email, List<Authority> authorities, String name, LocalDate birthday, Province province, LocalDateTime memberSince, List<Milestone> milestones, List<Post> posts, List<Post> favoritePosts, List<Task> tasks, List<Garden> gardens, List<Plant> favoritePlants) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
         this.email = email;
         this.authorities = authorities;
-        this.lvl = lvl;
-        this.xp = xp;
-        this.levelUpLimit = levelUpLimit;
+//        this.lvl = lvl;
+//        this.xp = xp;
+//        this.levelUpLimit = levelUpLimit;
         this.name = name;
         this.birthday = birthday;
         this.province = province;
@@ -99,7 +103,6 @@ public class User {
         this.gardens = gardens;
         this.favoritePlants = favoritePlants;
     }
-    // TODO CUSTOM CONSTRUCTOR
 
     public String getUsername() {
         return username;
@@ -113,15 +116,15 @@ public class User {
     public String getEmail() {
         return email;
     }
-    public int getLvl() {
-        return lvl;
-    }
-    public long getXp() {
-        return xp;
-    }
-    public long getLevelUpLimit() {
-        return levelUpLimit;
-    }
+//    public int getLvl() {
+//        return lvl;
+//    }
+//    public long getXp() {
+//        return xp;
+//    }
+//    public long getLevelUpLimit() {
+//        return levelUpLimit;
+//    }
     public String getName() {
         return name;
     }
@@ -155,7 +158,7 @@ public class User {
     public List<Plant> getFavoritePlants() {
         return favoritePlants;
     }
-    public Set<Authority> getAuthorities() {
+    public List<Authority> getAuthorities() {
         return authorities;
     }
 
@@ -171,15 +174,15 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    public void setLvl(int lvl) {
-        this.lvl = lvl;
-    }
-    public void setXp(long xp) {
-        this.xp = xp;
-    }
-    public void setLevelUpLimit(long levelUpLimit) {
-        this.levelUpLimit = levelUpLimit;
-    }
+//    public void setLvl(int lvl) {
+//        this.lvl = lvl;
+//    }
+//    public void setXp(long xp) {
+//        this.xp = xp;
+//    }
+//    public void setLevelUpLimit(long levelUpLimit) {
+//        this.levelUpLimit = levelUpLimit;
+//    }
     public void setName(String name) {
         this.name = name;
     }
@@ -213,21 +216,8 @@ public class User {
     public void setFavoritePlants(List<Plant> favoritePlants) {
         this.favoritePlants = favoritePlants;
     }
-    public void setAuthorities(Set<Authority> authorities) {
+    public void setAuthorities(List<Authority> authorities) {
         this.authorities = authorities;
-    }
-
-    public void addAuthority(Authority authority) {
-        this.authorities.add(authority);
-    }
-    public void addAuthority(String authorityString) {
-        this.authorities.add(new Authority(this.username, authorityString));
-    }
-    public void removeAuthority(Authority authority) {
-        this.authorities.remove(authority);
-    }
-    public void removeAuthority(String authorityString) {
-        this.authorities.removeIf(authority -> authority.getAuthority().equalsIgnoreCase(authorityString));
     }
 
     // TODO add / remove milestone
@@ -236,11 +226,27 @@ public class User {
     // TODO add / remove gardens
     // TODO add / remove favoriteplants
 
+    public boolean hasAuthority(String s) {
+        return authorities.stream().anyMatch( e -> e.getAuthority().equals(s));
+    }
+    public void addAuthority(String authorityString) {
+        String s = standarizeAuthorityString(authorityString);
+        if (!hasAuthority(s)) {
+            this.authorities.add(new Authority(this.username, s));
+        }
+    }
+    public void removeAuthority(String authorityString) {
+        String s = standarizeAuthorityString(authorityString);
+        this.authorities.removeIf(authority -> authority.getAuthority().equals(s));
+    }
+    private static String standarizeAuthorityString(String authorityString) {
+        String s = authorityString.toUpperCase();
+        if (!s.startsWith("ROLE_")) {
+            s = "ROLE_" + s;
+        }
+        return s;
+    }
 
-    /**
-     * Method to return the currentDate
-     * @return LocalDateTime
-     */
     public LocalDateTime getCurrentDate() {
         return LocalDateTime.now();
     }
