@@ -57,8 +57,16 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(value = NotAuthorizedException.class)
-    public ResponseEntity<Object> exception(NotAuthorizedException e) {
+    public ResponseEntity<Object> exception(NotAuthorizedException e ) {
         this.response = thisResponse( HttpStatus.UNAUTHORIZED, e.getMessage() );
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(response.getBody());
+    }
+
+    @ExceptionHandler(value = NotAllowedException.class)
+    public ResponseEntity<Object> exception( NotAllowedException e ) {
+        this.response = thisResponse( HttpStatus.BAD_REQUEST, e.getMessage() );
         return ResponseEntity
                 .status(response.getStatus())
                 .body(response.getBody());
