@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/quotes")
-@CrossOrigin
 public class QuoteController {
     private final QuoteService quoteService;
 
