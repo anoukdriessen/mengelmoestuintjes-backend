@@ -1,11 +1,12 @@
 package nl.mengelmoestuintjes.gardening.service;
 
-import nl.mengelmoestuintjes.gardening.dto.UserRequestDto;
-import nl.mengelmoestuintjes.gardening.exceptions.BadRequestException;
-import nl.mengelmoestuintjes.gardening.exceptions.InvalidPasswordException;
-import nl.mengelmoestuintjes.gardening.exceptions.NotAuthorizedException;
-import nl.mengelmoestuintjes.gardening.exceptions.UserNotFoundException;
+import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
+import nl.mengelmoestuintjes.gardening.controller.exceptions.InvalidPasswordException;
+import nl.mengelmoestuintjes.gardening.controller.exceptions.NotAuthorizedException;
+import nl.mengelmoestuintjes.gardening.controller.exceptions.UserNotFoundException;
+import nl.mengelmoestuintjes.gardening.dto.request.UserRequest;
 import nl.mengelmoestuintjes.gardening.model.users.Authority;
+import nl.mengelmoestuintjes.gardening.model.users.Province;
 import nl.mengelmoestuintjes.gardening.model.users.User;
 import nl.mengelmoestuintjes.gardening.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,61 +16,70 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
 
-    private final UserRepository repository;
-    private final PasswordEncoder encoder;
+    private UserRepository repository;
+    PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository repository, PasswordEncoder encoder) {
+    public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
-        this.encoder = encoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    private String getCurrentUsername() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return ( ( UserDetails ) auth.getPrincipal() ).getUsername();
+    public boolean userExists(String username) {
+        return repository.existsById(username);
     }
 
-    public boolean isUser( String username ) {
-        return repository.existsById( username );
-    }
-
-    public String newUser( UserRequestDto toAdd ) {
+    // CREATE
+    public String create(UserRequest request) {
         try {
-            User u = new User();
-
-            u.setUsername( toAdd.getUsername() );
-            u.setPassword( encoder.encode( toAdd.getPassword() ) );
-            u.setEnabled( true );
-
-            u.addAuthority( "ROLE_USER" );
-            for ( String role : toAdd.getAuthorities() ) {
-                if ( !role.startsWith("ROLE_" ) ) {
-                    role = "ROLE_" + role;
-                }
-                role = role.toUpperCase();
-                if ( !role.equals( "ROLE_USER") ) {
-                    u.addAuthority( role );
-                }
-            }
-
-            User newUser = repository.save( u );
+            String encryptedPassword = passwordEncoder.encode( request.getPassword());
+            User user = new User();
+            user.setUsername(request.getUsername());
+            user.setPassword(encryptedPassword);
+            user.setEnabled(true);
+            user.addAuthority("ROLE_USER");
+            user.setEmail(request.getEmail());
+            user.setLevel(request.getLevel());
+            user.setXp(request.getXp());
+            user.setLevelUpLimit(request.getLevelUpLimit());
+            user.setName(request.getName());
+            user.setBirthday(request.getBirthday());
+            user.setProvince(request.getProvince());
+            user.setMemberSince( LocalDate.now() );
+            user.setLastActivity();
+            User newUser = repository.save(user);
             return newUser.getUsername();
-        } catch ( Exception e ) {
-            throw new BadRequestException( "Cannot create user" );
+        }
+        catch (Exception ex) {
+            throw new BadRequestException("Cannot create user.");
         }
     }
 
-    public Iterable<User> getAll() {
+
+    // READ
+    private String getCurrentUserName() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return ((UserDetails) authentication.getPrincipal()).getUsername();
+    }
+
+    public Iterable<User> getAll(
+            String email, String level, Province province
+    ) {
+        if ( !email.isBlank() ) return repository.findAllByEmailContaining(email);
+        if ( !level.isBlank() ) return repository.findByLevel( level );
+        if ( province != null ) return repository.findAllByProvince(province);
+
         return repository.findAll();
     }
 
-    public User getByUsername( String username ) {
+    public User getUser(String username) {
         Optional<User> toFind = repository.findById( username );
         boolean userFound = toFind.isPresent();
         if ( userFound ) {
@@ -79,72 +89,143 @@ public class UserService {
         }
     }
 
-    public String update( String username, User modified ){
-        Optional<User> toFind = repository.findById( username );
-        boolean userNotFound = toFind.isEmpty();
-        if ( userNotFound ) {
+    public List<Authority> getAuthorities(String username) {
+        User toFind = getUser( username );
+        return toFind.getAuthorities();
+    }
+
+    public String getXP(String username) {
+        User toFind = getUser( username );
+        return toFind.getXp() + " - " + toFind.getLevelUpLimit();
+    }
+
+    public String addAuthority(String username, String authorityString) {
+        User user = getUser( username );
+        user.addAuthority(authorityString);
+        repository.save(user);
+        return user.getUsername() + " has now authorithy " + authorityString;
+    }
+
+    // UPDATE
+    public String changeCredentials(User toChange, User changed){
+        String out = toChange.getUsername() + " updated:";
+
+        toChange.setPassword( passwordEncoder.encode(changed.getPassword()));
+
+        if (toChange.isEnabled() != changed.isEnabled()) {
+            toChange.setEnabled(changed.isEnabled());
+            out += " enabled";
+        }
+        if (!toChange.getEmail().equalsIgnoreCase(changed.getEmail())) {
+            toChange.setEmail(changed.getEmail());
+            out += " email";
+        }
+        if (!toChange.getName().equalsIgnoreCase(changed.getName())) {
+            toChange.setName(changed.getName());
+            out += " name";
+        }
+        if (toChange.getProvince() != changed.getProvince() ) {
+            toChange.setProvince(changed.getProvince());
+            out += " province";
+        }
+
+        if (out.equalsIgnoreCase(toChange.getUsername() + " updated:")) {
+            out = "nothing had been updated";
+        }
+        return out;
+    }
+    public String update(String username, User modified) {
+        Optional<User> toFind = repository.findById(username);
+        if (toFind.isEmpty()) { throw new UserNotFoundException(username);
+        } else {
+            User user = toFind.get();
+            String changed = changeCredentials( user, modified );
+            repository.save(user);
+            return changed;
+        }
+    }
+    public void setPassword(String username, String password) {
+        if (username.equals(getCurrentUserName())) {
+            if (isValidPassword(password)) {
+                Optional<User> userOptional = repository.findById(username);
+                if (userOptional.isPresent()) {
+                    User user = userOptional.get();
+                    user.setPassword(passwordEncoder.encode(password));
+                    repository.save(user);
+                } else { throw new UserNotFoundException(username); }
+            } else { throw new InvalidPasswordException(); }
+        } else { throw new NotAuthorizedException(); }
+    }
+    public LocalDate setBirthday(String username, LocalDate newBirthday) {
+        User user = getUser( username );
+        user.setBirthday( newBirthday );
+        repository.save(user);
+        return newBirthday;
+    }
+
+    public void levelUp(String current, User user) {
+        long level = convertStringToLong(current) + 1;
+        if (level == 99) {
+            user.setLevel("MAX");
+            user.setLevelUpLimit("MAX");
+        } else {
+            user.setLevel("" + level);
+        }
+    }
+    public void setNewLevelUpLimit(int growth, String limit, User user) {
+        long levelUpLimit = convertStringToLong(limit);
+        levelUpLimit = levelUpLimit + (levelUpLimit / growth);
+        user.setLevelUpLimit("" + levelUpLimit);
+    }
+
+    public String setXP(String username, long toAdd) {
+        String out = "";
+        User user = getUser( username );
+
+        if ( !userIsMax(user.getLevel(), user.getLevelUpLimit()) ) {
+            long current = convertStringToLong(user.getXp());
+            long sum = current + toAdd;
+            user.setXp("" + sum);
+            out += toAdd + " xp added";
+
+            if (hasReachedLevelUpLimit(current, user.getLevelUpLimit())) {
+                levelUp(user.getLevel(), user);
+                setNewLevelUpLimit(3, user.getLevelUpLimit(), user); // +33.33% / +1/3 deel
+                out += " user has leveled up, new level " + user.getLevel();
+            }
+        } else {
+            out += "user is already MAX";
+        }
+        return out;
+    }
+
+    // DELETE
+    public void deleteUser(String username) {
+        if (repository.existsById(username)) {
+            repository.deleteById(username);
+        }
+        else {
             throw new UserNotFoundException(username);
-        } else {
-            User u = toFind.get();
-            u.setPassword( encoder.encode( modified.getPassword() ));
-            u.setEnabled( modified.isEnabled() );
-            repository.save( u );
-            return "updated user " + u.getUsername();
         }
     }
 
-    public String delete( String username ) {
-        if ( isUser( username ) ) {
-            repository.deleteById( username );
-            return "Deleted user with username " + username;
-        } else {
-            throw new UserNotFoundException( username );
-        }
-    }
-
-    public List<Authority> getAuthorities( String username ) {
-        Optional<User> toFind = repository.findById( username );
-        boolean userNotFound = toFind.isEmpty();
-        if ( userNotFound ) {
-            throw new UserNotFoundException(username);
-        } else {
-            User found = toFind.get();
-            return found.getAuthorities();
-        }
-    }
-
-    public String addAuthority( String username, String role ) {
-        Optional<User> toFind = repository.findById( username );
-        boolean userNotFound = toFind.isEmpty();
-        if ( userNotFound ) {
-            throw new UserNotFoundException(username);
-        } else {
-            User found = toFind.get();
-            found.addAuthority( role );
-            repository.save( found );
-            return "added authority " + role + " for user " + found.getUsername();
-        }
-    }
-
-    public String removeAuthority( String username, String role ) {
-        Optional<User> toFind = repository.findById( username );
-        boolean userNotFound = toFind.isEmpty();
-        if ( userNotFound ) {
+    public void removeAuthority(String username, String authorityString) {
+        Optional<User> userOptional = repository.findById(username);
+        if (userOptional.isEmpty()) {
             throw new UserNotFoundException(username);
         }
         else {
-            User found = toFind.get();
-            found.removeAuthority( role );
-            repository.save( found );
-            return "removed authority " + role + " for user " + found.getUsername();
+            User user = userOptional.get();
+            user.removeAuthority(authorityString);
+            repository.save(user);
         }
     }
 
-    private boolean isValidPassword( String password ) {
+    private boolean isValidPassword(String password) {
         final int MIN_LENGTH = 8;
-        final int MIN_DIGITS = 2;
-        final int MIN_LOWER = 2;
-        final int MIN_UPPER = 2;
+        final int MIN_DIGITS = 1;
+        final int MIN_LOWER = 1;
+        final int MIN_UPPER = 1;
         final int MIN_SPECIAL = 1;
         final String SPECIAL_CHARS = "@#$%&*!()+=-_";
 
@@ -162,19 +243,21 @@ public class UserService {
 
         return validPassword;
     }
-
-    public String setPassword( String username, String password ) {
-        if ( username.equals( getCurrentUsername() )) {
-            if ( isValidPassword( password ) ) {
-                Optional<User> toFind = repository.findById( username );
-                boolean userIsFound = toFind.isPresent();
-                if ( userIsFound ) {
-                    User found = toFind.get();
-                    found.setPassword( encoder.encode( password ));
-                    repository.save( found );
-                    return "new password set for user with username " + username;
-                } else { throw new UserNotFoundException( username ); }
-            } else { throw new InvalidPasswordException( username ); }
-        } else { throw new NotAuthorizedException( username ); }
+    public Long convertStringToLong(String s) {
+        if (s.equals("MAX")) {
+            return (long) 0;
+        }
+        return Long.parseLong( s );
     }
+    public boolean hasReachedLevelUpLimit(long current, String limit) {
+        long levelUpLimit = convertStringToLong(limit);
+        return current >= levelUpLimit;
+    }
+    public boolean userIsMax(String level, String limit) {
+        boolean levelIsMax = level.equalsIgnoreCase("MAX");
+        boolean isLevel99 = level.equalsIgnoreCase("99");
+        boolean levelUpLimitMax = limit.equalsIgnoreCase("MAX");
+        return levelIsMax || isLevel99 || levelUpLimitMax;
+    }
+
 }

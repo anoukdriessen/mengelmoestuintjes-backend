@@ -12,4 +12,5 @@ public class ApiController {
     public String welcome() {
         return "Welkom bij Mengelmoestuintjes API";
     }
+
 }

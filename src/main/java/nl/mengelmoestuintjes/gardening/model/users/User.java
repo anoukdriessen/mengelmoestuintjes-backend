@@ -1,9 +1,10 @@
 package nl.mengelmoestuintjes.gardening.model.users;
 
 import lombok.Data;
-import nl.mengelmoestuintjes.gardening.exceptions.NotAllowedException;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,59 +14,71 @@ import java.util.List;
 public class User {
 
     @Id
-    @Column(name = "id",nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 80)
     private String password;
 
     @Column(nullable = false)
     private boolean enabled = true;
 
-    @OneToMany( targetEntity = Authority.class,
-                mappedBy = "username",
-                cascade = CascadeType.ALL,
-                orphanRemoval = true,
-                fetch = FetchType.EAGER )
+    //TODO check has authority / is authority before add authority
+    // remove authority
+    @OneToMany(
+            targetEntity = Authority.class,
+            mappedBy = "username",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
     private List<Authority> authorities = new ArrayList<>();
 
-    public User() {}
-    public User(String username, String password, boolean enabled) {
-        this.username = username;
-        this.password = password;
-        this.enabled = enabled;
-    }
-    public User(String username, String password, boolean enabled, List<Authority> authorities) {
-        this.username = username;
-        this.password = password;
-        this.enabled = enabled;
-        this.authorities = authorities;
-    }
+    @Column(nullable = false, unique = true)
+    private String email;
 
-    public boolean hasAuthority(String s ) {
-        for ( Authority auth : authorities ) {
-            String toFind = standarizeAuthorityString(s);
-            if ( auth.getAuthority().equalsIgnoreCase( toFind ) ) return true;
-        }
-        return false; // not found
-    }
+    private String level;
+    private String xp;
+    private String levelUpLimit;
+    // TODO update method for level / xp / levelUpLimit
+    private String name;
 
-    public void addAuthority( Authority authority ) {
-        if ( !hasAuthority( authority.getAuthority() )) {
-            this.authorities.add( authority );
-        } else { throw new NotAllowedException("user already has authority"); }
-    }
-    public void addAuthority( String authorityString ) {
-        String s = standarizeAuthorityString(authorityString);
-        if (!hasAuthority(s)) {
-            this.authorities.add(new Authority(this.username, s));
-        }
-    }
+    private LocalDate birthday;
+    // TODO remove birthday (cannot be updated)
 
-    public void removeAuthority(String authorityString) {
-        String s = standarizeAuthorityString(authorityString);
-        this.authorities.removeIf(authority -> authority.getAuthority().equals(s));
-    }
+    @Enumerated(EnumType.STRING)
+    private Province province;
+
+    private LocalDate memberSince = LocalDate.now();
+    private LocalDateTime lastActivity = LocalDateTime.now();
+
+    //TODO add milestones
+    // @OneToMany( mappedBy = "owner" )
+    // private List<Milestones> milestones = new ArrayList<>();
+    // methods: has / add / remove
+
+    //TODO add favorites (posts / plants / people)
+    // private List<Favorite> favorites = new ArrayList<>()
+    // methods: contains // add / remove
+
+    //TODO add tasks
+    // @OneToMany( mappedBy = "owner")
+    // private List<Task> tasks = new ArrayList<>()
+    // methods: contains // get GardenTasks // get ToDoTasks
+    // add / remove
+
+    //TODO add gardens
+    // @ManyToMany
+    // private List<Garden> gardens = new ArrayList<>()
+    // methods: contains // add // remove
+
+    //TODO add posts
+    // @OneToMany( mappedBy = "owner" )
+    // private List<Post> posts = new ArrayList<>()
+    // methos: add / remove
+
+    //TODO add profile picture
+    // @Lob
+    // var profilePicture = ByteArray
 
     private static String standarizeAuthorityString( String authorityString ) {
         String s = authorityString.toUpperCase();
@@ -74,4 +87,24 @@ public class User {
         }
         return s;
     }
+    public void addAuthority(Authority authority) {
+        String authorityString = authority.getAuthority();
+        authorityString = standarizeAuthorityString(authorityString);
+        this.authorities.add( new Authority( this.username, authorityString ) );
+    }
+    public void addAuthority(String authorityString) {
+        authorityString = standarizeAuthorityString(authorityString);
+        this.authorities.add( new Authority( this.username, authorityString ));
+    }
+    public void removeAuthority(Authority authority) {
+        this.authorities.remove(authority);
+    }
+    public void removeAuthority(String authorityString) {
+        this.authorities.removeIf(authority -> authority.getAuthority().equalsIgnoreCase(authorityString));
+    }
+    public void setLastActivity() {
+        this.lastActivity = LocalDateTime.now();
+    }
+
+    // TODO XP WORDT NIET GEUPDATE
 }

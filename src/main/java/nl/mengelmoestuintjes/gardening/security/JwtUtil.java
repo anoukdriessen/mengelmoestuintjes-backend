@@ -13,50 +13,62 @@ import java.util.function.Function;
 
 @Service
 public class JwtUtil {
+    public static final long JWT_TOKEN_VALID = 1000 * 60 * 60 * 24 * 10;   // 10 days in ms
 
-    private final static String SECRET_KEY = "secret";
+    private static final String SECRET = "1C4ntG$TH4(k3D!";
 
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+    public String getUsernameFromToken(String token) {
+        return getClaimFromToken(token, Claims::getSubject);
     }
 
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+    public Date getIssuedAtDateFromToken(String token) {
+        return getClaimFromToken(token, Claims::getIssuedAt);
     }
 
-    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
+    public Date getExpirationDateFromToken(String token) {
+        return getClaimFromToken(token, Claims::getExpiration);
+    }
+
+    private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+    private Claims getAllClaimsFromToken(String token) {
+        return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        final Date expiration = getExpirationDateFromToken(token);
+        return expiration.before(new Date());
+    }
+
+    private Boolean ignoreTokenExpiration(String token) {
+        // here you specify tokens, for that the expiration is ignored
+        return false;
     }
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
+        return doGenerateToken(claims, userDetails.getUsername());
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
-        long validPeriod = 1000 * 60 * 60 * 24 * 10;   // 10 days in ms
-        long currentTime = System.currentTimeMillis();
+    private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
-                .setIssuedAt(new Date(currentTime))
-                .setExpiration(new Date(currentTime + validPeriod))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                .compact();
+                .setIssuedAt( new Date(System.currentTimeMillis()) )
+                .setExpiration( new Date(System.currentTimeMillis() + JWT_TOKEN_VALID ))
+                .signWith(SignatureAlgorithm.HS256, SECRET).compact();
+    }
+
+    public Boolean canTokenBeRefreshed(String token) {
+        return (!isTokenExpired(token) || ignoreTokenExpiration(token));
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        final String username = getUsernameFromToken(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
 }

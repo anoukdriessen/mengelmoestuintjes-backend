@@ -1,7 +1,7 @@
 package nl.mengelmoestuintjes.gardening.security;
 
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,8 +26,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
+    protected void doFilterInternal(@org.springframework.lang.NonNull HttpServletRequest request,
+                                    @org.springframework.lang.NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         final String authorizationHeader = request.getHeader("Authorization");
@@ -37,7 +37,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwt);
+            username = jwtUtil.getUsernameFromToken(jwt);
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

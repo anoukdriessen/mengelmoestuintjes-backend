@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.exceptions;
+package nl.mengelmoestuintjes.gardening.controller.exceptions;
 
 public class RecordNotFoundException extends RuntimeException{
 

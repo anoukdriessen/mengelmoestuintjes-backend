@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,20 +18,33 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.sql.DataSource;
 
+import static org.springframework.http.HttpMethod.*;
+
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig
-        extends WebSecurityConfigurerAdapter {
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private DataSource securitySource;
-
-    @Autowired
+    private DataSource dataSource;
     private JwtRequestFilter jwtRequestFilter;
+
+    @Autowired
+    WebSecurityConfig(DataSource dataSource, JwtRequestFilter jwtRequestFilter) {
+        this.dataSource = dataSource;
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+
+        auth.jdbcAuthentication().dataSource(dataSource)
+                .usersByUsernameQuery("SELECT username, password, enabled FROM users WHERE username=?")
+                .authoritiesByUsernameQuery("SELECT username, authority FROM authorities AS a WHERE username=?");
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -46,59 +60,30 @@ public class WebSecurityConfig
     }
 
     @Override
-    protected void configure( AuthenticationManagerBuilder auth ) throws Exception {
-        auth.jdbcAuthentication().dataSource( securitySource )
-                .usersByUsernameQuery("SELECT username, password, enabled FROM users WHERE username=?")
-                .authoritiesByUsernameQuery("SELECT username, authority FROM authorities AS a WHERE username=?");
-    }
+    protected void configure(HttpSecurity http) throws Exception {
 
-    @Override
-    protected void configure( HttpSecurity http ) throws Exception {
         http
                 .httpBasic()
                 .and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/actuator/**").hasRole("ADMIN")
-                .anyRequest().permitAll()
-                .and()
-                .cors()
+                .antMatchers("/actuator/info").permitAll()
+                .antMatchers("/actuator/**").hasRole("DEVELOPER")
+                .antMatchers("/api/gebruikers/**").hasRole("ADMIN")
+                .antMatchers(PATCH,"/gebruikers/{^[\\w]$}/password").authenticated()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/customers/**").hasRole("USER")
+                .antMatchers(POST,"/authenticate").permitAll()
+                .antMatchers(GET,"/public").permitAll()
+                .anyRequest().denyAll()
                 .and()
                 .csrf().disable()
                 .formLogin().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore( jwtRequestFilter, UsernamePasswordAuthenticationFilter.class );
-    }
 
-//    @Override
-//    public void configure(HttpSecurity htppSecurty) throws Exception {
-//
-//        htppSecurty
-//                .httpBasic()
-//                .and()
-//                .authorizeRequests()
-//                        .antMatchers("/quotes/**", "/plants/**").permitAll()
-//                    .antMatchers("/tuintjes/**", "/topic/**", "/tasks/**", "/posts/**").hasAnyRole(USER, MODERATOR, ADMIN)
-//                    .antMatchers("/actuator/**", "/milestones/**").hasRole(ADMIN)
-//                    .antMatchers(HttpMethod.POST).hasAnyRole(MODERATOR, ADMIN)
-//                    .antMatchers(HttpMethod.PUT).hasAnyRole(MODERATOR, ADMIN)
-//                .antMatchers("/api/v1/users/**").hasRole("ADMIN")
-//                .antMatchers(HttpMethod.GET, "/api/v1/books/**").hasRole("USER")
-//                .antMatchers("/api/v1/books/**").hasRole("ADMIN")
-//                .antMatchers("/api/v1/copies/**").hasRole("ADMIN")
-//                .antMatchers("/api/v1/members/**").hasRole("ADMIN")
-//                .antMatchers("/api/v1/borrowedCopies/**").hasRole("USER")
-//                .antMatchers(HttpMethod.POST, "/api/v1/authenticate").permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/v1").authenticated()
-//                .anyRequest().denyAll()
-//                .and()
-//                .csrf().disable()
-//                .formLogin().disable()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//
-//        htppSecurty.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-//    }
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+    }
 
 }
