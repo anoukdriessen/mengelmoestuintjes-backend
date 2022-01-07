@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.exceptions;
+package nl.mengelmoestuintjes.gardening.controller.exceptions;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String username) {

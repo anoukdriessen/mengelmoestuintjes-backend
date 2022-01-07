@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.model.plants;
-
-public enum Ground {
-}
+//package nl.mengelmoestuintjes.gardening.model.plants;
+//
+//public enum Ground {
+//}

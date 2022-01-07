@@ -1,94 +1,153 @@
 package nl.mengelmoestuintjes.gardening.controller;
 
-import nl.mengelmoestuintjes.gardening.dto.UserRequestDto;
-import nl.mengelmoestuintjes.gardening.dto.UserResponseDto;
-import nl.mengelmoestuintjes.gardening.exceptions.BadRequestException;
-import nl.mengelmoestuintjes.gardening.model.users.Authority;
+import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
+import nl.mengelmoestuintjes.gardening.dto.request.UserRequest;
+import nl.mengelmoestuintjes.gardening.model.users.Province;
 import nl.mengelmoestuintjes.gardening.model.users.User;
 import nl.mengelmoestuintjes.gardening.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @RestController
-@RequestMapping(value = "/gebruikers")
+@RequestMapping(value = "/api/gebruikers")
 public class UserController {
-    private final UserService service;
+    private UserService service;
 
     @Autowired
-    public UserController( UserService service ) {
+    public UserController(UserService service) {
         this.service = service;
     }
 
+    // CREATE
     @PostMapping
-    public UserResponseDto newUser(@RequestBody UserRequestDto toAdd ) {
-        String newUsername = service.newUser( toAdd );;
-        return UserResponseDto.fromUser(service.getById( newUsername ) );
+    public User create(
+            @RequestBody UserRequest toAdd
+    ) {
+        try {
+            String username = service.create( toAdd );
+            return service.getUser( username );
+        } catch (BadRequestException e) {
+            throw new BadRequestException( e.getMessage() );
+        }
     }
 
     @PostMapping(value = "/{username}/authorities")
-    public String addUserAuthority( @PathVariable("username") String username,
-                                             @RequestBody Map<String, Object> fields ) {
+    public String addUserAuthority(
+            @PathVariable("username") String username,
+            @RequestBody Map<String, Object> fields
+    ) {
         try {
-            String auth = (String) fields.get("authority");
-            return service.addAuthority( username, auth );
+            String authorityName = (String) fields.get("authority");
+            return service.addAuthority(username, authorityName);
         } catch (Exception e) {
-            throw new BadRequestException();
+            throw new BadRequestException( e.getMessage() );
         }
     }
 
+    // READ
     @GetMapping
-    public List<UserResponseDto> getAll() {
-        List<UserResponseDto> all = new ArrayList<>();
-        Iterable<User> users = service.getAll();
-
-        for ( User u : users) {
-            all.add(
-                    UserResponseDto.fromUser( u )
-            );
-        }
-
-        return all;
+    public ResponseEntity<Object> getUsers(
+            @RequestParam(name = "email", defaultValue = "", required = false) String email,
+            @RequestParam(name = "level", defaultValue = "", required = false) String level,
+            @RequestParam(name = "province", defaultValue = "", required = false) Province province
+    ) {
+        return ResponseEntity.ok().body(service.getAll(email, level, province));
     }
 
     @GetMapping(value = "/{username}")
-    public UserResponseDto getById(@PathVariable( "username" ) String username) {
-        User toFind = service.getById( username );
-        return UserResponseDto.fromUser( toFind );
+    public ResponseEntity<Object> getUser(
+            @PathVariable("username") String username
+    ) {
+        return ResponseEntity.ok().body(service.getUser(username));
     }
 
     @GetMapping(value = "/{username}/authorities")
-    public Set<Authority> getUserAuthorities(@PathVariable( "username" ) String username ) {
-        return service.getAuthorities( username );
+    public ResponseEntity<Object> getUserAuthorities(
+            @PathVariable("username") String username
+    ) {
+        return ResponseEntity.ok().body(service.getAuthorities(username));
     }
 
+    @GetMapping(value = "/{username}/xp")
+    public ResponseEntity<Object> getUserXp(
+            @PathVariable("username") String username
+    ) {
+        return ResponseEntity.ok().body(service.getXP(username));
+    }
+
+    @GetMapping(value = "/provincies")
+    public ResponseEntity<Object> allProvinces() {
+        List<String> all = new ArrayList<>();
+        for (Province p : Province.values()) {
+            all.add(p.name());
+        }
+        return ResponseEntity.ok().body( all );
+    }
+
+    // UPDATE
     @PutMapping(value = "/{username}")
-    public UserResponseDto update( @PathVariable( "username" ) String username, @RequestBody User modified ) {
-        service.update( username, modified );
-        return UserResponseDto.fromUser( modified );
+    public String update(
+            @PathVariable("username") String username,
+            @RequestBody User user) {
+        try {
+            return service.update(username, user);
+        } catch (Exception e) {
+            throw new BadRequestException( e.getMessage() );
+        }
     }
-
     @PatchMapping(value = "/{username}/password")
-    public String setPassword( @PathVariable("username") String username,
-                               @RequestBody String password ) {
-        service.setPassword( username, password );
-        return "set new password for user " + username;
+    public String setPassword(
+            @PathVariable("username") String username,
+            @RequestBody String password)
+    {
+        try {
+            service.setPassword(username, password);
+            return "Password changed for user " + username;
+        } catch (Exception e) {
+            throw new BadRequestException( e.getMessage() );
+        }
+    }
+    @PatchMapping(value = "/{username}/birthday")
+    public LocalDate setBirthday(
+            @PathVariable("username") String username,
+            @RequestBody String newBirthday
+    ) {
+        try {
+            LocalDate birthday = LocalDate.parse(newBirthday);
+            return service.setBirthday(username, birthday);
+        } catch (Exception e) {
+            throw new BadRequestException( e.getMessage() );
+        }
+    }
+    @PatchMapping(value = "/{username}/xp/{num}")
+    public String setXP(
+            @PathVariable("username") String username,
+            @PathVariable("num") Long toAdd
+    ) {
+        try {
+            return service.setXP(username, toAdd);
+        } catch (Exception e) {
+            throw new BadRequestException( e.getMessage() );
+        }
     }
 
+    // DELETE
     @DeleteMapping(value = "/{username}")
-    public UserResponseDto delete( @PathVariable( "username" ) String username ) {
-        return UserResponseDto.fromUser( service.getById( username ) );
+    public ResponseEntity<Object> deleteKlant(@PathVariable("username") String username) {
+        service.deleteUser(username);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(value = "/{username}/authorities/{authority}")
-    public String deleteUserAuthority( @PathVariable("username") String username,
-                                       @PathVariable("authority") String auth ) {
-        return service.removeAuthority( username, auth );
+    public ResponseEntity<Object> deleteUserAuthority(@PathVariable("username") String username, @PathVariable("authority") String authority) {
+        service.removeAuthority(username, authority);
+        return ResponseEntity.noContent().build();
     }
-
-
 }
+
