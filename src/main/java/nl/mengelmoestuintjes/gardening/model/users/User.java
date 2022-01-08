@@ -1,6 +1,7 @@
 package nl.mengelmoestuintjes.gardening.model.users;
 
 import lombok.Data;
+import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -23,8 +24,9 @@ public class User {
     @Column(nullable = false)
     private boolean enabled = true;
 
-    //TODO check has authority / is authority before add authority
-    // remove authority
+    @Transient
+    private List<String> possibleAuthorities = new ArrayList<>();
+
     @OneToMany(
             targetEntity = Authority.class,
             mappedBy = "username",
@@ -39,7 +41,6 @@ public class User {
     private String level;
     private String xp;
     private String levelUpLimit;
-    // TODO update method for level / xp / levelUpLimit
     private String name;
 
     private LocalDate birthday;
@@ -80,6 +81,19 @@ public class User {
     // @Lob
     // var profilePicture = ByteArray
 
+    private boolean isPossibleAuthority(String toAdd){
+        this.possibleAuthorities.add("ROLE_USER");
+        this.possibleAuthorities.add("ROLE_MODERATOR");
+        this.possibleAuthorities.add("ROLE_DEVELOPER");
+        this.possibleAuthorities.add("ROLE_ADMIN");
+
+        for (String role : possibleAuthorities) {
+            if (role.equals( toAdd )) {
+                return true;
+            }
+        }
+        return false;
+    }
     private static String standarizeAuthorityString( String authorityString ) {
         String s = authorityString.toUpperCase();
         if (!s.startsWith("ROLE_")) {
@@ -90,11 +104,19 @@ public class User {
     public void addAuthority(Authority authority) {
         String authorityString = authority.getAuthority();
         authorityString = standarizeAuthorityString(authorityString);
-        this.authorities.add( new Authority( this.username, authorityString ) );
+        if ( isPossibleAuthority( authorityString )) {
+            this.authorities.add(new Authority(this.username, authorityString));
+        } else {
+            throw new BadRequestException( "authority is not possible authority" );
+        }
     }
     public void addAuthority(String authorityString) {
         authorityString = standarizeAuthorityString(authorityString);
-        this.authorities.add( new Authority( this.username, authorityString ));
+        if ( isPossibleAuthority( authorityString )) {
+            this.authorities.add( new Authority( this.username, authorityString ));
+        } else {
+            throw new BadRequestException( "authority is not possible authority" );
+        }
     }
     public void removeAuthority(Authority authority) {
         this.authorities.remove(authority);
@@ -106,5 +128,55 @@ public class User {
         this.lastActivity = LocalDateTime.now();
     }
 
-    // TODO XP WORDT NIET GEUPDATE
+    public long parseLong(String toParse) {
+        return Long.parseLong(toParse);
+    }
+    public void setLevel(String level) {
+        this.level = level;
+    }
+    public void setLevel(long level) {
+        this.level = "" + level;
+    }
+    public void setLevelUpLimit(String limit) {
+        this.levelUpLimit = limit;
+    }
+    public void setLevelUpLimit(long limit) {
+        this.levelUpLimit = "" + limit;
+    }
+    public void checkAndSetMax(long current) {
+        if (current == 99) {
+            this.setLevel("MAX");
+            this.setLevelUpLimit("MAX");
+        }
+    }
+    public void levelUp() {
+        long level = parseLong(this.level);
+        // user is already 99
+        checkAndSetMax(level);
+        level++;
+        // user has become 99
+        checkAndSetMax(level);
+        this.setLevel(level);
+    }
+    public String setXp (String xp){
+        String out = this.xp + " + " + xp + " = ";
+        if (!this.xp.equals("MAX")) {
+            Long current = parseLong(this.xp);
+            Long toAdd = parseLong(xp);
+            this.xp = "" + ( current + toAdd );
+        }
+        out += this.xp;
+
+        // check and set level up limit
+        long newXP = parseLong(this.xp);
+        long limit = parseLong(this.levelUpLimit);
+        if (newXP >= limit) {
+            // level up limit behaald, verhoog limit
+            limit = limit + ( limit / 3 );
+            setLevelUpLimit( limit );
+            this.levelUp();
+            out += " user has leveled up ";
+        }
+        return out;
+    }
 }

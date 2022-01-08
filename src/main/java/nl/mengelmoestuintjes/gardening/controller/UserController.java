@@ -75,7 +75,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{username}/xp")
-    public ResponseEntity<Object> getUserXp(
+    public ResponseEntity<Object> getUserXpInfo(
             @PathVariable("username") String username
     ) {
         return ResponseEntity.ok().body(service.getXP(username));
@@ -136,18 +136,28 @@ public class UserController {
             throw new BadRequestException( e.getMessage() );
         }
     }
+    @PatchMapping(value = "/{username}/activity")
+    public String setLastActivity(
+            @PathVariable("username") String username
+    ) {
+        try {
+            return service.setLastActivity(username);
+        } catch (Exception e) {
+            throw new BadRequestException();
+        }
+    }
 
     // DELETE
     @DeleteMapping(value = "/{username}")
-    public ResponseEntity<Object> deleteKlant(@PathVariable("username") String username) {
+    public String deleteKlant(@PathVariable("username") String username) {
         service.deleteUser(username);
-        return ResponseEntity.noContent().build();
+        return "user " + username + " is deleted";
     }
 
     @DeleteMapping(value = "/{username}/authorities/{authority}")
-    public ResponseEntity<Object> deleteUserAuthority(@PathVariable("username") String username, @PathVariable("authority") String authority) {
+    public String deleteUserAuthority(@PathVariable("username") String username, @PathVariable("authority") String authority) {
         service.removeAuthority(username, authority);
-        return ResponseEntity.noContent().build();
+        return "authority " + authority + " deleted from " + username + " ";
     }
 }
 

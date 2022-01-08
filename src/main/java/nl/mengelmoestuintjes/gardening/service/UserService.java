@@ -96,7 +96,7 @@ public class UserService {
 
     public String getXP(String username) {
         User toFind = getUser( username );
-        return toFind.getXp() + " - " + toFind.getLevelUpLimit();
+        return toFind.getLevel() + ":" +toFind.getXp() + " -> " + toFind.getLevelUpLimit();
     }
 
     public String addAuthority(String username, String authorityString) {
@@ -162,41 +162,18 @@ public class UserService {
         repository.save(user);
         return newBirthday;
     }
-
-    public void levelUp(String current, User user) {
-        long level = convertStringToLong(current) + 1;
-        if (level == 99) {
-            user.setLevel("MAX");
-            user.setLevelUpLimit("MAX");
-        } else {
-            user.setLevel("" + level);
-        }
-    }
-    public void setNewLevelUpLimit(int growth, String limit, User user) {
-        long levelUpLimit = convertStringToLong(limit);
-        levelUpLimit = levelUpLimit + (levelUpLimit / growth);
-        user.setLevelUpLimit("" + levelUpLimit);
-    }
-
     public String setXP(String username, long toAdd) {
-        String out = "";
         User user = getUser( username );
-
-        if ( !userIsMax(user.getLevel(), user.getLevelUpLimit()) ) {
-            long current = convertStringToLong(user.getXp());
-            long sum = current + toAdd;
-            user.setXp("" + sum);
-            out += toAdd + " xp added";
-
-            if (hasReachedLevelUpLimit(current, user.getLevelUpLimit())) {
-                levelUp(user.getLevel(), user);
-                setNewLevelUpLimit(3, user.getLevelUpLimit(), user); // +33.33% / +1/3 deel
-                out += " user has leveled up, new level " + user.getLevel();
-            }
-        } else {
-            out += "user is already MAX";
-        }
+        String xp = "" + toAdd;
+        String out = user.setXp( xp );
+        repository.save( user );
         return out;
+    }
+    public String setLastActivity(String username) {
+        User user = getUser( username );
+        user.setLastActivity();
+        repository.save( user );
+        return "last activity = " + user.getLastActivity();
     }
 
     // DELETE
@@ -213,8 +190,7 @@ public class UserService {
         Optional<User> userOptional = repository.findById(username);
         if (userOptional.isEmpty()) {
             throw new UserNotFoundException(username);
-        }
-        else {
+        } else {
             User user = userOptional.get();
             user.removeAuthority(authorityString);
             repository.save(user);
