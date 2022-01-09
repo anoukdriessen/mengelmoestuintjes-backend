@@ -89,12 +89,19 @@ public class UserController {
         }
         return ResponseEntity.ok().body( all );
     }
+    @GetMapping(value = "/{username}/berichten")
+    public ResponseEntity<Object> getUserPosts(
+            @PathVariable("username") String username,
+            @RequestParam(value = "published") boolean published
+    ) {
+        return ResponseEntity.ok().body(service.getPosts(username, published));
+    }
 
     // UPDATE
     @PutMapping(value = "/{username}")
-    public String update(
+    public ArrayList<String> update(
             @PathVariable("username") String username,
-            @RequestBody User user) {
+            @RequestBody UserRequest user) {
         try {
             return service.update(username, user);
         } catch (Exception e) {

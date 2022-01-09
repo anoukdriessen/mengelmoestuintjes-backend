@@ -2,6 +2,7 @@ package nl.mengelmoestuintjes.gardening.model.users;
 
 import lombok.Data;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
+import nl.mengelmoestuintjes.gardening.model.posts.Post;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -72,10 +73,12 @@ public class User {
     // private List<Garden> gardens = new ArrayList<>()
     // methods: contains // add // remove
 
-    //TODO add posts
-    // @OneToMany( mappedBy = "owner" )
-    // private List<Post> posts = new ArrayList<>()
-    // methos: add / remove
+    @OneToMany(
+            mappedBy = "author",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
+    private List<Post> posts = new ArrayList<>();
 
     //TODO add profile picture
     // @Lob
@@ -178,5 +181,22 @@ public class User {
             out += " user has leveled up ";
         }
         return out;
+    }
+
+    public boolean hasPost(Post post) {
+        for ( Post p : this.getPosts() ) {
+            if ( p.equals(post) ) return true;
+        }
+        return false;
+    }
+    public void addPost(Post post){
+        this.posts.add(post);
+    }
+    public void removePost(Post post){
+        if (!this.hasPost(post)) {
+            this.posts.remove(post);
+        } else {
+            throw new BadRequestException("post already exists");
+        }
     }
 }
