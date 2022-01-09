@@ -30,8 +30,8 @@ public class ExceptionController {
 
     }
 
-    @ExceptionHandler(value = InvalidPasswordException.class)
-    public ResponseEntity<Object> exception(InvalidPasswordException e) {
+    @ExceptionHandler(value = InvalidException.class)
+    public ResponseEntity<Object> exception(InvalidException e) {
         return createResponse( HttpStatus.UNAUTHORIZED, e.getMessage());
     }
 
