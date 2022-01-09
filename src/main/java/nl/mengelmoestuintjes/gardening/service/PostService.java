@@ -1,120 +1,118 @@
-//package nl.mengelmoestuintjes.gardening.service;
-//
-//import nl.mengelmoestuintjes.gardening.controller.exceptions.RecordNotFoundException;
-//import nl.mengelmoestuintjes.gardening.model.posts.Post;
-//import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
-//import nl.mengelmoestuintjes.gardening.repository.PostRepository;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.Date;
-//import java.util.Objects;
-//import java.util.Optional;
-//import java.util.Random;
-//
-//@Service
-//public class PostService {
-//    private static final String NOT_FOUND = "Post not found";
-//    private final PostRepository postRepository;
-//
-//    @Autowired
-//    public PostService( PostRepository postRepository ) {
-//        this.postRepository = postRepository;
-//    }
-//
-//    // Create
-//    public Post newPost( Post toAdd ) {
-//        return postRepository.save( toAdd );
-//    }
-//
-//    // Read
-//    public Iterable<Post> getAllPosts(String author, boolean visible, PostCategory category) {
-//        if ( !author.isBlank() && visible ) {
-//            return postRepository.findAllByAuthorAndVisible(author, visible);
-//        } else if ( !Objects.isNull(category) && visible ){
-//            return postRepository.findAllByCategoryAndVisible(category, visible);
-//        } else if ( visible ) {
-//            return postRepository.findByVisibleTrue();
-//        } else if ( !author.isBlank() ) {
-//            return postRepository.findAllByAuthor(author);
-//        } else if ( !Objects.isNull(category) ) {
-//            return postRepository.findAllByCategory(category);
-//        } else {
-//            return postRepository.findAll();
-//        }
-//    }
-//    public Post getPostById(int id) {
-//        Optional<Post> toFind = postRepository.findById(id);
-//
-//        if (toFind.isPresent()) { // check if post exists
-//            return toFind.get();
-//        } else {  // post does not exists
-//            throw new RecordNotFoundException(NOT_FOUND);
-//        }
-//    }
-//    public Post getRandom() {
-//        long bound = postRepository.count();
-//        Random r = new Random();
-//        int id = r.nextInt( (int) bound );
-//        return getPostById( id );
-//    }
-//
-//    // Update
-//    public void updatePost(int id, Post modified) {
-//        Post toModify = postRepository.findById(id).orElse(null);
-//
-//        if (toModify != null) {
-//            boolean titleNotEmpty = !modified.getTitle().isEmpty();
-//            boolean categoryNotEmpty = modified.getCategory() != null;
-//            boolean descriptionNotEmpty = !modified.getTitle().isEmpty();
-//            boolean imageNotEmpty = !modified.getImageUrl().isEmpty();
-//            boolean authorNotEmpty = !modified.getAuthor().isEmpty();
-//            boolean visibleChanged = modified.isVisible() != toModify.isVisible();
-//
-//            boolean isModifed = false;
-//
-//            if (titleNotEmpty) {
-//                toModify.setTitle(modified.getTitle());
-//                isModifed = true;
-//            }
-//            if (categoryNotEmpty) {
-//                toModify.setCategory(modified.getCategory());
-//                isModifed = true;
-//            }
-//            if (descriptionNotEmpty) {
-//                toModify.setDescription(modified.getDescription());
-//                isModifed = true;
-//            }
-//            if (imageNotEmpty) {
-//                toModify.setImageUrl(modified.getImageUrl());
-//                isModifed = true;
-//            }
-//            if (authorNotEmpty) {
-//                toModify.setAuthor(modified.getAuthor());
-//                isModifed = true;
-//            }
-//            if (visibleChanged) {
-//                toModify.setVisible(modified.isVisible());
-//                isModifed = true;
-//            }
-//
-//            // if something is modified set modified date
-//            if (isModifed) { toModify.setModified(new Date()); }
-//            postRepository.save(toModify);
-//        } else {
-//            throw new RecordNotFoundException(NOT_FOUND);
-//        }
-//    }
-//
-//    public Post delete( int id ) {
-//        Optional<Post> toFind = postRepository.findById( id );
-//        if (toFind.isPresent()) { // check if post exists
-//            Post toDelete = toFind.get();
-//            postRepository.delete( toDelete );
-//            return toDelete;
-//        } else { // post does not exists
-//            throw new RecordNotFoundException(NOT_FOUND);
-//        }
-//    }
-//
-//}
+package nl.mengelmoestuintjes.gardening.service;
+
+import nl.mengelmoestuintjes.gardening.controller.exceptions.PostNotFoundException;
+import nl.mengelmoestuintjes.gardening.dto.request.PostRequest;
+import nl.mengelmoestuintjes.gardening.model.posts.Post;
+import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
+import nl.mengelmoestuintjes.gardening.model.users.User;
+import nl.mengelmoestuintjes.gardening.repository.PostAuthorRepository;
+import nl.mengelmoestuintjes.gardening.repository.PostRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Optional;
+
+@Service
+public class PostService {
+
+    private PostRepository repository;
+
+    @Autowired
+    PostAuthorRepository relationRepository;
+
+    @Autowired
+    public PostService( PostRepository postRepository ) {
+        this.repository = postRepository;
+    }
+
+    // CREATE
+    public Post create( PostRequest toAdd ) {
+        Post newPost = new Post();
+
+        newPost.setId( toAdd.getId() );
+        newPost.setAuthor(toAdd.getAuthor() );
+        newPost.setTitle( toAdd.getTitle() );
+        newPost.setSummary( toAdd.getSummary() );
+        newPost.setDescription( toAdd.getDescription() );
+        newPost.setImageUrl( toAdd.getImageUrl() );
+        newPost.setCategory( toAdd.getCategory() );
+        newPost.setPublished( toAdd.isPublished() );
+        newPost.setCreated( LocalDateTime.now() );
+
+        repository.save(newPost);
+        return newPost;
+    }
+
+    // READ
+    public Iterable<Post> getAll(
+            String title, boolean published, PostCategory category, String summary) {
+        boolean hasTitle = !title.isBlank();
+        boolean hasCategory = !Objects.isNull( category );
+        boolean hasSummary = !summary.isBlank();
+
+        if (published && hasTitle) return repository.findAllByTitleContainingAndPublished(title, published);
+        if (published && hasCategory) return repository.findAllByCategoryAndPublished( category, published );
+
+        if (hasSummary) return repository.findAllBySummaryContainingAndPublishedTrue(summary);
+        if (published) return repository.findByPublished( published);
+        if (hasCategory) return repository.findAllByCategory( category );
+
+        return repository.findAll();
+    }
+    public Post getPost(long id) {
+        Optional<Post> toFind = repository.findById( id );
+        boolean postFound = toFind.isPresent();
+        if ( postFound ) {
+            return toFind.get();
+        } else {
+            throw new PostNotFoundException(id);
+        }
+    }
+
+    // UPDATE
+    public String addAuthor(User user, Post post) {
+        post.setAuthor( user );
+        repository.save( post );
+        return post.getTitle() + " written by " + user.getUsername();
+    }
+    public String updatePost(long id, PostRequest modified) {
+        Post post = getPost(id);
+
+        post.setTitle(modified.getTitle());
+        post.setSummary(modified.getSummary());
+        post.setDescription(modified.getDescription());
+        post.setImageUrl(modified.getImageUrl());
+        post.setCategory(modified.getCategory());
+        post.setPublished(modified.isPublished());
+        post.setModified();
+
+        repository.save(post);
+        return post.getTitle() + " has been updated";
+    }
+    public String setPublished(long id, boolean published) {
+        Post post = getPost(id);
+        post.setPublished(published);
+        post.setModified();
+
+        repository.save(post);
+        return post.getTitle() + " is now published=" + published;
+    }
+
+    // DELETE
+    public String delete(long id) {
+        Post p = getPost(id);
+        repository.deleteById(id);
+        return p.getTitle() + " is deleted";
+    }
+}
+
+/*
+ *     public Post getRandom() {
+ *         long bound = postRepository.count();
+ *         Random r = new Random();
+ *         int id = r.nextInt( (int) bound );
+ *         return getPostById( id );
+ *     }
+ * */
