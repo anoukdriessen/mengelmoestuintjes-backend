@@ -1,19 +1,56 @@
-//package nl.mengelmoestuintjes.gardening.model.posts;
-//
-//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-//import nl.mengelmoestuintjes.gardening.model.users.User;
-//
-//import javax.persistence.*;
-//import java.util.Date;
-//
-//@Entity
-//@Table(name="posts")
-//public class Post {
+package nl.mengelmoestuintjes.gardening.model.posts;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import nl.mengelmoestuintjes.gardening.model.users.User;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name="posts")
+@Data
+public class Post {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @JsonIgnoreProperties("posts")
+    @ManyToOne(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.EAGER)
+    @JoinColumn(
+            name = "user_id",
+            referencedColumnName = "username")
+    private User author;
+
+    @Column(nullable = false)
+    private String title;
+
+    private String summary;
+
+    @Column(nullable = false)
+    private String description;
+
+    private String imageUrl;
+
+    @Enumerated(EnumType.STRING)
+    private PostCategory category;
+
+    private boolean published;
+
+    private LocalDateTime created;
+    private LocalDateTime modified;
+
+    public void setModified() {
+        this.modified = LocalDateTime.now();
+    }
+}
 //
 //    /*
 //     * Post bestaat uit:
-//     * - titel
-//     * - category (type van post)
 //     * - beschrijving
 //     * - afbeelding (optioneel)
 //     * - auteur (gebruikersnaam)
@@ -23,9 +60,7 @@
 //     *
 //     * gebruikers kunnen posts toevoegen aan hun profiel
 //     */
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private int id;
+
 //    private String title;
 //    private PostCategory category;
 //    private String description;

@@ -19,3 +19,4 @@ VALUES ('itiskevin', 'ROLE_USER'),
        ('vivalanouk', 'ROLE_MODERATOR'),
        ('vivalanouk', 'ROLE_DEVELOPER'),
        ('vivalanouk', 'ROLE_ADMIN');
+

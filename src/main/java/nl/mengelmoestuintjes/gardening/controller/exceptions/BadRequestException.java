@@ -6,6 +6,6 @@ public class BadRequestException extends RuntimeException {
             super(message);
         }
     public BadRequestException() {
-        super("Something went wrong");
+        super("Bad request happened");
     }
 }
