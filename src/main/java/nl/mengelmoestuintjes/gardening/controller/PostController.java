@@ -4,7 +4,7 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException
 import nl.mengelmoestuintjes.gardening.dto.request.PostRequest;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
 import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
-import nl.mengelmoestuintjes.gardening.model.users.User;
+import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.service.PostService;
 import nl.mengelmoestuintjes.gardening.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,21 +12,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/berichten")
 @CrossOrigin
 public class PostController {
     private PostService service;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
-    public PostController(PostService postService) {
+    public PostController(PostService postService, UserService userService) {
         this.service = postService;
+        this.userService = userService;
     }
 
     // CREATE
-    @PostMapping("/berichten")
+    @PostMapping
     public Post newPost(
             @RequestParam(value = "username") String username,
             @RequestBody PostRequest request
@@ -39,7 +38,7 @@ public class PostController {
             throw new BadRequestException( "cannot create post" );
         }
     }
-    @PostMapping(value = "/berichten/{username}/{id}")
+    @PostMapping(value = "/{username}/{id}")
     public String addAuthor(
             @PathVariable("username") String username,
             @PathVariable("id") long id
@@ -54,33 +53,31 @@ public class PostController {
     }
 
     // READ
-    @GetMapping("/berichten")
-    public ResponseEntity<Object> getAllPosts(
+    @GetMapping
+    public Iterable<Post> getAllPosts(
             @RequestParam(name = "title", defaultValue = "", required = false) String title,
             @RequestParam(name = "published", required = false) boolean published,
             @RequestParam(name = "category", required = false) PostCategory category,
             @RequestParam(name = "summary", defaultValue = "", required = false) String summary
     ){
-        return ResponseEntity.ok().body(
-                service.getAll(title, published, category, summary)
-        );
+        return service.getAll(title, published, category, summary);
     }
-    @GetMapping("/berichten/{id}")
-    public ResponseEntity<Object> getPostById(
+    @GetMapping("/{id}")
+    public Post getPostById(
             @PathVariable( "id" ) long id
     ){
-        return ResponseEntity.ok().body(service.getPost(id));
+        return service.getPost(id);
     }
 
     // UPDATE
-    @PutMapping("/berichten/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> updatePost(
             @PathVariable("id") long id,
             @RequestBody PostRequest request
     ) {
         return ResponseEntity.ok().body(service.updatePost(id, request));
     }
-    @PutMapping("/berichten/{id}/{published}")
+    @PutMapping("/{id}/{published}")
     public ResponseEntity<Object> setPostToPublished(
             @PathVariable("id") long id,
             @PathVariable("published") boolean published
@@ -89,17 +86,10 @@ public class PostController {
     }
 
     // DELETE
-    @DeleteMapping("/berichten/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(
             @PathVariable("id") long id
     ) {
         return ResponseEntity.ok().body(service.delete(id));
     }
 }
-
-/*
- *     @GetMapping(value = "/random")
- *     public ResponseEntity<Post> getRandom() {
- *         return ResponseEntity.ok( postService.getRandom() );
- *     }
- */
