@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
-import nl.mengelmoestuintjes.gardening.model.users.User;
+import nl.mengelmoestuintjes.gardening.model.User;
 
 import java.time.LocalDateTime;
 

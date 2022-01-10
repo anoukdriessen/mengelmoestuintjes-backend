@@ -1,6 +1,6 @@
 //package nl.mengelmoestuintjes.gardening.model.garden;
 //
-//import nl.mengelmoestuintjes.gardening.model.users.User;
+//import nl.mengelmoestuintjes.gardening.model.User;
 //
 //import javax.persistence.*;
 //import java.time.LocalDateTime;

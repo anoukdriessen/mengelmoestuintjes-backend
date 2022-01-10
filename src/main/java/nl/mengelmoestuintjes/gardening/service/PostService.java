@@ -4,7 +4,7 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.PostNotFoundExcepti
 import nl.mengelmoestuintjes.gardening.dto.request.PostRequest;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
 import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
-import nl.mengelmoestuintjes.gardening.model.users.User;
+import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,11 +60,8 @@ public class PostService {
     public Post getPost(long id) {
         Optional<Post> toFind = repository.findById( id );
         boolean postFound = toFind.isPresent();
-        if ( postFound ) {
-            return toFind.get();
-        } else {
-            throw new PostNotFoundException(id);
-        }
+        if ( postFound ) return toFind.get();
+        throw new PostNotFoundException(id);
     }
 
     // UPDATE

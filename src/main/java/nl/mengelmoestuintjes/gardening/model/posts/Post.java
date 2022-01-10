@@ -2,7 +2,7 @@ package nl.mengelmoestuintjes.gardening.model.posts;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import nl.mengelmoestuintjes.gardening.model.users.User;
+import nl.mengelmoestuintjes.gardening.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,7 +19,7 @@ public class Post {
     @JsonIgnoreProperties("posts")
     @ManyToOne(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH},
+                       CascadeType.DETACH, CascadeType.REFRESH},
             fetch = FetchType.EAGER)
     @JoinColumn(
             name = "user_id",
@@ -46,5 +46,8 @@ public class Post {
 
     public void setModified() {
         this.modified = LocalDateTime.now();
+    }
+    public String getAuthor() {
+        return author.getUsername();
     }
 }
