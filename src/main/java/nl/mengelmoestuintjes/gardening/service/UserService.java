@@ -5,10 +5,8 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.InvalidException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.NotAuthorizedException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.UserNotFoundException;
 import nl.mengelmoestuintjes.gardening.dto.request.UserRequest;
+import nl.mengelmoestuintjes.gardening.model.*;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
-import nl.mengelmoestuintjes.gardening.model.Authority;
-import nl.mengelmoestuintjes.gardening.model.Province;
-import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -75,6 +73,7 @@ public class UserService {
 
         try {
             user.setPosts(toAdd.getPosts());
+            user.setTasks(toAdd.getTasks());
         } catch (Exception e) {
             throw new BadRequestException("Invalid list(s)");
         }
@@ -147,6 +146,18 @@ public class UserService {
             return posted;
         } else {
             return concepts;
+        }
+    }
+    public List<Task> getTasks(String username, TaskType type) {
+        User toFind = getUser( username );
+        return toFind.getTasksByType(type);
+    }
+    public List<Task> getTodaysTasks(String username, TaskType type) {
+        User toFind = getUser( username );
+        if (type == TaskType.TODO) {
+            return toFind.getTodayToDo();
+        } else {
+            return toFind.getTodayGardening();
         }
     }
 

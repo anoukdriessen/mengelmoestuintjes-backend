@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nl.mengelmoestuintjes.gardening.model.posts.Post;
 import nl.mengelmoestuintjes.gardening.model.Province;
+import nl.mengelmoestuintjes.gardening.model.Task;
+import nl.mengelmoestuintjes.gardening.model.posts.Post;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,5 +33,6 @@ public class UserRequest {
     private LocalDateTime lastActivity;
     private List<String> authorities;
     private List<Post> posts = new ArrayList<>();
+    private List<Task> tasks = new ArrayList<>();
 
 }

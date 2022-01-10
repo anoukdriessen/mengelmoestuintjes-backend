@@ -2,6 +2,10 @@ package nl.mengelmoestuintjes.gardening.model;
 
 import lombok.Data;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
+import nl.mengelmoestuintjes.gardening.controller.exceptions.GardenNotFoundException;
+import nl.mengelmoestuintjes.gardening.controller.exceptions.PostNotFoundException;
+import nl.mengelmoestuintjes.gardening.controller.exceptions.TaskNotFoundException;
+import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
 
 import javax.persistence.*;
@@ -75,20 +79,32 @@ public class User {
     )
     private List<Task> tasks = new ArrayList<>();
 
-    //TODO ADD favorites (posts / plants / people)
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH}
+    )
+    @JoinTable(
+            name = "garden_users",
+            joinColumns=@JoinColumn(name = "garden_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<Garden> gardens;
+    //TODO ADD gardens
+    // methods: contains // add // remove
+
+
+//    @OneToMany(
+//            mappedBy = "owner",
+//            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+//                    CascadeType.DETACH, CascadeType.REFRESH},
+//            fetch = FetchType.LAZY
+//    )
+    // TODO ADD favorites (posts / plants / people)
     // private List<Favorite> favorites = new ArrayList<>()
     // methods: contains // add / remove
 
-    //TODO ADD tasks
-    // @OneToMany( mappedBy = "owner")
-    // private List<Task> tasks = new ArrayList<>()
-    // methods: contains // get GardenTasks // get ToDoTasks
-    // add / remove
 
-    //TODO ADD gardens
-    // @ManyToMany
-    // private List<Garden> gardens = new ArrayList<>()
-    // methods: contains // add // remove
 
     //TODO ADD profile picture
     // @Lob
@@ -226,7 +242,68 @@ public class User {
         if (!this.hasPost(post)) {
             this.posts.remove(post);
         } else {
-            throw new BadRequestException("post not found");
+            throw new PostNotFoundException(post);
+        }
+    }
+
+    // TASKS
+    public Task findTaskById(int id) {
+        return this.getTasks().get(id);
+    }
+    public ArrayList<Task> getTasksByType(TaskType type) {
+        ArrayList<Task> tasksByType = new ArrayList<>();
+
+        for (Task t : this.getTasks()) {
+            if (t.getType() == type) tasksByType.add(t);
+        }
+        return tasksByType;
+    }
+    public ArrayList<Task> getTodayToDo() {
+        ArrayList<Task> todo = getTasksByType(TaskType.TODO);
+        for ( Task t : todo ) {
+            if (t.getDeadline().equals(LocalDate.now())) todo.add(t);
+        }
+        return todo;
+    }
+    public ArrayList<Task> getTodayGardening() {
+        ArrayList<Task> gardening = getTasksByType(TaskType.GARDENING);
+        for ( Task t : gardening ) {
+            if (t.getDeadline().equals(LocalDate.now())) gardening.add(t);
+        }
+        return gardening;
+    }
+    public boolean hasTask(Task task) {
+        for ( Task t : this.getTasks() ) {
+            if ( t.equals(task) ) return true;
+        }
+        return false;
+    }
+    public void addTask(Task task){
+        this.tasks.add(task);
+    }
+    public void removeTask(Task task){
+        if (!this.hasTask(task)) {
+            this.tasks.remove(task);
+        } else {
+            throw new TaskNotFoundException(task);
+        }
+    }
+
+    // GARDENS
+    public boolean hasGarden(Garden garden) {
+        for (Garden g : this.getGardens()) {
+            if ( g.equals(garden) ) return true;
+        }
+        return false;
+    }
+    public void addGarden(Garden garden) {
+        this.gardens.add(garden);
+    }
+    public void removeGarden(Garden garden) {
+        if (!this.hasGarden(garden)) {
+            this.gardens.remove(garden);
+        } else {
+            throw new GardenNotFoundException(garden);
         }
     }
 

@@ -34,6 +34,11 @@ public class ExceptionController {
         return createResponse( HttpStatus.NOT_FOUND, e.getMessage());
     }
 
+    @ExceptionHandler(value = GardenNotFoundException.class)
+    public ResponseEntity<Object> exception(GardenNotFoundException e) {
+        return createResponse( HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseEntity<Object> exception(BadRequestException e) {
         return createResponse( HttpStatus.BAD_REQUEST, e.getMessage());

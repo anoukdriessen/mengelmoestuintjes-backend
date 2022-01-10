@@ -4,6 +4,7 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException
 import nl.mengelmoestuintjes.gardening.controller.exceptions.InvalidException;
 import nl.mengelmoestuintjes.gardening.dto.request.UserRequest;
 import nl.mengelmoestuintjes.gardening.model.Province;
+import nl.mengelmoestuintjes.gardening.model.TaskType;
 import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,13 @@ public class UserController {
             @RequestParam(value = "published") boolean published
     ) {
         return ResponseEntity.ok().body(service.getPosts(username, published));
+    }
+    @GetMapping(value = "/{username}/taken/{type}")
+    public ResponseEntity<Object> getUserTaken(
+            @PathVariable("username") String username,
+            @PathVariable("type") TaskType type
+    ) {
+        return ResponseEntity.ok().body(service.getTasks(username, type));
     }
 
     // UPDATE
