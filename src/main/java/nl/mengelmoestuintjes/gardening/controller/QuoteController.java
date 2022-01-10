@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/quotes")
+@RequestMapping(value = "/api/quotes")
 public class QuoteController {
     private final QuoteService quoteService;
 
