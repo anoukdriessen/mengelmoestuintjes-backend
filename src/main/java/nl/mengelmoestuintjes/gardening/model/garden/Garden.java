@@ -3,7 +3,7 @@
 //import com.fasterxml.jackson.annotation.JsonGetter;
 //import com.fasterxml.jackson.annotation.JsonIgnore;
 //import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-//import nl.mengelmoestuintjes.gardening.model.users.User;
+//import nl.mengelmoestuintjes.gardening.model.User;
 //
 //import javax.persistence.*;
 //import java.util.List;
