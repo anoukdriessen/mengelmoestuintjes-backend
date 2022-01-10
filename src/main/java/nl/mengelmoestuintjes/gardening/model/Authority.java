@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.model.users;
+package nl.mengelmoestuintjes.gardening.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
