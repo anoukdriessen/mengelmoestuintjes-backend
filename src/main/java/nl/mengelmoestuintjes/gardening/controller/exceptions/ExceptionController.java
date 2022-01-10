@@ -24,6 +24,16 @@ public class ExceptionController {
         return createResponse( HttpStatus.NOT_FOUND, e.getMessage());
     }
 
+    @ExceptionHandler(value = PostNotFoundException.class)
+    public ResponseEntity<Object> exception(PostNotFoundException e) {
+        return createResponse( HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
+    @ExceptionHandler(value = TaskNotFoundException.class)
+    public ResponseEntity<Object> exception(TaskNotFoundException e) {
+        return createResponse( HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseEntity<Object> exception(BadRequestException e) {
         return createResponse( HttpStatus.BAD_REQUEST, e.getMessage());
