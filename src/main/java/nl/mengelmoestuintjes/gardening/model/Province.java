@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.model.users;
+package nl.mengelmoestuintjes.gardening.model;
 
 public enum Province {
     HIDDEN,

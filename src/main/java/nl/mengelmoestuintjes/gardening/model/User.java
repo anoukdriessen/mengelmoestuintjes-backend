@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.model.users;
+package nl.mengelmoestuintjes.gardening.model;
 
 import lombok.Data;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -24,17 +25,6 @@ public class User {
 
     @Column(nullable = false)
     private boolean enabled = true;
-
-    @Transient
-    private List<String> possibleAuthorities = new ArrayList<>();
-
-    @OneToMany(
-            targetEntity = Authority.class,
-            mappedBy = "username",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER)
-    private List<Authority> authorities = new ArrayList<>();
 
     @Column(nullable = false, unique = true)
     private String email; // TODO ISVALID EMAIL
@@ -53,16 +43,37 @@ public class User {
     private LocalDateTime lastActivity = LocalDateTime.now();
 
     @OneToMany(
+            targetEntity = Authority.class,
+            mappedBy = "username",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    private List<Authority> authorities = new ArrayList<>();
+
+    @OneToMany(
             mappedBy = "author",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH},
-            fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY
+    )
     private List<Post> posts = new ArrayList<>();
 
-    //TODO ADD milestones
-    // @OneToMany( mappedBy = "owner" )
-    // private List<Milestones> milestones = new ArrayList<>();
-    // methods: has / add / remove
+//    @OneToMany(
+//            mappedBy = "owner",
+//            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+//                    CascadeType.DETACH, CascadeType.REFRESH},
+//            fetch = FetchType.LAZY
+//    )
+//    private List<Milestone> milestones = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "owner",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
+    private List<Task> tasks = new ArrayList<>();
 
     //TODO ADD favorites (posts / plants / people)
     // private List<Favorite> favorites = new ArrayList<>()
@@ -93,14 +104,20 @@ public class User {
         this.setLevelUpLimit("2000");
     }
 
-    // AUTHORITHIES
-    private boolean isPossibleAuthority(String toAdd){
-        this.possibleAuthorities.add("ROLE_USER");
-        this.possibleAuthorities.add("ROLE_MODERATOR");
-        this.possibleAuthorities.add("ROLE_DEVELOPER");
-        this.possibleAuthorities.add("ROLE_ADMIN");
+    public boolean birthdayIsToday() {
+        return Objects.equals(this.birthday, LocalDate.now());
+    }
 
-        for (String role : possibleAuthorities) {
+    // AUTHORITHIES
+    private boolean isPossibleAuthority(String toAdd) {
+        List<String> possible = new ArrayList<>();
+
+        possible.add("ROLE_USER");
+        possible.add("ROLE_MODERATOR");
+        possible.add("ROLE_DEVELOPER");
+        possible.add("ROLE_ADMIN");
+
+        for (String role : possible) {
             if (role.equals( toAdd )) {
                 return true;
             }
@@ -135,7 +152,8 @@ public class User {
         this.authorities.remove(authority);
     }
     public void removeAuthority(String authorityString) {
-        this.authorities.removeIf(authority -> authority.getAuthority().equalsIgnoreCase(authorityString));
+        String toRemove = standarizeAuthorityString(authorityString);
+        this.authorities.removeIf(authority -> authority.getAuthority().equalsIgnoreCase(toRemove));
     }
     public void setLastActivity() {
         this.lastActivity = LocalDateTime.now();
@@ -208,7 +226,36 @@ public class User {
         if (!this.hasPost(post)) {
             this.posts.remove(post);
         } else {
-            throw new BadRequestException("post already exists");
+            throw new BadRequestException("post not found");
         }
     }
+
+    // MILESTONES
+    /**
+    public boolean hasMilestone(Milestone milestone) {
+        for (Milestone m : this.getMilestones() ) {
+            if ( m.equals(milestone) ) return true;
+        }
+        return false;
+    }
+    public boolean isValidMilestone(Milestone milestone) {
+        for (Milestones m : Milestones.values() ) {
+            if ( m.equals(milestone.getMilestone()) ) return true;
+        }
+        return false;
+    }
+    public void addMilestone(Milestone milestone) {
+        if (isValidMilestone(milestone)){
+            this.milestones.add(milestone);
+        } else {
+            throw new InvalidException("milestone doesn't exist");
+        }
+    }
+    public void removeMilestone(Milestone milestone) {
+        if (!this.hasMilestone(milestone)) {
+            this.milestones.remove(milestone);
+        } else {
+            throw new BadRequestException("milestone not found");
+        }
+    }**/
 }
