@@ -17,10 +17,10 @@ public class User {
 
     @Id
     @Column(nullable = false, unique = true)
-    private String username;
+    private String username; // TODO ISVALID USERNAME
 
     @Column(nullable = false, length = 80)
-    private String password;
+    private String password; // TODO ISVALID PASSWORD
 
     @Column(nullable = false)
     private boolean enabled = true;
@@ -37,41 +37,20 @@ public class User {
     private List<Authority> authorities = new ArrayList<>();
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String email; // TODO ISVALID EMAIL
 
     private String level;
     private String xp;
     private String levelUpLimit;
-    private String name;
+    private String name; // TODO ISVALID NAME
 
     private LocalDate birthday;
-    // TODO remove birthday (cannot be updated)
 
     @Enumerated(EnumType.STRING)
     private Province province;
 
     private LocalDate memberSince = LocalDate.now();
     private LocalDateTime lastActivity = LocalDateTime.now();
-
-    //TODO add milestones
-    // @OneToMany( mappedBy = "owner" )
-    // private List<Milestones> milestones = new ArrayList<>();
-    // methods: has / add / remove
-
-    //TODO add favorites (posts / plants / people)
-    // private List<Favorite> favorites = new ArrayList<>()
-    // methods: contains // add / remove
-
-    //TODO add tasks
-    // @OneToMany( mappedBy = "owner")
-    // private List<Task> tasks = new ArrayList<>()
-    // methods: contains // get GardenTasks // get ToDoTasks
-    // add / remove
-
-    //TODO add gardens
-    // @ManyToMany
-    // private List<Garden> gardens = new ArrayList<>()
-    // methods: contains // add // remove
 
     @OneToMany(
             mappedBy = "author",
@@ -80,10 +59,41 @@ public class User {
             fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
 
-    //TODO add profile picture
+    //TODO ADD milestones
+    // @OneToMany( mappedBy = "owner" )
+    // private List<Milestones> milestones = new ArrayList<>();
+    // methods: has / add / remove
+
+    //TODO ADD favorites (posts / plants / people)
+    // private List<Favorite> favorites = new ArrayList<>()
+    // methods: contains // add / remove
+
+    //TODO ADD tasks
+    // @OneToMany( mappedBy = "owner")
+    // private List<Task> tasks = new ArrayList<>()
+    // methods: contains // get GardenTasks // get ToDoTasks
+    // add / remove
+
+    //TODO ADD gardens
+    // @ManyToMany
+    // private List<Garden> gardens = new ArrayList<>()
+    // methods: contains // add // remove
+
+    //TODO ADD profile picture
     // @Lob
     // var profilePicture = ByteArray
 
+    public void setDefaultValues(){
+        this.setMemberSince(LocalDate.now());
+        this.setLastActivity();
+        this.setEnabled(true);
+
+        this.setLevel(1);
+        this.setXp("1000");
+        this.setLevelUpLimit("2000");
+    }
+
+    // AUTHORITHIES
     private boolean isPossibleAuthority(String toAdd){
         this.possibleAuthorities.add("ROLE_USER");
         this.possibleAuthorities.add("ROLE_MODERATOR");
@@ -131,6 +141,7 @@ public class User {
         this.lastActivity = LocalDateTime.now();
     }
 
+    // LEVEL (XP / LIMIT)
     public long parseLong(String toParse) {
         return Long.parseLong(toParse);
     }
@@ -161,7 +172,7 @@ public class User {
         checkAndSetMax(level);
         this.setLevel(level);
     }
-    public String setXp (String xp){
+    public String setUserXp (String xp){
         String out = this.xp + " + " + xp + " = ";
         if (!this.xp.equals("MAX")) {
             Long current = parseLong(this.xp);
@@ -183,6 +194,7 @@ public class User {
         return out;
     }
 
+    // POSTS
     public boolean hasPost(Post post) {
         for ( Post p : this.getPosts() ) {
             if ( p.equals(post) ) return true;

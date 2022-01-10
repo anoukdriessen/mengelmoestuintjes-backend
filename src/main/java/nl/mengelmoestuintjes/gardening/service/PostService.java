@@ -5,7 +5,6 @@ import nl.mengelmoestuintjes.gardening.dto.request.PostRequest;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
 import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
 import nl.mengelmoestuintjes.gardening.model.users.User;
-import nl.mengelmoestuintjes.gardening.repository.PostAuthorRepository;
 import nl.mengelmoestuintjes.gardening.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +17,6 @@ import java.util.Optional;
 public class PostService {
 
     private PostRepository repository;
-
-    @Autowired
-    PostAuthorRepository relationRepository;
 
     @Autowired
     public PostService( PostRepository postRepository ) {

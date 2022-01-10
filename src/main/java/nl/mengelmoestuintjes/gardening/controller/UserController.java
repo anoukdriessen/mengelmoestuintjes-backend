@@ -26,15 +26,10 @@ public class UserController {
 
     // CREATE
     @PostMapping
-    public User create(
-            @RequestBody UserRequest toAdd
+    public String create(
+            @RequestBody User toAdd
     ) {
-        try {
-            String username = service.create( toAdd );
-            return service.getUser( username );
-        } catch (BadRequestException e) {
-            throw new BadRequestException( e.getMessage() );
-        }
+        return service.create( toAdd );
     }
 
     @PostMapping(value = "/{username}/authorities")
@@ -156,7 +151,7 @@ public class UserController {
 
     // DELETE
     @DeleteMapping(value = "/{username}")
-    public String deleteKlant(@PathVariable("username") String username) {
+    public String delete(@PathVariable("username") String username) {
         service.deleteUser(username);
         return "user " + username + " is deleted";
     }

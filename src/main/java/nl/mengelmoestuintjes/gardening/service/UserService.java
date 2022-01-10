@@ -5,7 +5,6 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.InvalidException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.NotAuthorizedException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.UserNotFoundException;
 import nl.mengelmoestuintjes.gardening.dto.request.UserRequest;
-import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
 import nl.mengelmoestuintjes.gardening.model.users.Authority;
 import nl.mengelmoestuintjes.gardening.model.users.Province;
@@ -44,26 +43,41 @@ public class UserService {
     }
 
     // CREATE
-    public String create(UserRequest request) {
+    public String create(User toAdd) {
+        User user = new User();
         try {
-            request.setMemberSince(LocalDate.now());
-
-            UserResponse dto = new UserResponse();
-            User user = dto.toUser(request);
-
-            try {
-                String encryptedPassword = passwordEncoder.encode(request.getPassword());
-                user.setPassword(encryptedPassword);
-            } catch (Exception e) {
-                throw new InvalidException("password");
-            }
-
-            repository.save(user);
-            return user.getUsername();
+            String encryptedPassword = passwordEncoder.encode(toAdd.getPassword());
+            user.setPassword(encryptedPassword);
+            user.setUsername(toAdd.getUsername());
+        } catch (Exception e) {
+            throw new BadRequestException("Invalid credentials");
         }
-        catch (Exception ex) {
-            throw new BadRequestException("Cannot create user.");
+
+        user.setDefaultValues();
+        user.addAuthority("ROLE_USER");
+
+        try {
+            user.setEmail(toAdd.getEmail());
+        } catch (Exception e) {
+            throw new BadRequestException("Invalid email");
         }
+
+        try {
+            user.setName(toAdd.getName());
+            user.setBirthday(toAdd.getBirthday());
+            user.setProvince(toAdd.getProvince());
+        } catch (Exception e) {
+            throw new BadRequestException("Invalid user details");
+        }
+
+        try {
+            user.setPosts(toAdd.getPosts());
+        } catch (Exception e) {
+            throw new BadRequestException("Invalid list(s)");
+        }
+
+        repository.save(user);
+        return user.getUsername() + " created";
     }
 
     // READ
@@ -188,7 +202,7 @@ public class UserService {
         User user = getUser(username);
         try {
             String xp = "" + toAdd;
-            String out = user.setXp(xp);
+            String out = user.setUserXp(xp);
             repository.save(user);
             return out;
         } catch (Exception e) {
@@ -208,8 +222,11 @@ public class UserService {
 
     // DELETE
     public void deleteUser(String username) {
-        if (userExists( username )) repository.deleteById(username);
-        else throw new UserNotFoundException(username);
+        if (userExists( username )) {
+            repository.deleteById(username);
+        } else {
+            throw new UserNotFoundException(username);
+        }
     }
     public void removeAuthority(String username, String authorityString) {
         User user = getUser( username );
