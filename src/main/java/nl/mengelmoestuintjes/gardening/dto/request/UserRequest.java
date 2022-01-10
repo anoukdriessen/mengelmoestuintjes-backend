@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
-import nl.mengelmoestuintjes.gardening.model.users.Province;
+import nl.mengelmoestuintjes.gardening.model.Province;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,7 +21,6 @@ public class UserRequest {
     private String username;
     private String password;
     private boolean enabled;
-    private List<String> authorities;
     private String email;
     private String level;
     private String xp;
@@ -31,6 +30,7 @@ public class UserRequest {
     private Province province;
     private LocalDate memberSince;
     private LocalDateTime lastActivity;
+    private List<String> authorities;
     private List<Post> posts = new ArrayList<>();
 
 }

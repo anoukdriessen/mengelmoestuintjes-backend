@@ -6,9 +6,9 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.NotAuthorizedExcept
 import nl.mengelmoestuintjes.gardening.controller.exceptions.UserNotFoundException;
 import nl.mengelmoestuintjes.gardening.dto.request.UserRequest;
 import nl.mengelmoestuintjes.gardening.model.posts.Post;
-import nl.mengelmoestuintjes.gardening.model.users.Authority;
-import nl.mengelmoestuintjes.gardening.model.users.Province;
-import nl.mengelmoestuintjes.gardening.model.users.User;
+import nl.mengelmoestuintjes.gardening.model.Authority;
+import nl.mengelmoestuintjes.gardening.model.Province;
+import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -43,15 +43,18 @@ public class UserService {
     }
 
     // CREATE
-    public String create(User toAdd) {
+    public User create(User toAdd) {
         User user = new User();
         try {
             String encryptedPassword = passwordEncoder.encode(toAdd.getPassword());
             user.setPassword(encryptedPassword);
-            user.setUsername(toAdd.getUsername());
         } catch (Exception e) {
-            throw new BadRequestException("Invalid credentials");
+            throw new InvalidException("password invalid");
         }
+        String chosen = toAdd.getUsername();
+
+        if (userExists(chosen)) throw new InvalidException("username already exists");
+        user.setUsername(toAdd.getUsername());
 
         user.setDefaultValues();
         user.addAuthority("ROLE_USER");
@@ -77,7 +80,7 @@ public class UserService {
         }
 
         repository.save(user);
-        return user.getUsername() + " created";
+        return user;
     }
 
     // READ
@@ -107,9 +110,25 @@ public class UserService {
         User toFind = getUser( username );
         return toFind.getAuthorities();
     }
+    public List<String> getProvinces() {
+        List<String> all = new ArrayList<>();
+        for (Province p : Province.values()) {
+            all.add(p.name());
+        }
+        return all;
+    }
     public String getXP(String username) {
         User toFind = getUser( username );
         return toFind.getLevel() + ":" +toFind.getXp() + " -> " + toFind.getLevelUpLimit();
+    }
+    public Iterable<User> getWithBirthdayToday() {
+        Iterable<User> all = getAll("", "", null);
+        ArrayList<User> isBirthday = new ArrayList<>();
+
+        for (User u : all) {
+            if (u.birthdayIsToday()) isBirthday.add(u);
+        }
+        return isBirthday;
     }
     public List<Post> getPosts(String username, boolean published) {
         User toFind = getUser( username );
@@ -170,10 +189,14 @@ public class UserService {
         return changedFields;
     }
     public ArrayList<String> update(String username, UserRequest modified) {
-        User user = getUser( username );
-        ArrayList<String> changed = change( user, modified );
-        repository.save(user);
-        return changed;
+        try {
+            User user = getUser(username);
+            ArrayList<String> changed = change(user, modified);
+            repository.save(user);
+            return changed;
+        } catch (Exception e) {
+            throw new BadRequestException("cannot update user " + username);
+        }
     }
 
     public void setPassword(String username, String password) {
@@ -228,14 +251,13 @@ public class UserService {
             throw new UserNotFoundException(username);
         }
     }
-    public void removeAuthority(String username, String authorityString) {
+    public String removeAuthority(String username, String authorityString) {
         User user = getUser( username );
-        try {
-            user.removeAuthority(authorityString);
-            repository.save(user);
-        } catch (Exception e) {
-            throw new InvalidException("cannot remove authority " + authorityString + " from user " + username);
-        }
+        user.removeAuthority(authorityString);
+        repository.save(user);
+
+        if (user.getAuthorities().contains(authorityString)) throw new BadRequestException("cannot remove authority");
+        return "removed " + authorityString + " from " + username;
     }
 
     private boolean isValidPassword(String password) {
