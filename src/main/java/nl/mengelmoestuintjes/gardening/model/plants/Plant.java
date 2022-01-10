@@ -1,7 +1,7 @@
 //package nl.mengelmoestuintjes.gardening.model.plants;
 //
 //import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-//import nl.mengelmoestuintjes.gardening.model.users.User;
+//import nl.mengelmoestuintjes.gardening.model.User;
 //import org.springframework.lang.Nullable;
 //
 //import javax.persistence.*;
