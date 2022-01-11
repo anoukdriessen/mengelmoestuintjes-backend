@@ -2,8 +2,8 @@ package nl.mengelmoestuintjes.gardening.service;
 
 import nl.mengelmoestuintjes.gardening.controller.exceptions.PostNotFoundException;
 import nl.mengelmoestuintjes.gardening.dto.request.PostRequest;
-import nl.mengelmoestuintjes.gardening.model.posts.Post;
-import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
+import nl.mengelmoestuintjes.gardening.model.Post;
+import nl.mengelmoestuintjes.gardening.model.PostCategory;
 import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;

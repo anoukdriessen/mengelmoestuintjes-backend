@@ -1,7 +1,7 @@
 package nl.mengelmoestuintjes.gardening.repository;
 
-import nl.mengelmoestuintjes.gardening.model.posts.Post;
-import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
+import nl.mengelmoestuintjes.gardening.model.Post;
+import nl.mengelmoestuintjes.gardening.model.PostCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository extends JpaRepository<Post, Long> {

@@ -2,8 +2,8 @@ package nl.mengelmoestuintjes.gardening.controller;
 
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 import nl.mengelmoestuintjes.gardening.dto.request.PostRequest;
-import nl.mengelmoestuintjes.gardening.model.posts.Post;
-import nl.mengelmoestuintjes.gardening.model.posts.PostCategory;
+import nl.mengelmoestuintjes.gardening.model.Post;
+import nl.mengelmoestuintjes.gardening.model.PostCategory;
 import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.service.PostService;
 import nl.mengelmoestuintjes.gardening.service.UserService;
