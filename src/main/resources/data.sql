@@ -78,7 +78,7 @@ INSERT INTO gardens(name, x, y, size)
 VALUES ('volkstuintje', 10, 10, '100'),
        ('achtertuin', 5, 5, '25');
 
-INSERT INTO garden_users(garden_id, user_id)
+INSERT INTO gardens_users(garden_id, user_id)
 VALUES (1, 'itiskevin'),
        (1, 'gebruiker'),
        (2, 'itiskevin');

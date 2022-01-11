@@ -4,6 +4,7 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException
 import nl.mengelmoestuintjes.gardening.dto.request.GardenRequest;
 import nl.mengelmoestuintjes.gardening.model.Task;
 import nl.mengelmoestuintjes.gardening.model.User;
+import nl.mengelmoestuintjes.gardening.model.garden.Field;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.service.GardenService;
 import nl.mengelmoestuintjes.gardening.service.UserService;
@@ -67,7 +68,10 @@ public class GardenController {
     }
     @GetMapping(value = "/{id}/taken")
     public Iterable<Task> getTasksFromGarden(@PathVariable("id") long id) { return service.getTasks(id); }
-
+    @GetMapping(value = "{id}/velden")
+    public Iterable<Field> getFieldsFromGarden(@PathVariable("id") long id){
+        return service.getFields(id);
+    }
     // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateGarden(

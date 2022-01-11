@@ -5,6 +5,7 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.GardenNotFoundExcep
 import nl.mengelmoestuintjes.gardening.dto.request.GardenRequest;
 import nl.mengelmoestuintjes.gardening.model.Task;
 import nl.mengelmoestuintjes.gardening.model.User;
+import nl.mengelmoestuintjes.gardening.model.garden.Field;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.repository.GardenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class GardenService {
             newGarden.setX(toAdd.getX());
             newGarden.setY(toAdd.getY());
             newGarden.setSize(newGarden.getX(), newGarden.getY());
+            newGarden.setFields(toAdd.getFields());
 
             newGarden.setOwners(toAdd.getOwners());
 
@@ -64,6 +66,10 @@ public class GardenService {
     public Iterable<Task> getTasks(long id) {
         Garden garden = getGarden(id);
         return garden.getTasks();
+    }
+    public Iterable<Field> getFields(long id) {
+        Garden garden = getGarden(id);
+        return garden.getFields();
     }
 
     // UPDATE

@@ -4,7 +4,7 @@
 //import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 //import com.fasterxml.jackson.annotation.JsonManagedReference;
 //import lombok.Data;
-//import nl.mengelmoestuintjes.gardening.model.plants.*;
+//import nl.mengelmoestuintjes.gardening.model.garden.plants.*;
 //
 //import javax.persistence.*;
 //import java.time.LocalDateTime;

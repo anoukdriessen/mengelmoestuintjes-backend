@@ -33,7 +33,7 @@ public class Garden {
             cascade= {CascadeType.PERSIST, CascadeType.MERGE,
                       CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
-            name="garden_users",
+            name="gardens_users",
             joinColumns=@JoinColumn(name="garden_id"),
             inverseJoinColumns=@JoinColumn(name="user_id")
     )
@@ -44,12 +44,24 @@ public class Garden {
             fetch=FetchType.LAZY,
             cascade= {CascadeType.PERSIST, CascadeType.MERGE,
                       CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "task_id")
+    @JoinTable(
+            name="gardens_tasks",
+            joinColumns=@JoinColumn(name="garden_id"),
+            inverseJoinColumns=@JoinColumn(name="task_id")
+    )
     private List<Task> tasks = new ArrayList<>();
 
-//    @OneToMany
-//    @JsonIgnore
-//    private List<Field> fields;
+    @JsonIgnoreProperties("gardens")
+    @OneToMany(
+            fetch=FetchType.LAZY,
+            cascade= {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(
+            name="gardens_fields",
+            joinColumns=@JoinColumn(name="garden_id"),
+            inverseJoinColumns=@JoinColumn(name="field_id")
+    )
+    private List<Field> fields = new ArrayList<>();
 
     public int calculateSize(int x, int y) {
         return x * y;
@@ -90,6 +102,21 @@ public class Garden {
     public void removeTask(Task toRemove) {
         if (!tasks.isEmpty()) {
             tasks.remove(toRemove);
+        }
+    }
+    public void setFields(ArrayList<Field> fields) {
+        if (this.fields.isEmpty()) {
+            setEmptyFields();
+        } else {
+            this.fields = fields;
+        }
+    }
+    public void setEmptyFields() {
+        int size = Integer.parseInt(this.getSize());
+        for (int i = 0; i < size; i++) {
+            Field toAdd = new Field();
+            toAdd.setStatus(FieldStatus.EMPTY);
+            fields.add(toAdd);
         }
     }
 
