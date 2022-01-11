@@ -73,3 +73,12 @@ VALUES ('mengelmoestuintje','BLOG','Hello World','We zijn LIVE!',
 INSERT INTO tasks(user_id, type, done, title, description, created, deadline)
 VALUES ('gebruiker', 'TODO', FALSE, 'verjaardagsboeket plukken', 'er is er een jarig en dat ben ik!', '10-01-2022', '10-01-2022'),
        ('itiskevin', 'GARDENING', FALSE, 'water geven', 'veld A1, B3 en C5', '10-01-2022', '10-01-2022');
+
+INSERT INTO gardens(name, x, y, size)
+VALUES ('volkstuintje', 10, 10, '100'),
+       ('achtertuin', 5, 5, '25');
+
+INSERT INTO gardens_users(garden_id, user_id)
+VALUES (1, 'itiskevin'),
+       (1, 'gebruiker'),
+       (2, 'itiskevin');

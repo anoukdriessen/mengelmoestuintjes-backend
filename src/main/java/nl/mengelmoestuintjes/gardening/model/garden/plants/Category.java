@@ -1,4 +1,4 @@
-//package nl.mengelmoestuintjes.gardening.model.plants;
+//package nl.mengelmoestuintjes.gardening.model.garden.plants;
 //
 //public enum Category {
 //    FLOWERS,

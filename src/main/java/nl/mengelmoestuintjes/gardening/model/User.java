@@ -6,7 +6,6 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.GardenNotFoundExcep
 import nl.mengelmoestuintjes.gardening.controller.exceptions.PostNotFoundException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.TaskNotFoundException;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
-import nl.mengelmoestuintjes.gardening.model.posts.Post;
 
 import javax.persistence.*;
 import java.time.LocalDate;

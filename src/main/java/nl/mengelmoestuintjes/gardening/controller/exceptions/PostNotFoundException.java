@@ -1,6 +1,6 @@
 package nl.mengelmoestuintjes.gardening.controller.exceptions;
 
-import nl.mengelmoestuintjes.gardening.model.posts.Post;
+import nl.mengelmoestuintjes.gardening.model.Post;
 
 public class PostNotFoundException extends RuntimeException {
 

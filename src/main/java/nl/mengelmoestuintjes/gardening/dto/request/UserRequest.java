@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import nl.mengelmoestuintjes.gardening.model.Province;
 import nl.mengelmoestuintjes.gardening.model.Task;
-import nl.mengelmoestuintjes.gardening.model.posts.Post;
+import nl.mengelmoestuintjes.gardening.model.Post;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

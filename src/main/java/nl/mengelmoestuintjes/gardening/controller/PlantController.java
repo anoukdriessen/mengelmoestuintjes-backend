@@ -2,7 +2,7 @@
 //
 //import nl.mengelmoestuintjes.gardening.dto.PlantRequestDto;
 //import nl.mengelmoestuintjes.gardening.dto.PlantResponseDto;
-//import nl.mengelmoestuintjes.gardening.model.plants.*;
+//import nl.mengelmoestuintjes.gardening.model.garden.plants.*;
 //import nl.mengelmoestuintjes.gardening.service.PlantService;
 //import org.springframework.beans.factory.annotation.*;
 //import org.springframework.web.bind.annotation.*;

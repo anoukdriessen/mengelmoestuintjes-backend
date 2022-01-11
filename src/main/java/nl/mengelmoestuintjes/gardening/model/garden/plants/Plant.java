@@ -1,21 +1,38 @@
-//package nl.mengelmoestuintjes.gardening.model.plants;
-//
-//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-//import nl.mengelmoestuintjes.gardening.model.User;
-//import org.springframework.lang.Nullable;
-//
-//import javax.persistence.*;
-//
-//@Entity
-//@Table( name = "plants" )
-//public class Plant {
-//    @Id
-//    @GeneratedValue( strategy = GenerationType.IDENTITY )
-//    private long id;
-//
-//    private Category category;
-//    private String name;
-//    private String description;
+package nl.mengelmoestuintjes.gardening.model.garden.plants;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import nl.mengelmoestuintjes.gardening.model.garden.Field;
+
+import javax.persistence.*;
+
+@Entity
+@Table( name = "plants" )
+@Data
+public class Plant {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @JsonIgnoreProperties("plants")
+    @ManyToOne(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.EAGER)
+    @JoinColumn(name = "field_id")
+    private Field field;
+
+    @Column(nullable = false)
+    private String name;
+
+    //    private Category category;
+    //    private String name;
+    //    private String description;
+
+
+}
+
 //
 //    @Column(columnDefinition = "integer default 0")
 //    private Location location;            // de standplaats van de plant

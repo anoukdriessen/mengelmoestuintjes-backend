@@ -4,8 +4,10 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException
 import nl.mengelmoestuintjes.gardening.controller.exceptions.InvalidException;
 import nl.mengelmoestuintjes.gardening.dto.request.UserRequest;
 import nl.mengelmoestuintjes.gardening.model.Province;
+import nl.mengelmoestuintjes.gardening.model.Task;
 import nl.mengelmoestuintjes.gardening.model.TaskType;
 import nl.mengelmoestuintjes.gardening.model.User;
+import nl.mengelmoestuintjes.gardening.model.Post;
 import nl.mengelmoestuintjes.gardening.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +41,28 @@ public class UserController {
         try {
             String authorityName = (String) fields.get("authority");
             return service.addAuthority(username, authorityName);
+        } catch (Exception e) {
+            throw new BadRequestException( e.getMessage() );
+        }
+    }
+    @PostMapping(value = "/{username}/berichten")
+    public Post addUserPost(
+            @PathVariable("username") String username,
+            @RequestBody Map<String, Object> fields
+    ) {
+        try {
+            return service.addPost(username, fields);
+        } catch (Exception e) {
+            throw new BadRequestException( e.getMessage() );
+        }
+    }
+    @PostMapping(value = "/{username}/taken")
+    public Task addUserTask(
+            @PathVariable("username") String username,
+            @RequestBody Map<String, Object> fields
+    ) {
+        try {
+            return service.addTask(username, fields);
         } catch (Exception e) {
             throw new BadRequestException( e.getMessage() );
         }
@@ -131,6 +155,7 @@ public class UserController {
     ) {
         return service.setLastActivity(username);
     }
+
 
     // DELETE
     @DeleteMapping(value = "/{username}")

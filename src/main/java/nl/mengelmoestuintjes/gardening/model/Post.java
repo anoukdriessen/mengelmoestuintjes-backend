@@ -1,8 +1,7 @@
-package nl.mengelmoestuintjes.gardening.model.posts;
+package nl.mengelmoestuintjes.gardening.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import nl.mengelmoestuintjes.gardening.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

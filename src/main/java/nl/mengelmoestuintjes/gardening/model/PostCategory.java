@@ -1,4 +1,4 @@
-package nl.mengelmoestuintjes.gardening.model.posts;
+package nl.mengelmoestuintjes.gardening.model;
 
 public enum PostCategory {
     POST,

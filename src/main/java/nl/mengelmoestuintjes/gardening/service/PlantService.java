@@ -1,7 +1,7 @@
 //package nl.mengelmoestuintjes.gardening.service;
 //
 //import nl.mengelmoestuintjes.gardening.controller.exceptions.RecordNotFoundException;
-//import nl.mengelmoestuintjes.gardening.model.plants.*;
+//import nl.mengelmoestuintjes.gardening.model.garden.plants.*;
 //import nl.mengelmoestuintjes.gardening.repository.PlantRepository;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Service;

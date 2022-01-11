@@ -2,7 +2,9 @@ package nl.mengelmoestuintjes.gardening.controller;
 
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 import nl.mengelmoestuintjes.gardening.dto.request.GardenRequest;
+import nl.mengelmoestuintjes.gardening.model.Task;
 import nl.mengelmoestuintjes.gardening.model.User;
+import nl.mengelmoestuintjes.gardening.model.garden.Field;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.service.GardenService;
 import nl.mengelmoestuintjes.gardening.service.UserService;
@@ -25,7 +27,7 @@ public class GardenController {
 
     // CREATE
     @PostMapping
-    public String newGarden(
+    public Garden newGarden(
             @RequestParam(value = "username") String username,
             @RequestBody GardenRequest request
     ) {
@@ -47,7 +49,7 @@ public class GardenController {
             User owner = userService.getUser(username);
             return service.addUser(owner, garden);
         } catch (Exception e) {
-            throw new BadRequestException( e.getMessage() );
+            throw new BadRequestException( "cannot add owner" );
         }
     }
 
@@ -64,7 +66,12 @@ public class GardenController {
     public Iterable<String> getUsersFromGarden(@PathVariable("id") long id) {
         return service.getUsers(id);
     }
-
+    @GetMapping(value = "/{id}/taken")
+    public Iterable<Task> getTasksFromGarden(@PathVariable("id") long id) { return service.getTasks(id); }
+    @GetMapping(value = "{id}/velden")
+    public Iterable<Field> getFieldsFromGarden(@PathVariable("id") long id){
+        return service.getFields(id);
+    }
     // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateGarden(
@@ -73,20 +80,25 @@ public class GardenController {
     ) {
         return ResponseEntity.ok().body(service.updateGarden(id, request));
     }
-//    @PutMapping("/{id}/x/{x}")
-//    public ResponseEntity<Object> updateX(
-//            @PathVariable("id") long id,
-//            @PathVariable("x") byte x
-//    ) {
-//        return ResponseEntity.ok().body(service.updateX(id, x));
-//    }
-//    @PutMapping("/{id}/y/{y}")
-//    public ResponseEntity<Object> updateY(
-//            @PathVariable("id") long id,
-//            @PathVariable("y") byte y
-//    ) {
-//        return ResponseEntity.ok().body(service.updateY(id, y));
-//    }
+    @PutMapping("/{id}/size")
+    public ResponseEntity<Object> updateSize(
+            @PathVariable("id") long id,
+            @RequestBody GardenRequest request
+    ) {
+        return ResponseEntity.ok().body(service.updateSize(id, request.getX(), request.getY()));
+    }
+    @PutMapping(value = "/{id}/taken")
+    public Iterable<Task> addTasks(
+            @PathVariable("id") long id
+    ) {
+        try {
+            Garden garden = service.getGarden(id);
+            return service.updateTasks(garden);
+        } catch (Exception e) {
+            throw new BadRequestException( "cannot update tasks ");
+        }
+    }
+
 
     // DELETE
     @DeleteMapping("/{id}")

@@ -18,8 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.sql.DataSource;
 
-import static org.springframework.http.HttpMethod.*;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -66,15 +64,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/actuator/info").permitAll()
-                .antMatchers("/actuator/**").hasRole("DEVELOPER")
-                .antMatchers("/api/gebruikers/**").hasRole("ADMIN")
-                .antMatchers(POST, "/api/quotes").hasRole("MODERATOR")
-                .antMatchers(PATCH, "/api/quotes").hasRole("MODERATOR")
-                .antMatchers(DELETE, "/api/quotes").hasRole("MODERATOR")
-                .antMatchers(PATCH,"/gebruikers/{^[\\w]$}/password").authenticated()
-                .antMatchers(POST,"/authenticate").permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .csrf().disable()
@@ -87,3 +76,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 }
+/**
+ * //                .antMatchers("/").permitAll()
+ * //                .antMatchers("/actuator/info").permitAll()
+ * //                .antMatchers("/actuator/**").hasRole("DEVELOPER")
+ * //                .antMatchers("/api/gebruikers/**").hasRole("ADMIN")
+ * //                .antMatchers(POST, "/api/quotes").hasRole("MODERATOR")
+ * //                .antMatchers(PATCH, "/api/quotes").hasRole("MODERATOR")
+ * //                .antMatchers(DELETE, "/api/quotes").hasRole("MODERATOR")
+ * //                .antMatchers(PATCH,"/gebruikers/{^[\\w]$}/password").authenticated()
+ * //                .antMatchers(POST,"/authenticate").permitAll()
+ */

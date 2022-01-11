@@ -4,9 +4,11 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException
 import nl.mengelmoestuintjes.gardening.controller.exceptions.InvalidException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.NotAuthorizedException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.UserNotFoundException;
+import nl.mengelmoestuintjes.gardening.dto.request.PostRequest;
+import nl.mengelmoestuintjes.gardening.dto.request.TaskRequest;
 import nl.mengelmoestuintjes.gardening.dto.request.UserRequest;
 import nl.mengelmoestuintjes.gardening.model.*;
-import nl.mengelmoestuintjes.gardening.model.posts.Post;
+import nl.mengelmoestuintjes.gardening.model.Post;
 import nl.mengelmoestuintjes.gardening.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,8 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -251,6 +255,49 @@ public class UserService {
             return "last activity = " + user.getLastActivity();
         } catch (Exception e) {
             throw new InvalidException("last activity");
+        }
+    }
+    public Post addPost(String username, Map<String, Object> fields) {
+        User user = getUser( username );
+        PostRequest toAdd = new PostRequest();
+        try {
+            toAdd.setAuthor(user);
+            toAdd.setTitle((String) fields.get("title"));
+            toAdd.setSummary((String) fields.get("summary"));
+            toAdd.setDescription((String) fields.get("description"));
+            toAdd.setImageUrl((String) fields.get("imageUrl"));
+            toAdd.setPublished((boolean) fields.get("published"));
+            toAdd.setCategory((String) fields.get("category"));
+            toAdd.setCreated(LocalDateTime.now());
+
+            user.addPost(toAdd.convert());
+            repository.save(user);
+            return toAdd.convert();
+        } catch (Exception e) {
+            throw new InvalidException("post");
+        }
+    }
+    public Task addTask(String username, Map<String, Object> fields) {
+        User user = getUser( username );
+        TaskRequest toAdd = new TaskRequest();
+        try {
+            toAdd.setOwner(user);
+            toAdd.setType((String) fields.get("type"));
+            toAdd.setTitle((String) fields.get("title"));
+            toAdd.setDescription((String) fields.get("description"));
+            toAdd.setDone((boolean) fields.get("done"));
+            toAdd.setCreated(LocalDate.now());
+
+            String date = (String) fields.get("deadline");
+            LocalDate deadline = LocalDate.parse(date);
+
+            toAdd.setDeadline(deadline);
+
+            user.addTask(toAdd.convert());
+            repository.save(user);
+            return toAdd.convert();
+        } catch (Exception e) {
+            throw new InvalidException("task");
         }
     }
 
