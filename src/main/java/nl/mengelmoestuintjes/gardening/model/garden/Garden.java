@@ -1,7 +1,10 @@
 package nl.mengelmoestuintjes.gardening.model.garden;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import nl.mengelmoestuintjes.gardening.model.Task;
+import nl.mengelmoestuintjes.gardening.model.TaskType;
 import nl.mengelmoestuintjes.gardening.model.User;
 
 import javax.persistence.*;
@@ -22,15 +25,13 @@ public class Garden {
 
     private String size;
 
-    @Transient
     private int x;
-    @Transient
     private int y;
 
     @ManyToMany(
             fetch=FetchType.LAZY,
             cascade= {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+                      CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
             name="garden_users",
             joinColumns=@JoinColumn(name="garden_id"),
@@ -38,21 +39,25 @@ public class Garden {
     )
     private List<User> owners = new ArrayList<>();
 
+    @JsonIgnoreProperties("gardens")
+    @OneToMany(
+            fetch=FetchType.LAZY,
+            cascade= {CascadeType.PERSIST, CascadeType.MERGE,
+                      CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "task_id")
+    private List<Task> tasks = new ArrayList<>();
+
 //    @OneToMany
 //    @JsonIgnore
 //    private List<Field> fields;
 
-//    public int calculateSize(byte x, byte y) {
-//        return x * y;
-//    }
+    public int calculateSize(int x, int y) {
+        return x * y;
+    }
 
-//    public void setFields(List<Field> fields) {
-//        this.fields = fields;
-//    }
-
-//    public void setSize() {
-//        this.size = "" + (calculateSize(this.x, this.y));
-//    }
+    public void setSize(int x, int y) {
+        this.size = "" + (calculateSize(x, y));
+    }
 
     public boolean hasOwner(User user){
         for (User u : this.owners) {
@@ -72,6 +77,20 @@ public class Garden {
             usernames.add(u.getUsername());
         }
         return usernames;
+    }
+    public void setTasks() {
+        for (User u : this.owners) {
+            tasks.addAll(u.getTasksByType(TaskType.GARDENING));
+        }
+    }
+    public void addTask(Task toAdd) {
+        toAdd.setType(TaskType.GARDENING);
+        tasks.add(toAdd);
+    }
+    public void removeTask(Task toRemove) {
+        if (!tasks.isEmpty()) {
+            tasks.remove(toRemove);
+        }
     }
 
 }

@@ -1,7 +1,9 @@
 package nl.mengelmoestuintjes.gardening.service;
 
+import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.GardenNotFoundException;
 import nl.mengelmoestuintjes.gardening.dto.request.GardenRequest;
+import nl.mengelmoestuintjes.gardening.model.Task;
 import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.repository.GardenRepository;
@@ -20,14 +22,26 @@ public class GardenService {
     }
 
     // CREATE
-    public String create(GardenRequest toAdd) {
+    public Garden create(GardenRequest toAdd) {
         Garden newGarden = new Garden();
 
-        newGarden.setId(toAdd.getId());
-        newGarden.setName(toAdd.getName());
-        newGarden.setOwners(toAdd.getOwners());
-        repository.save(newGarden);
-        return newGarden.getName() + " created";
+        try {
+            newGarden.setId(toAdd.getId());
+            newGarden.setName(toAdd.getName());
+
+            newGarden.setX(toAdd.getX());
+            newGarden.setY(toAdd.getY());
+            newGarden.setSize(newGarden.getX(), newGarden.getY());
+
+            newGarden.setOwners(toAdd.getOwners());
+
+            if (!newGarden.getOwners().isEmpty()) newGarden.setTasks();
+
+            return repository.save(newGarden);
+        } catch (Exception e) {
+            throw new BadRequestException("cannot create garden");
+        }
+
     }
 
     // READ
@@ -47,6 +61,10 @@ public class GardenService {
         Garden garden = getGarden(id);
         return garden.getOwners();
     }
+    public Iterable<Task> getTasks(long id) {
+        Garden garden = getGarden(id);
+        return garden.getTasks();
+    }
 
     // UPDATE
     public String addUser(User user, Garden garden) {
@@ -54,27 +72,43 @@ public class GardenService {
         repository.save( garden );
         return garden.getName() + " has now owner " + user.getUsername();
     }
-    public String updateGarden(long id, GardenRequest modified) {
+    public Garden updateGarden(long id, GardenRequest modified) {
         Garden garden = getGarden(id);
+        try {
+            if (!modified.getName().isBlank()) garden.setName(modified.getName());
 
-        garden.setName(modified.getName());
-        garden.setOwners(modified.getOwners());
+            if (modified.getX() != 0 || modified.getY() != 0) {
+                garden.setX(modified.getX());
+                garden.setY(modified.getY());
+                garden.setSize(garden.getX(), garden.getY());
+            }
 
-        repository.save(garden);
-        return garden.getName() + " has been updated";
+            if (!modified.getOwners().isEmpty()) garden.setOwners(modified.getOwners());
+
+            if (!garden.getOwners().isEmpty()) garden.setTasks();
+
+            return repository.save(garden);
+        } catch (Exception e) {
+            throw new BadRequestException("cannot update garden");
+        }
     }
-//    public String updateX(long id, byte x) {
-//        Garden garden = getGarden(id);
-//        garden.setX(x);
-//        repository.save(garden);
-//        return "new x=" + garden.getX() + " size=" + garden.getSize();
-//    }
-//    public String updateY(long id, byte y) {
-//        Garden garden = getGarden(id);
-//        garden.setY(y);
-//        repository.save(garden);
-//        return "new y=" + garden.getY() + " size=" + garden.getSize();
-//    }
+    public Garden updateSize(long id, int x, int y) {
+        Garden garden = getGarden(id);
+        try {
+            if (x != 0 || y != 0) {
+                garden.setX(x);
+                garden.setY(y);
+                garden.setSize(garden.getX(), garden.getY());
+            }
+            return repository.save(garden);
+        } catch (Exception e) {
+            throw new BadRequestException("cannot update garden size");
+        }
+    }
+    public Iterable<Task> updateTasks(Garden toModify) {
+        toModify.setTasks();
+        return toModify.getTasks();
+    }
 
     // DELETE
     public String delete(long id) {
