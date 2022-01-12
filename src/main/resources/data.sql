@@ -1,8 +1,8 @@
 INSERT INTO users (username, password, enabled, email, level, xp, level_up_limit, name, birthday, province)
 VALUES ('gebruiker', '$2a$10$wPHxwfsfTnOJAdgYcerBt.utdAvC24B/DWfuXfzKBSDHO0etB1ica', TRUE,
-        'user@mail.nl', '1', '1000', '2000', 'gebruiker', '10-01-2022', 'UTRECHT'),
+        'user@mail.nl', '1', '1000', '2000', 'gebruiker', '11-01-2022', 'UTRECHT'),
        ('itiskevin', '$2a$10$wPHxwfsfTnOJAdgYcerBt.utdAvC24B/DWfuXfzKBSDHO0etB1ica', TRUE,
-        'info@mengelmoestuintjes.nl', '1', '1000', '2000', 'Kevin', '30-12-1991', 'OVERIJSSEL'),
+        'info@mengelmoestuintjes.nl', '1', '1000', '2000', 'Kevin', '11-01-1991', 'OVERIJSSEL'),
        ('mengelmoestuintje', '$2a$10$wPHxwfsfTnOJAdgYcerBt.utdAvC24B/DWfuXfzKBSDHO0etB1ica', TRUE,
         'moderator@mengelmoestuintjes.nl', '1', '1000', '2000', 'Mengelmoestuintje', '22-02-2022', 'HIDDEN'),
        ('vivalanouk', '$2a$10$wPHxwfsfTnOJAdgYcerBt.utdAvC24B/DWfuXfzKBSDHO0etB1ica', TRUE,
