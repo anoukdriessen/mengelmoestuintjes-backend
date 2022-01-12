@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -103,8 +102,6 @@ public class User {
     // private List<Favorite> favorites = new ArrayList<>()
     // methods: contains // add / remove
 
-
-
     //TODO ADD profile picture
     // @Lob
     // var profilePicture = ByteArray
@@ -118,9 +115,25 @@ public class User {
         this.setXp("1000");
         this.setLevelUpLimit("2000");
     }
+    public List<String> getInfo() {
+        List<String> userDetails = new ArrayList<>();
+        userDetails.add( this.username );
+        userDetails.add( this.email );
+        userDetails.add( this.level );
+        userDetails.add( this.xp );
+        userDetails.add( this.levelUpLimit );
+        userDetails.add( this.name );
+        userDetails.add( this.province.toString() );
+        return userDetails;
+    }
 
     public boolean birthdayIsToday() {
-        return Objects.equals(this.birthday, LocalDate.now());
+        if (this.birthday.getMonthValue() == LocalDate.now().getMonthValue()) {
+            // it is this month
+            // check if it is the same day
+            return this.birthday.getDayOfMonth() == LocalDate.now().getDayOfMonth();
+        }
+        return false;
     }
 
     // AUTHORITHIES

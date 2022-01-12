@@ -82,6 +82,11 @@ public class UserController {
     public User getUser( @PathVariable("username") String username ) {
         return service.getUser(username);
     }
+    @GetMapping(value = "/{username}/info")
+    public ResponseEntity<Object> getUserInfo(@PathVariable("username") String username ) {
+        return ResponseEntity.ok().body(service.getUserInfo(username));
+
+    }
     @GetMapping(value = "/{username}/authorities")
     public ResponseEntity<Object> getUserAuthorities( @PathVariable("username") String username ) {
         return ResponseEntity.ok().body(service.getAuthorities(username));
@@ -95,7 +100,7 @@ public class UserController {
         return ResponseEntity.ok().body( service.getProvinces() );
     }
     @GetMapping(value = "/birthdays")
-    public Iterable<User> allUsersWhosBirthdayToday() {
+    public Iterable<String> allUsersWhosBirthdayToday() {
         return service.getWithBirthdayToday();
     }
 

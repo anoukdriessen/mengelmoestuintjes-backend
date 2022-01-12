@@ -109,6 +109,10 @@ public class UserService {
         if ( userFound ) return toFind.get();
         else throw new UserNotFoundException(username);
     }
+    public List<String> getUserInfo(String username) {
+        User user = getUser( username );
+        return user.getInfo();
+    }
     public List<Authority> getAuthorities(String username) {
         User toFind = getUser( username );
         return toFind.getAuthorities();
@@ -120,16 +124,20 @@ public class UserService {
         }
         return all;
     }
-    public String getXP(String username) {
+    public String[] getXP(String username) {
         User toFind = getUser( username );
-        return toFind.getLevel() + ":" +toFind.getXp() + " -> " + toFind.getLevelUpLimit();
+        String[] stats = new String[3];
+        stats[0] = toFind.getLevel();
+        stats[1] = toFind.getXp();
+        stats[2] = toFind.getLevelUpLimit();
+        return stats;
     }
-    public Iterable<User> getWithBirthdayToday() {
+    public Iterable<String> getWithBirthdayToday() {
         Iterable<User> all = getAll("", "", null);
-        ArrayList<User> isBirthday = new ArrayList<>();
+        ArrayList<String> isBirthday = new ArrayList<>();
 
         for (User u : all) {
-            if (u.birthdayIsToday()) isBirthday.add(u);
+            if (u.birthdayIsToday()) isBirthday.add(u.getUsername());
         }
         return isBirthday;
     }
