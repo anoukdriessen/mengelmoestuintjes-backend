@@ -20,21 +20,21 @@ public class User {
 
     @Id
     @Column(nullable = false, unique = true)
-    private String username; // TODO ISVALID USERNAME
+    private String username;
 
     @Column(nullable = false, length = 80)
-    private String password; // TODO ISVALID PASSWORD
+    private String password;
 
     @Column(nullable = false)
     private boolean enabled = true;
 
     @Column(nullable = false, unique = true)
-    private String email; // TODO ISVALID EMAIL
+    private String email;
 
     private String level;
     private String xp;
     private String levelUpLimit;
-    private String name; // TODO ISVALID NAME
+    private String name;
 
     private LocalDate birthday;
 

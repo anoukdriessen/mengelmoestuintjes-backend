@@ -4,6 +4,7 @@ import nl.mengelmoestuintjes.gardening.security.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -64,6 +65,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/api/quotes/random").permitAll()
+                .antMatchers(HttpMethod.POST,"/authenticate").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/gebruikers").permitAll()
+                .antMatchers(HttpMethod.GET, "api/berichten?published=TRUE&category=BLOG").permitAll()
+                .antMatchers("/api/quotes/**").hasAnyRole("MODERATOR", "ADMIN")
+                .antMatchers("/api/gebruikers/**").hasAnyRole("ADMIN")
                 .anyRequest().permitAll()
                 .and()
                 .csrf().disable()
@@ -85,5 +92,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
  * //                .antMatchers(PATCH, "/api/quotes").hasRole("MODERATOR")
  * //                .antMatchers(DELETE, "/api/quotes").hasRole("MODERATOR")
  * //                .antMatchers(PATCH,"/gebruikers/{^[\\w]$}/password").authenticated()
- * //                .antMatchers(POST,"/authenticate").permitAll()
  */

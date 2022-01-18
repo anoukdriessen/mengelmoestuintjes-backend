@@ -5,6 +5,7 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.RecordNotFoundExcep
 import nl.mengelmoestuintjes.gardening.model.Quote;
 import nl.mengelmoestuintjes.gardening.repository.QuoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,11 +25,11 @@ public class QuoteService {
     }
 
     public Iterable<Quote> getAll() {
-        return quoteRepository.findAll();
+        return quoteRepository.findAll(Pageable.ofSize(10));
     }
 
     public Quote getById( long id ) {
-        Optional<Quote> toFind = quoteRepository.findById( id );
+        Optional<Quote> toFind = quoteRepository.findByIdOrderById( id );
         if (toFind.isPresent()) {  // check if quote exists
             return toFind.get();
         } else { // quote does not exists
