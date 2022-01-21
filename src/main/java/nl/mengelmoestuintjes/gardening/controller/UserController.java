@@ -6,8 +6,8 @@ import nl.mengelmoestuintjes.gardening.dto.request.UserRequest;
 import nl.mengelmoestuintjes.gardening.model.*;
 import nl.mengelmoestuintjes.gardening.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,8 +23,8 @@ import java.util.Map;
 @CrossOrigin
 public class UserController {
 
-    @Value("${app.uploads}")
-    private String storageLocation;
+//    @Value("${app.uploads}")
+//    private String storageLocation;
 
     private UserService service;
 
@@ -75,10 +75,10 @@ public class UserController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/{username}/upload")
+    @PostMapping(value = "/{username}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> addUserProfileImage(
             @PathVariable("username") String username,
-            @RequestBody MultipartFile multipartFile
+            @RequestParam(value="photo") MultipartFile multipartFile
     ) throws IOException {
         String out = "";
         try {
