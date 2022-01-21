@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "api/taken")
-//@CrossOrigin
+@CrossOrigin
 public class TaskController {
     private TaskService service;
     private UserService userService;

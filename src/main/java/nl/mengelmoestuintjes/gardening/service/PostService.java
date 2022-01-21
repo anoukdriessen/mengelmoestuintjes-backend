@@ -1,5 +1,6 @@
 package nl.mengelmoestuintjes.gardening.service;
 
+import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.PostNotFoundException;
 import nl.mengelmoestuintjes.gardening.dto.request.PostRequest;
 import nl.mengelmoestuintjes.gardening.model.Post;
@@ -49,7 +50,7 @@ public class PostService {
         boolean hasSummary = !summary.isBlank();
 
         if (published && hasTitle) return repository.findAllByTitleContainingAndPublished(title, published);
-        if (published && hasCategory) return repository.findAllByCategoryAndPublished( category, published );
+        if (published && hasCategory) return repository.findAllByCategoryAndPublished( category, published);
 
         if (hasSummary) return repository.findAllBySummaryContainingAndPublishedTrue(summary);
         if (published) return repository.findByPublished( published);
@@ -62,6 +63,14 @@ public class PostService {
         boolean postFound = toFind.isPresent();
         if ( postFound ) return toFind.get();
         throw new PostNotFoundException(id);
+    }
+    public Iterable<Post> getTop4Posts(boolean published, PostCategory category) {
+        boolean hasCategory = !Objects.isNull( category );
+        if (published && hasCategory) {
+            return repository.findTop4ByCategoryAndPublished( category, published);
+        } else {
+            throw new BadRequestException("params missing or incorrect");
+        }
     }
 
     // UPDATE

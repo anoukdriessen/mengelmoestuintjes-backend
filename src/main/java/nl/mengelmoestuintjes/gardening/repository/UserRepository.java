@@ -9,4 +9,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     // TODO add sorting/paging
     Iterable<User> findByLevel(String level);
     Iterable<User> findAllByProvince(Province province);
+    boolean existsByEmail(String email);
+
 }

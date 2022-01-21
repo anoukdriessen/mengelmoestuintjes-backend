@@ -34,5 +34,6 @@ public class UserRequest {
     private List<String> authorities;
     private List<Post> posts = new ArrayList<>();
     private List<Task> tasks = new ArrayList<>();
+    private byte[] profileImg;
 
 }

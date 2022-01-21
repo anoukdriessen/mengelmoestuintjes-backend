@@ -15,14 +15,10 @@ import java.util.function.Function;
 public class JwtUtil {
     public static final long JWT_TOKEN_VALID = 1000 * 60 * 60 * 24 * 10;   // 10 days in ms
 
-    private static final String SECRET = "1C4ntG$TH4(k3D!";
+    private static final String SECRET = "secret";
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
-    }
-
-    public Date getIssuedAtDateFromToken(String token) {
-        return getClaimFromToken(token, Claims::getIssuedAt);
     }
 
     public Date getExpirationDateFromToken(String token) {
@@ -39,13 +35,7 @@ public class JwtUtil {
     }
 
     private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
-    }
-
-    private Boolean ignoreTokenExpiration(String token) {
-        // here you specify tokens, for that the expiration is ignored
-        return false;
+        return getExpirationDateFromToken(token).before(new Date());
     }
 
     public String generateToken(UserDetails userDetails) {
@@ -59,11 +49,8 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt( new Date(System.currentTimeMillis()) )
                 .setExpiration( new Date(System.currentTimeMillis() + JWT_TOKEN_VALID ))
-                .signWith(SignatureAlgorithm.HS256, SECRET).compact();
-    }
-
-    public Boolean canTokenBeRefreshed(String token) {
-        return (!isTokenExpired(token) || ignoreTokenExpiration(token));
+                .signWith(SignatureAlgorithm.HS256, SECRET)
+                .compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

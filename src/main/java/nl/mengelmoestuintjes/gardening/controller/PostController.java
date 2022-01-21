@@ -68,6 +68,13 @@ public class PostController {
     ){
         return service.getPost(id);
     }
+    @GetMapping("/top4")
+    public Iterable<Post> findTop4ByCategoryAndPublished(
+            @RequestParam(name = "published", required = false) boolean published,
+            @RequestParam(name = "category", required = false) PostCategory category
+    ) {
+        return service.getTop4Posts(published, category);
+    }
 
     // UPDATE
     @PutMapping("/{id}")

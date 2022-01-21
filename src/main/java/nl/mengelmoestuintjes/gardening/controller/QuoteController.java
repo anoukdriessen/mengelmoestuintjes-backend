@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/quotes")
+@CrossOrigin
 public class QuoteController {
     private final QuoteService quoteService;
 

@@ -62,19 +62,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-                .httpBasic()
+                .cors()
                 .and()
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/quotes/random").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/quotes/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/berichten/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/gebruikers/check/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/authenticate").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/gebruikers").permitAll()
-                .antMatchers(HttpMethod.GET, "api/berichten?published=TRUE&category=BLOG").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/gebruikers/**").hasRole("USER")
+                .antMatchers(HttpMethod.PATCH,"/api/gebruikers/**").hasRole("USER")
+                .antMatchers(HttpMethod.PUT,"/api/gebruikers/**").hasRole("USER")
                 .antMatchers("/api/quotes/**").hasAnyRole("MODERATOR", "ADMIN")
                 .antMatchers("/api/gebruikers/**").hasAnyRole("ADMIN")
                 .anyRequest().permitAll()
                 .and()
-                .csrf().disable()
-                .formLogin().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

@@ -3,23 +3,29 @@ package nl.mengelmoestuintjes.gardening.controller;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.InvalidException;
 import nl.mengelmoestuintjes.gardening.dto.request.UserRequest;
-import nl.mengelmoestuintjes.gardening.model.Province;
-import nl.mengelmoestuintjes.gardening.model.Task;
-import nl.mengelmoestuintjes.gardening.model.TaskType;
-import nl.mengelmoestuintjes.gardening.model.User;
-import nl.mengelmoestuintjes.gardening.model.Post;
+import nl.mengelmoestuintjes.gardening.model.*;
 import nl.mengelmoestuintjes.gardening.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/gebruikers")
+@CrossOrigin
 public class UserController {
+
+    @Value("${app.uploads}")
+    private String storageLocation;
+
     private UserService service;
 
     @Autowired
@@ -29,8 +35,8 @@ public class UserController {
 
     // CREATE
     @PostMapping
-    public User create( @RequestBody User toAdd ) {
-        return service.create( toAdd );
+    public ResponseEntity<Object> create( @RequestBody User toAdd ) {
+        return ResponseEntity.ok().body(service.create( toAdd ));
     }
 
     @PostMapping(value = "/{username}/authorities")
@@ -68,6 +74,23 @@ public class UserController {
         }
     }
 
+    @CrossOrigin
+    @PostMapping(value = "/{username}/upload")
+    public ResponseEntity<String> addUserProfileImage(
+            @PathVariable("username") String username,
+            @RequestBody MultipartFile multipartFile
+    ) throws IOException {
+        String out = "";
+        try {
+            service.addProfileImage(username, multipartFile);
+            out = "Upload SUCCESS: " + multipartFile.getOriginalFilename();
+            return ResponseEntity.status(HttpStatus.OK).body(out);
+        } catch (Exception e) {
+            out = "Upload ERROR: could not upload file " + multipartFile.getOriginalFilename();
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(out);
+        }
+    }
+
     // READ
     @GetMapping
     public Iterable<User> getUsers(
@@ -77,16 +100,24 @@ public class UserController {
     ) {
         return service.getAll(email, level, province);
     }
-
+    @GetMapping(value = "/profiles")
+    public HashMap<String, byte[]> getUsersProfile(){
+        return service.getAllProfiles();
+    }
     @GetMapping(value = "/{username}")
     public User getUser( @PathVariable("username") String username ) {
         return service.getUser(username);
     }
-    @GetMapping(value = "/{username}/info")
-    public ResponseEntity<Object> getUserInfo(@PathVariable("username") String username ) {
-        return ResponseEntity.ok().body(service.getUserInfo(username));
 
+    @GetMapping(value = "/check/username/{username}")
+    public boolean isUserByUsername( @PathVariable("username") String username ) {
+        return service.userExistsByUsername(username);
     }
+    @GetMapping(value = "/check/email/{email}")
+    public boolean isUserByEmail( @PathVariable("email") String email ) {
+        return service.userExistsByEmail(email);
+    }
+
     @GetMapping(value = "/{username}/authorities")
     public ResponseEntity<Object> getUserAuthorities( @PathVariable("username") String username ) {
         return ResponseEntity.ok().body(service.getAuthorities(username));
@@ -118,6 +149,12 @@ public class UserController {
     ) {
         return ResponseEntity.ok().body(service.getTasks(username, type));
     }
+    @GetMapping(value = "/{username}/img")
+    public ResponseEntity<Object> getUserProfile(
+            @PathVariable("username") String username
+    ) {
+        return ResponseEntity.ok().body(service.getProfileImg(username));
+    }
 
     // UPDATE
     @PutMapping(value = "/{username}")
@@ -125,6 +162,13 @@ public class UserController {
             @PathVariable("username") String username,
             @RequestBody UserRequest user) {
         return service.update(username, user);
+    }
+    @PatchMapping(value = "/{username}")
+    public ArrayList<String> updateProfile(
+            @PathVariable("username") String username,
+            @RequestBody UserRequest user
+    ) {
+        return service.updateProfile(username, user);
     }
     @PatchMapping(value = "/{username}/password")
     public String setPassword(
@@ -156,9 +200,16 @@ public class UserController {
     }
     @PatchMapping(value = "/{username}/activity")
     public String setLastActivity(
-            @PathVariable("username") String username
+            @PathVariable("username") String username,
+            @RequestBody String newActivity
     ) {
-        return service.setLastActivity(username);
+        LocalDate activity;
+        try {
+            activity = LocalDate.parse(newActivity);
+        } catch (Exception e) {
+            throw new InvalidException();
+        }
+        return service.setLastActivity(username, activity);
     }
 
 

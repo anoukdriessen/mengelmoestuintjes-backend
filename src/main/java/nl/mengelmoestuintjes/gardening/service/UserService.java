@@ -8,7 +8,6 @@ import nl.mengelmoestuintjes.gardening.dto.request.PostRequest;
 import nl.mengelmoestuintjes.gardening.dto.request.TaskRequest;
 import nl.mengelmoestuintjes.gardening.dto.request.UserRequest;
 import nl.mengelmoestuintjes.gardening.model.*;
-import nl.mengelmoestuintjes.gardening.model.Post;
 import nl.mengelmoestuintjes.gardening.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,13 +15,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -36,9 +34,13 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public boolean userExists(String username) {
+    public boolean userExistsByUsername(String username) {
         return repository.existsById(username);
     }
+    public boolean userExistsByEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+
     private String getCurrentUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ((UserDetails) authentication.getPrincipal()).getUsername();
@@ -53,9 +55,12 @@ public class UserService {
         } catch (Exception e) {
             throw new InvalidException("password invalid");
         }
-        String chosen = toAdd.getUsername();
+        String chosenUsername = toAdd.getUsername();
+        String chosenEmail = toAdd.getEmail();
 
-        if (userExists(chosen)) throw new InvalidException("username already exists");
+        if (userExistsByUsername(chosenUsername)) throw new InvalidException("username already exists");
+        if (userExistsByEmail(chosenEmail)) throw new InvalidException("email already exists");
+
         user.setUsername(toAdd.getUsername());
 
         user.setDefaultValues();
@@ -102,16 +107,22 @@ public class UserService {
             throw new BadRequestException();
         }
     }
+    public HashMap<String, byte[]> getAllProfiles() {
+        HashMap<String, byte[]> all = new HashMap<>();
+        Iterable<User> users = getAll("", "", null);
+        users.forEach(user -> { all.put(user.getUsername(), user.getProfileImg());});
+        return all;
+    }
     public User getUser(String username) {
         Optional<User> toFind = repository.findById( username );
         boolean userFound = toFind.isPresent();
 
-        if ( userFound ) return toFind.get();
+        if ( userFound ) {
+            User found = toFind.get();
+            found.setLastActivity(LocalDate.now());
+            return found;
+        }
         else throw new UserNotFoundException(username);
-    }
-    public List<String> getUserInfo(String username) {
-        User user = getUser( username );
-        return user.getInfo();
     }
     public List<Authority> getAuthorities(String username) {
         User toFind = getUser( username );
@@ -164,13 +175,9 @@ public class UserService {
         User toFind = getUser( username );
         return toFind.getTasksByType(type);
     }
-    public List<Task> getTodaysTasks(String username, TaskType type) {
-        User toFind = getUser( username );
-        if (type == TaskType.TODO) {
-            return toFind.getTodayToDo();
-        } else {
-            return toFind.getTodayGardening();
-        }
+    public byte[] getProfileImg(String username) {
+        User user = getUser(username);
+        return user.getProfileImg();
     }
 
     // UPDATE
@@ -222,6 +229,41 @@ public class UserService {
         }
     }
 
+    public ArrayList<String> updateProfile(String username, UserRequest modified) {
+        try {
+            User user = getUser(username);
+            ArrayList<String> changed = new ArrayList<>();
+            // change display name
+            if (!Objects.equals(modified.getName(), user.getName())) {
+                // display name has changed
+                user.setName(modified.getName());
+                changed.add("changed display name");
+            }
+            // change email
+            if (!Objects.equals(modified.getEmail(), user.getEmail())) {
+                // email has changed
+                user.setEmail(modified.getEmail());
+                changed.add("changed email");
+            }
+            // change birthday
+            if (modified.getBirthday() != user.getBirthday()) {
+                // birthday has changed
+                user.setBirthday(modified.getBirthday());
+                changed.add("changed birthday");
+            }
+            // change province
+            if (modified.getProvince() != user.getProvince()) {
+                // province has changed
+                user.setProvince(modified.getProvince());
+                changed.add("changed province");
+            }
+            repository.save(user);
+            return changed;
+        } catch (Exception e) {
+            throw new BadRequestException("cannot update user " + username);
+        }
+    }
+
     public void setPassword(String username, String password) {
         if (username.equals(getCurrentUserName())) {
             if (isValidPassword(password)) {
@@ -255,10 +297,10 @@ public class UserService {
             throw new InvalidException("set xp to user " + username);
         }
     }
-    public String setLastActivity(String username) {
+    public String setLastActivity(String username, LocalDate date) {
         User user = getUser( username );
         try {
-            user.setLastActivity();
+            user.setLastActivity(date);
             repository.save(user);
             return "last activity = " + user.getLastActivity();
         } catch (Exception e) {
@@ -308,10 +350,17 @@ public class UserService {
             throw new InvalidException("task");
         }
     }
+    public byte[] addProfileImage(String username, MultipartFile file) throws IOException {
+        User user = getUser( username );
+        String fileName = file.getOriginalFilename();
+        byte[] data = file.getBytes();
+        user.setProfileImg(data);
+        return repository.save(user).getProfileImg();
+    }
 
     // DELETE
     public void deleteUser(String username) {
-        if (userExists( username )) {
+        if (userExistsByUsername( username )) {
             repository.deleteById(username);
         } else {
             throw new UserNotFoundException(username);

@@ -30,7 +30,9 @@ public class Post {
 
     private String summary;
 
-    @Column(nullable = false)
+
+//    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition="TEXT")
     private String description;
 
     private String imageUrl;

@@ -1,5 +1,6 @@
 package nl.mengelmoestuintjes.gardening.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.GardenNotFoundException;
@@ -9,7 +10,6 @@ import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class User {
     private Province province;
 
     private LocalDate memberSince = LocalDate.now();
-    private LocalDateTime lastActivity = LocalDateTime.now();
+    private LocalDate lastActivity = LocalDate.now();
 
     @OneToMany(
             targetEntity = Authority.class,
@@ -53,6 +53,7 @@ public class User {
     )
     private List<Authority> authorities = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(
             mappedBy = "author",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
@@ -69,6 +70,7 @@ public class User {
 //    )
 //    private List<Milestone> milestones = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(
             mappedBy = "owner",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
@@ -77,6 +79,7 @@ public class User {
     )
     private List<Task> tasks = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToMany(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
@@ -102,29 +105,18 @@ public class User {
     // private List<Favorite> favorites = new ArrayList<>()
     // methods: contains // add / remove
 
-    //TODO ADD profile picture
-    // @Lob
-    // var profilePicture = ByteArray
+    @Column(name = "img", nullable = true)
+    @Lob
+    private byte[] profileImg;
 
     public void setDefaultValues(){
         this.setMemberSince(LocalDate.now());
-        this.setLastActivity();
+        this.setLastActivity(LocalDate.now());
         this.setEnabled(true);
 
         this.setLevel(1);
         this.setXp("1000");
         this.setLevelUpLimit("2000");
-    }
-    public List<String> getInfo() {
-        List<String> userDetails = new ArrayList<>();
-        userDetails.add( this.username );
-        userDetails.add( this.email );
-        userDetails.add( this.level );
-        userDetails.add( this.xp );
-        userDetails.add( this.levelUpLimit );
-        userDetails.add( this.name );
-        userDetails.add( this.province.toString() );
-        return userDetails;
     }
 
     public boolean birthdayIsToday() {
@@ -142,7 +134,6 @@ public class User {
 
         possible.add("ROLE_USER");
         possible.add("ROLE_MODERATOR");
-        possible.add("ROLE_DEVELOPER");
         possible.add("ROLE_ADMIN");
 
         for (String role : possible) {
@@ -183,8 +174,8 @@ public class User {
         String toRemove = standarizeAuthorityString(authorityString);
         this.authorities.removeIf(authority -> authority.getAuthority().equalsIgnoreCase(toRemove));
     }
-    public void setLastActivity() {
-        this.lastActivity = LocalDateTime.now();
+    public void setLastActivity(LocalDate date) {
+        this.lastActivity = date;
     }
 
     // LEVEL (XP / LIMIT)
@@ -269,20 +260,6 @@ public class User {
             if (t.getType() == type) tasksByType.add(t);
         }
         return tasksByType;
-    }
-    public ArrayList<Task> getTodayToDo() {
-        ArrayList<Task> todo = getTasksByType(TaskType.TODO);
-        for ( Task t : todo ) {
-            if (t.getDeadline().equals(LocalDate.now())) todo.add(t);
-        }
-        return todo;
-    }
-    public ArrayList<Task> getTodayGardening() {
-        ArrayList<Task> gardening = getTasksByType(TaskType.GARDENING);
-        for ( Task t : gardening ) {
-            if (t.getDeadline().equals(LocalDate.now())) gardening.add(t);
-        }
-        return gardening;
     }
     public boolean hasTask(Task task) {
         for ( Task t : this.getTasks() ) {
