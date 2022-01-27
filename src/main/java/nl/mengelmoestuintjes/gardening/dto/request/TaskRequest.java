@@ -45,7 +45,6 @@ public class TaskRequest {
         t.setOwner(this.getOwner());
         t.setType(this.getType());
         t.setTitle(this.getTitle());
-        t.setDescription(this.getDescription());
         t.setDone(this.isDone());
         t.setCreated(this.getCreated());
         t.setDeadline(this.getDeadline());

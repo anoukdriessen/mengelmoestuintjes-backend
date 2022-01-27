@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import nl.mengelmoestuintjes.gardening.model.Post;
 import nl.mengelmoestuintjes.gardening.model.Province;
 import nl.mengelmoestuintjes.gardening.model.Task;
-import nl.mengelmoestuintjes.gardening.model.Post;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,7 +32,7 @@ public class UserRequest {
     private LocalDate memberSince;
     private LocalDateTime lastActivity;
     private List<String> authorities;
-    private List<Post> posts = new ArrayList<>();
+    private ArrayList<Post> posts = new ArrayList<>();
     private List<Task> tasks = new ArrayList<>();
     private byte[] profileImg;
 

@@ -9,7 +9,9 @@ import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,21 +27,21 @@ public class PostService {
     }
 
     // CREATE
-    public Post create( PostRequest toAdd ) {
+    public Long create( PostRequest toAdd ) {
         Post newPost = new Post();
 
-        newPost.setId( toAdd.getId() );
+        newPost.setId(toAdd.getId());
         newPost.setAuthor(toAdd.getAuthor() );
         newPost.setTitle( toAdd.getTitle() );
         newPost.setSummary( toAdd.getSummary() );
         newPost.setDescription( toAdd.getDescription() );
-        newPost.setImageUrl( toAdd.getImageUrl() );
+        newPost.setImage( toAdd.getImage() );
         newPost.setCategory( toAdd.getCategory() );
         newPost.setPublished( toAdd.isPublished() );
         newPost.setCreated( LocalDateTime.now() );
 
-        repository.save(newPost);
-        return newPost;
+        Post p = repository.save(newPost);
+        return p.getId();
     }
 
     // READ
@@ -79,13 +81,20 @@ public class PostService {
         repository.save( post );
         return post.getTitle() + " written by " + user.getUsername();
     }
+    public byte[] addPostImage(Long postId, MultipartFile file) throws IOException {
+        Post post = getPost( postId );
+        String fileName = file.getOriginalFilename();
+        byte[] data = file.getBytes();
+        post.setImage(data);
+        return repository.save(post).getImage();
+    }
     public String updatePost(long id, PostRequest modified) {
         Post post = getPost(id);
 
         post.setTitle(modified.getTitle());
         post.setSummary(modified.getSummary());
         post.setDescription(modified.getDescription());
-        post.setImageUrl(modified.getImageUrl());
+        post.setImage(modified.getImage());
         post.setCategory(modified.getCategory());
         post.setPublished(modified.isPublished());
         post.setModified();

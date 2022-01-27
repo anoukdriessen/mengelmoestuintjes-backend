@@ -4,7 +4,6 @@ import nl.mengelmoestuintjes.gardening.security.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -18,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
+
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
@@ -66,16 +67,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/quotes/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/berichten/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/gebruikers/check/**").permitAll()
-                .antMatchers(HttpMethod.POST,"/authenticate").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/gebruikers").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/gebruikers/**").hasRole("USER")
-                .antMatchers(HttpMethod.PATCH,"/api/gebruikers/**").hasRole("USER")
-                .antMatchers(HttpMethod.PUT,"/api/gebruikers/**").hasRole("USER")
+                .antMatchers(GET, "/api/quotes/**").permitAll()
+                .antMatchers(GET, "/api/berichten?published=TRUE&category=BLOG").permitAll()
+                .antMatchers(GET, "/api/berichten?published=TRUE&category=POST").hasRole("USER")
+                .antMatchers(GET,"/api/gebruikers/check/**").permitAll()
+                .antMatchers(POST,"/authenticate").permitAll()
+                .antMatchers(POST,"/api/gebruikers").permitAll()
+                .antMatchers(GET, "/api/gebruikers/**").hasRole("USER")
+                .antMatchers(POST,"/api/gebruikers/**").hasRole("USER")
+                .antMatchers(PATCH,"/api/gebruikers/**").hasRole("USER")
+                .antMatchers(PUT,"/api/gebruikers/**").hasRole("USER")
+
                 .antMatchers("/api/quotes/**").hasAnyRole("MODERATOR", "ADMIN")
-                .antMatchers("/api/gebruikers/**").hasAnyRole("ADMIN")
                 .anyRequest().permitAll()
                 .and()
                 .sessionManagement()

@@ -2,6 +2,7 @@ package nl.mengelmoestuintjes.gardening.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -35,7 +36,10 @@ public class Post {
     @Column(nullable = false, columnDefinition="TEXT")
     private String description;
 
-    private String imageUrl;
+    @Column(name = "img", nullable = true)
+    @Lob
+    @Type(type = "org.hibernate.type.ImageType")
+    private byte[] image;
 
     @Enumerated(EnumType.STRING)
     private PostCategory category;

@@ -8,8 +8,13 @@ import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.service.PostService;
 import nl.mengelmoestuintjes.gardening.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/berichten")
@@ -26,7 +31,7 @@ public class PostController {
 
     // CREATE
     @PostMapping
-    public Post newPost(
+    public Long newPost(
             @RequestParam(value = "username") String username,
             @RequestBody PostRequest request
     ) {
@@ -49,6 +54,22 @@ public class PostController {
             return service.addAuthor(author, post);
         } catch (Exception e) {
             throw new BadRequestException( e.getMessage() );
+        }
+    }
+    @CrossOrigin
+    @PostMapping(value = "/{id}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> addUserProfileImage(
+            @PathVariable("id") long id,
+            @RequestParam(value="photo") MultipartFile multipartFile
+    ) throws IOException {
+        String out = "";
+        try {
+            service.addPostImage(id, multipartFile);
+            out = "Upload SUCCESS: " + multipartFile.getOriginalFilename();
+            return ResponseEntity.status(HttpStatus.OK).body(out);
+        } catch (Exception e) {
+            out = "Upload ERROR: could not upload file " + multipartFile.getOriginalFilename();
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(out);
         }
     }
 
@@ -75,6 +96,7 @@ public class PostController {
     ) {
         return service.getTop4Posts(published, category);
     }
+
 
     // UPDATE
     @PutMapping("/{id}")

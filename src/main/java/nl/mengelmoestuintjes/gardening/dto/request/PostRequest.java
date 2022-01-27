@@ -21,7 +21,7 @@ public class PostRequest {
     private String title;
     private String summary;
     private String description;
-    private String imageUrl;
+    private byte[] image;
     private PostCategory category;
     private boolean published;
     private LocalDateTime created;
@@ -53,7 +53,6 @@ public class PostRequest {
         p.setTitle(this.getTitle());
         p.setSummary(this.getSummary());
         p.setDescription(this.getDescription());
-        p.setImageUrl(this.getImageUrl());
         p.setCategory(this.getCategory());
         p.setPublished(this.isPublished());
         p.setCreated(this.getCreated());

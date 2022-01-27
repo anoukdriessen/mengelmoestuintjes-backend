@@ -28,7 +28,6 @@ public class TaskService {
         newTask.setOwner( toAdd.getOwner() );
         newTask.setType( toAdd.getType() );
         newTask.setTitle( toAdd.getTitle() );
-        newTask.setDescription( toAdd.getDescription() );
         newTask.setDone( toAdd.isDone() );
         newTask.setCreated();
         newTask.setDeadline( toAdd.getDeadline() );
@@ -58,12 +57,9 @@ public class TaskService {
 
         task.setType( modified.getType() );
         task.setTitle( modified.getTitle() );
-        task.setDescription( modified.getDescription() );
         task.setDone( modified.isDone() );
         task.setCreated();
         task.setDeadline( modified.getDeadline() );
-
-        if (task.daysTillDeadline() < 0) throw new InvalidException("deadline must be in the future");
 
         repository.save(task);
         return task.getTitle() + " has been updated";
