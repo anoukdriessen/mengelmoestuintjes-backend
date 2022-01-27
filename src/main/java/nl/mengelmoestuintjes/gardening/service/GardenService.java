@@ -11,6 +11,8 @@ import nl.mengelmoestuintjes.gardening.repository.GardenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 @Service
@@ -58,6 +60,14 @@ public class GardenService {
         } else {
             throw new GardenNotFoundException(id);
         }
+    }
+    public HashMap<Garden, ArrayList<String>> findGardensByOwnersEquals(User username){
+        HashMap<Garden, ArrayList<String>> idAndUsers = new HashMap<>();
+        Iterable<Garden> all = getAll();
+        for (Garden g : all) {
+            idAndUsers.put(g, g.getOwners());
+        }
+        return idAndUsers;
     }
     public Iterable<String> getUsers(long id) {
         Garden garden = getGarden(id);

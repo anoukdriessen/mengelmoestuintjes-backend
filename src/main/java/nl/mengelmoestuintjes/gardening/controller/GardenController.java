@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 @RestController
 @RequestMapping(value = "/api/tuintjes")
 @CrossOrigin
@@ -54,6 +57,12 @@ public class GardenController {
     }
 
     // READ
+    @GetMapping(value = "/from/{username}")
+    public HashMap<Garden, ArrayList<String>> getAllByUser(@PathVariable("username") String username) {
+        User owner = userService.getUser(username);
+        return service.findGardensByOwnersEquals(owner);
+    }
+
     @GetMapping
     public Iterable<Garden> getAll() {
         return service.getAll();
@@ -72,6 +81,7 @@ public class GardenController {
     public Iterable<Field> getFieldsFromGarden(@PathVariable("id") long id){
         return service.getFields(id);
     }
+
     // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateGarden(
