@@ -58,7 +58,7 @@ public class GardenController {
 
     // READ
     @GetMapping(value = "/from/{username}")
-    public HashMap<Garden, ArrayList<String>> getAllByUser(@PathVariable("username") String username) {
+    public HashMap<Long, ArrayList<String>> getAllByUser(@PathVariable("username") String username) {
         User owner = userService.getUser(username);
         return service.findGardensByOwnersEquals(owner);
     }

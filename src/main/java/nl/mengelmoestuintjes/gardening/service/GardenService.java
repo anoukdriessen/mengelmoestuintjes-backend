@@ -61,11 +61,11 @@ public class GardenService {
             throw new GardenNotFoundException(id);
         }
     }
-    public HashMap<Garden, ArrayList<String>> findGardensByOwnersEquals(User username){
-        HashMap<Garden, ArrayList<String>> idAndUsers = new HashMap<>();
+    public HashMap<Long, ArrayList<String>> findGardensByOwnersEquals(User username){
+        HashMap<Long, ArrayList<String>> idAndUsers = new HashMap<>();
         Iterable<Garden> all = getAll();
         for (Garden g : all) {
-            idAndUsers.put(g, g.getOwners());
+            idAndUsers.put(g.getId(), g.getOwners());
         }
         return idAndUsers;
     }
