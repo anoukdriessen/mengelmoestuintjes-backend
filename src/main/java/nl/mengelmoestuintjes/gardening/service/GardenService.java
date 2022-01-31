@@ -3,23 +3,29 @@ package nl.mengelmoestuintjes.gardening.service;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.GardenNotFoundException;
 import nl.mengelmoestuintjes.gardening.dto.request.GardenRequest;
+import nl.mengelmoestuintjes.gardening.dto.response.GardenResponse;
+import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
 import nl.mengelmoestuintjes.gardening.model.Task;
 import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.model.garden.Field;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.repository.GardenRepository;
+import nl.mengelmoestuintjes.gardening.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
 public class GardenService {
 
     private final GardenRepository repository;
+    private final UserRepository userRepository;
     @Autowired
-    public GardenService(GardenRepository repository) {
+    public GardenService(GardenRepository repository, UserRepository userRepository) {
         this.repository = repository;
+        this.userRepository = userRepository;
     }
 
     // CREATE
@@ -47,8 +53,14 @@ public class GardenService {
     }
 
     // READ
-    public Iterable<Garden> getAll() {
-        return repository.findAll();
+    public Iterable<GardenResponse> getAll() {
+        Iterable<Garden> all = repository.findAll();
+        ArrayList<GardenResponse> responses = new ArrayList<>();
+
+        all.forEach(garden -> {
+            responses.add(new GardenResponse(garden.getId(), garden.getName(), garden.getSize(), garden.getNumberOfTasks(), garden.getOwners()));
+        });
+        return responses;
     }
     public Garden getGarden(long id) {
         Optional<Garden> toFind = repository.findById(id);
@@ -59,7 +71,27 @@ public class GardenService {
             throw new GardenNotFoundException(id);
         }
     }
-    public Iterable<String> getUsers(long id) {
+    public ArrayList<GardenResponse> findGardensByOwnersEquals(User user){
+        ArrayList<GardenResponse> result = new ArrayList<>();
+        Iterable<Garden> all = repository.findAll();
+        for (Garden g : all) {
+            // check if user is owner of garden
+            for (UserResponse u : g.getOwners()) {
+                if (u.getUsername().equals(user.getUsername())) {
+                    GardenResponse thisGarden = new GardenResponse(
+                            g.getId(),
+                            g.getName(),
+                            g.getSize(),
+                            g.getNumberOfTasks(),
+                            g.getOwners()
+                    );
+                    result.add(thisGarden);
+                }
+            }
+        }
+        return result;
+    }
+    public Iterable<UserResponse> getUsers(long id) {
         Garden garden = getGarden(id);
         return garden.getOwners();
     }

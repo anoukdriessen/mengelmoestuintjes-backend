@@ -3,6 +3,7 @@ package nl.mengelmoestuintjes.gardening.model.garden;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
 import nl.mengelmoestuintjes.gardening.model.Task;
 import nl.mengelmoestuintjes.gardening.model.TaskType;
 import nl.mengelmoestuintjes.gardening.model.User;
@@ -71,29 +72,37 @@ public class Garden {
         this.size = "" + (calculateSize(x, y));
     }
 
-    public boolean hasOwner(User user){
+    public boolean hasOwner(String username){
         for (User u : this.owners) {
-            if (u.equals(user)) return true;
+            if (u.getUsername().equals(username)) return true;
         }
         return false;
     }
     public void addOwner(User user) {
-        if (!hasOwner(user)) this.owners.add(user);
+        if (!hasOwner(user.getUsername())) this.owners.add(user);
     }
     public void removeOwner(User user) {
-        if (hasOwner(user)) this.owners.remove(user);
+        if (hasOwner(user.getUsername())) this.owners.remove(user);
     }
-    public ArrayList<String> getOwners() {
-        ArrayList<String> usernames = new ArrayList<>();
+    public ArrayList<UserResponse> getOwners() {
+        ArrayList<UserResponse> profiles = new ArrayList<>();
         for (User u : this.owners) {
-            usernames.add(u.getUsername());
+            UserResponse thisUser = new UserResponse(
+                    u.getUsername(),
+                    u.getName(),
+                    u.getProfileImg(),
+                    u.getTasks());
+            profiles.add(thisUser);
         }
-        return usernames;
+        return profiles;
     }
     public void setTasks() {
         for (User u : this.owners) {
             tasks.addAll(u.getTasksByType(TaskType.GARDENING));
         }
+    }
+    public int getNumberOfTasks() {
+        return this.tasks.size();
     }
     public void addTask(Task toAdd) {
         toAdd.setType(TaskType.GARDENING);

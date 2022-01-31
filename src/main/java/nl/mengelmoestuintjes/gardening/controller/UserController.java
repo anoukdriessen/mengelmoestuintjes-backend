@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -53,12 +54,13 @@ public class UserController {
         }
     }
     @PostMapping(value = "/{username}/berichten")
-    public Post addUserPost(
+    public Long addUserPost(
             @PathVariable("username") String username,
             @RequestBody Map<String, Object> fields
     ) {
         try {
-            return service.addPost(username, fields);
+            List<Post> posts = service.addPost(username, fields);
+            return posts.get(posts.size() - 1).getId();
         } catch (Exception e) {
             throw new BadRequestException( e.getMessage() );
         }
@@ -137,12 +139,13 @@ public class UserController {
         return service.getWithBirthdayToday();
     }
 
-    @GetMapping(value = "/{username}/berichten")
+    @GetMapping(value = "/{username}/berichten/{category}")
     public ResponseEntity<Object> getUserPosts(
             @PathVariable("username") String username,
-            @RequestParam(value = "published") boolean published
+            @PathVariable("category") String category,
+            @RequestParam(value = "published", required = false) boolean published
     ) {
-        return ResponseEntity.ok().body(service.getPosts(username, published));
+        return ResponseEntity.ok().body(service.getPosts(username, category, published));
     }
     @GetMapping(value = "/{username}/taken/{type}")
     public ResponseEntity<Object> getUserTaken(
@@ -156,6 +159,12 @@ public class UserController {
             @PathVariable("username") String username
     ) {
         return ResponseEntity.ok().body(service.getProfileImg(username));
+    }
+    @GetMapping("/{username}/tuintjes")
+    public ResponseEntity<Object> getUserGardens(
+            @PathVariable("username") String username
+    ) {
+        return ResponseEntity.ok().body(service.getGardens(username));
     }
 
     // UPDATE

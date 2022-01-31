@@ -3,7 +3,6 @@ package nl.mengelmoestuintjes.gardening.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
-import nl.mengelmoestuintjes.gardening.controller.exceptions.GardenNotFoundException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.PostNotFoundException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.TaskNotFoundException;
 import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
@@ -82,7 +81,6 @@ public class User {
     )
     private List<Task> tasks = new ArrayList<>();
 
-    @JsonIgnore
     @ManyToMany(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
@@ -94,8 +92,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<Garden> gardens;
-    //TODO ADD gardens
-    // methods: contains // add // remove
 
 
 //    @OneToMany(
@@ -294,27 +290,36 @@ public class User {
         }
         return false;
     }
+    public HashMap<Long, ArrayList<String>> getGardens(){
+        HashMap<Long, ArrayList<String>> myGardens = new HashMap<>();
+        for (Garden g : this.gardens) {
+            myGardens.put(g.getId(), g.getOwners());
+        }
+        return myGardens;
+    }
     public UserResponse getUserProfile() {
         UserResponse thisProfile = new UserResponse();
         thisProfile.setUsername(this.getUsername());
         thisProfile.setName(this.getName());
         return thisProfile;
     }
-    public HashMap<Garden, ArrayList<UserResponse>> getGardens(){
-        HashMap<Garden, ArrayList<UserResponse>> myGardens = new HashMap<>();
-        for (Garden g : this.gardens) {
-            myGardens.put(g, g.getOwners());
-        }
-    }
+//    public HashMap<Garden, ArrayList<UserResponse>> getGardens(){
+//        HashMap<Garden, ArrayList<UserResponse>> myGardens = new HashMap<>();
+//        for (Garden g : this.gardens) {
+//            myGardens.put(g, g.getOwners());
+//        }
+//        return myGardens;
+//    }
+
     public void addGarden(Garden garden) {
         this.gardens.add(garden);
     }
     public void removeGarden(Garden garden) {
-        if (!this.hasGarden(garden)) {
+//        if (!this.hasGarden(garden)) {
             this.gardens.remove(garden);
-        } else {
-            throw new GardenNotFoundException(garden);
-        }
+//        } else {
+//            throw new GardenNotFoundException(garden);
+//        }
     }
 
     // MILESTONES

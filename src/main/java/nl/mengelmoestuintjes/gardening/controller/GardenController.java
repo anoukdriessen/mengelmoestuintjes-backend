@@ -2,6 +2,8 @@ package nl.mengelmoestuintjes.gardening.controller;
 
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 import nl.mengelmoestuintjes.gardening.dto.request.GardenRequest;
+import nl.mengelmoestuintjes.gardening.dto.response.GardenResponse;
+import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
 import nl.mengelmoestuintjes.gardening.model.Task;
 import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.model.garden.Field;
@@ -54,8 +56,14 @@ public class GardenController {
     }
 
     // READ
+    @GetMapping(value = "/from/{username}")
+    public Iterable<GardenResponse> getAllByUser(@PathVariable("username") String username) {
+        User owner = userService.getUser(username);
+        return service.findGardensByOwnersEquals(owner);
+    }
+
     @GetMapping
-    public Iterable<Garden> getAll() {
+    public Iterable<GardenResponse> getAll() {
         return service.getAll();
     }
     @GetMapping(value = "/{id}")
@@ -63,7 +71,7 @@ public class GardenController {
         return service.getGarden(id);
     }
     @GetMapping(value = "/{id}/gebruikers")
-    public Iterable<String> getUsersFromGarden(@PathVariable("id") long id) {
+    public Iterable<UserResponse> getUsersFromGarden(@PathVariable("id") long id) {
         return service.getUsers(id);
     }
     @GetMapping(value = "/{id}/taken")
@@ -72,6 +80,7 @@ public class GardenController {
     public Iterable<Field> getFieldsFromGarden(@PathVariable("id") long id){
         return service.getFields(id);
     }
+
     // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateGarden(

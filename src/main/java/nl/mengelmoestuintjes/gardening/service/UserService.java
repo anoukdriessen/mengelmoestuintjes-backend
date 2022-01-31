@@ -157,23 +157,38 @@ public class UserService {
         }
         return isBirthday;
     }
-    public List<Post> getPosts(String username, boolean published) {
+    public List<Post> getPosts(String username, String category, boolean published) {
         User toFind = getUser( username );
-        ArrayList<Post> posted = new ArrayList<>();
-        ArrayList<Post> concepts = new ArrayList<>();
+
+        ArrayList<Post> privateNotes = new ArrayList<>();
+        ArrayList<Post> privatePosts = new ArrayList<>();
+        ArrayList<Post> publicPosts = new ArrayList<>();
 
         for (Post p : toFind.getPosts()) {
-            if (p.isPublished()) {
-                posted.add(p);
+            if (p.getCategory() == PostCategory.NOTE) {
+                // post is a private note
+                privateNotes.add(p);
+            } else if (p.getCategory() == PostCategory.POST) {
+                if (p.isPublished()) {
+                    publicPosts.add(p);
+                } else {
+                    privatePosts.add(p);
+                }
             } else {
-                concepts.add(p);
+                // do nothing if category is Academy / Blog
             }
         }
 
         if (published) {
-            return posted;
+            return publicPosts;
         } else {
-            return concepts;
+            if (category.equalsIgnoreCase(String.valueOf(PostCategory.NOTE))) {
+                return privateNotes;
+            } else if (category.equalsIgnoreCase(String.valueOf(PostCategory.POST))) {
+                return privatePosts;
+            } else {
+                return null;
+            }
         }
     }
     public List<Task> getTasks(String username, TaskType type) {
@@ -183,6 +198,10 @@ public class UserService {
     public byte[] getProfileImg(String username) {
         User user = getUser(username);
         return user.getProfileImg();
+    }
+    public HashMap<Long, ArrayList<String>> getGardens(String username) {
+        User toFind = getUser( username );
+        return toFind.getGardens();
     }
 
     public HashMap<Garden, ArrayList<UserResponse>> getGardens(String username) {
@@ -317,7 +336,7 @@ public class UserService {
             throw new InvalidException("last activity");
         }
     }
-    public Post addPost(String username, Map<String, Object> fields) {
+    public List<Post> addPost(String username, Map<String, Object> fields) {
         User user = getUser( username );
         PostRequest toAdd = new PostRequest();
         try {
@@ -325,14 +344,13 @@ public class UserService {
             toAdd.setTitle((String) fields.get("title"));
             toAdd.setSummary((String) fields.get("summary"));
             toAdd.setDescription((String) fields.get("description"));
-            toAdd.setImageUrl((String) fields.get("imageUrl"));
             toAdd.setPublished((boolean) fields.get("published"));
             toAdd.setCategory((String) fields.get("category"));
             toAdd.setCreated(LocalDateTime.now());
 
             user.addPost(toAdd.convert());
             repository.save(user);
-            return toAdd.convert();
+            return user.getPosts();
         } catch (Exception e) {
             throw new InvalidException("post");
         }
