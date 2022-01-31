@@ -3,6 +3,7 @@ package nl.mengelmoestuintjes.gardening.controller;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.InvalidException;
 import nl.mengelmoestuintjes.gardening.dto.request.UserRequest;
+import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
 import nl.mengelmoestuintjes.gardening.model.*;
 import nl.mengelmoestuintjes.gardening.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +109,8 @@ public class UserController {
     public User getUser( @PathVariable("username") String username ) {
         return service.getUser(username);
     }
-
+    @GetMapping(value = "/profile/{username}")
+    public UserResponse getUsersProfile( @PathVariable("username") String username) { return service.getUsersProfile(username);}
     @GetMapping(value = "/check/username/{username}")
     public boolean isUserByUsername( @PathVariable("username") String username ) {
         return service.userExistsByUsername(username);

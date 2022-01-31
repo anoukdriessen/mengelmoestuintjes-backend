@@ -5,9 +5,7 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.RecordNotFoundExcep
 import nl.mengelmoestuintjes.gardening.model.Quote;
 import nl.mengelmoestuintjes.gardening.repository.QuoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Optional;
 import java.util.Random;
@@ -22,11 +20,18 @@ public class QuoteService {
     }
 
     public Quote newQuote(Quote toAdd) {
-        return quoteRepository.save( toAdd );
+        if (toAdd.getText() == null || toAdd.getText().isEmpty() || toAdd.getText().isBlank()) {
+            throw new BadRequestException("Quote cannot be empty");
+        } else if (toAdd.getAuthor() == null || toAdd.getAuthor().isEmpty() || toAdd.getAuthor().isBlank()) {
+            throw new BadRequestException("Author cannot be empty");
+        } else {
+            return quoteRepository.save( toAdd );
+        }
     }
 
     public Iterable<Quote> getAll() {
-        return quoteRepository.findAll(Pageable.ofSize(10));
+//        return quoteRepository.findAll(Pageable.ofSize(20));
+        return quoteRepository.findAll();
     }
 
     public Quote getById( long id ) {

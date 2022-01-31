@@ -7,7 +7,9 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.UserNotFoundExcepti
 import nl.mengelmoestuintjes.gardening.dto.request.PostRequest;
 import nl.mengelmoestuintjes.gardening.dto.request.TaskRequest;
 import nl.mengelmoestuintjes.gardening.dto.request.UserRequest;
+import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
 import nl.mengelmoestuintjes.gardening.model.*;
+import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -49,46 +51,38 @@ public class UserService {
     // CREATE
     public User create(User toAdd) {
         User user = new User();
-        try {
-            String encryptedPassword = passwordEncoder.encode(toAdd.getPassword());
-            user.setPassword(encryptedPassword);
-        } catch (Exception e) {
-            throw new InvalidException("password invalid");
+        if (toAdd.getUsername() == null || toAdd.getUsername().isEmpty() || toAdd.getUsername().isBlank()) {
+            throw new BadRequestException("Username is missing or invalid");
+        } else if (toAdd.getPassword() == null || toAdd.getPassword().isEmpty() || toAdd.getPassword().isBlank()){
+            throw new BadRequestException("Password is missing or invalid");
+        } else if (toAdd.getEmail() == null || toAdd.getEmail().isEmpty() || toAdd.getEmail().isBlank()) {
+            throw new BadRequestException("Email is missing or invalid");
+        } else {
+            try {
+                String encryptedPassword = passwordEncoder.encode(toAdd.getPassword());
+                user.setPassword(encryptedPassword);
+            } catch (Exception e) {
+                throw new BadRequestException("password is invalid");
+            }
+            String chosenUsername = toAdd.getUsername();
+            String chosenEmail = toAdd.getEmail();
+
+            if (userExistsByUsername(chosenUsername)) throw new InvalidException("username already exists");
+            if (userExistsByEmail(chosenEmail)) throw new InvalidException("email already exists");
+
+            user.setUsername(toAdd.getUsername());
+            try {
+                user.setEmail(toAdd.getEmail());
+            } catch (Exception e) {
+                throw new BadRequestException("email is invalid");
+            }
+
+            user.setDefaultValues();
+            user.addAuthority("ROLE_USER");
+
+            repository.save(user);
+            return user;
         }
-        String chosenUsername = toAdd.getUsername();
-        String chosenEmail = toAdd.getEmail();
-
-        if (userExistsByUsername(chosenUsername)) throw new InvalidException("username already exists");
-        if (userExistsByEmail(chosenEmail)) throw new InvalidException("email already exists");
-
-        user.setUsername(toAdd.getUsername());
-
-        user.setDefaultValues();
-        user.addAuthority("ROLE_USER");
-
-        try {
-            user.setEmail(toAdd.getEmail());
-        } catch (Exception e) {
-            throw new BadRequestException("Invalid email");
-        }
-
-        try {
-            user.setName(toAdd.getName());
-            user.setBirthday(toAdd.getBirthday());
-            user.setProvince(toAdd.getProvince());
-        } catch (Exception e) {
-            throw new BadRequestException("Invalid user details");
-        }
-
-        try {
-            user.setPosts(toAdd.getPosts());
-            user.setTasks(toAdd.getTasks());
-        } catch (Exception e) {
-            throw new BadRequestException("Invalid list(s)");
-        }
-
-        repository.save(user);
-        return user;
     }
 
     // READ
@@ -123,6 +117,17 @@ public class UserService {
             return found;
         }
         else throw new UserNotFoundException(username);
+    }
+    public UserResponse getUsersProfile(String username) {
+        Optional<User> toFind = repository.findById( username );
+        boolean userFound = toFind.isPresent();
+
+        if ( userFound ) {
+            User found = toFind.get();
+            return found.getUserProfile();
+        } else {
+            throw  new UserNotFoundException(username);
+        }
     }
     public List<Authority> getAuthorities(String username) {
         User toFind = getUser( username );
@@ -178,6 +183,11 @@ public class UserService {
     public byte[] getProfileImg(String username) {
         User user = getUser(username);
         return user.getProfileImg();
+    }
+
+    public HashMap<Garden, ArrayList<UserResponse>> getGardens(String username) {
+        User toFind = getUser( username );
+        return toFind.getGardens();
     }
 
     // UPDATE

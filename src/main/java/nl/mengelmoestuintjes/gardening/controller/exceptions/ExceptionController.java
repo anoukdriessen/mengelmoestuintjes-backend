@@ -42,7 +42,6 @@ public class ExceptionController {
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseEntity<Object> exception(BadRequestException e) {
         return createResponse( HttpStatus.BAD_REQUEST, e.getMessage());
-
     }
 
     @ExceptionHandler(value = InvalidException.class)

@@ -6,11 +6,14 @@ import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException
 import nl.mengelmoestuintjes.gardening.controller.exceptions.GardenNotFoundException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.PostNotFoundException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.TaskNotFoundException;
+import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Entity
@@ -105,8 +108,8 @@ public class User {
     // private List<Favorite> favorites = new ArrayList<>()
     // methods: contains // add / remove
 
-    @Column(name = "img", nullable = true)
     @Lob
+    @Type(type = "org.hibernate.type.ImageType")
     private byte[] profileImg;
 
     public void setDefaultValues(){
@@ -117,6 +120,12 @@ public class User {
         this.setLevel(1);
         this.setXp("1000");
         this.setLevelUpLimit("2000");
+
+        this.setName("");
+        this.setBirthday(null);
+        this.setProvince(Province.HIDDEN);
+        this.setPosts(new ArrayList<Post>());
+        this.setTasks(new ArrayList<Task>());
     }
 
     public boolean birthdayIsToday() {
@@ -281,9 +290,21 @@ public class User {
     // GARDENS
     public boolean hasGarden(Garden garden) {
         for (Garden g : this.getGardens()) {
-            if ( g.equals(garden) ) return true;
+            if (g.equals(garden)) return true;
         }
         return false;
+    }
+    public UserResponse getUserProfile() {
+        UserResponse thisProfile = new UserResponse();
+        thisProfile.setUsername(this.getUsername());
+        thisProfile.setName(this.getName());
+        return thisProfile;
+    }
+    public HashMap<Garden, ArrayList<UserResponse>> getGardens(){
+        HashMap<Garden, ArrayList<UserResponse>> myGardens = new HashMap<>();
+        for (Garden g : this.gardens) {
+            myGardens.put(g, g.getOwners());
+        }
     }
     public void addGarden(Garden garden) {
         this.gardens.add(garden);

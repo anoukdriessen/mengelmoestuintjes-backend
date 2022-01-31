@@ -23,11 +23,7 @@ public class QuoteController {
     public Quote newQuote(
             @RequestBody Quote toAdd
     ) {
-        try {
-            return quoteService.newQuote(toAdd);
-        } catch (Exception e) {
-            throw new BadRequestException("cannot add quote");
-        }
+        return quoteService.newQuote(toAdd);
     }
 
     @GetMapping
