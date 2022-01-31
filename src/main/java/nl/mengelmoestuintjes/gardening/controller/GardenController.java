@@ -2,6 +2,8 @@ package nl.mengelmoestuintjes.gardening.controller;
 
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 import nl.mengelmoestuintjes.gardening.dto.request.GardenRequest;
+import nl.mengelmoestuintjes.gardening.dto.response.GardenResponse;
+import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
 import nl.mengelmoestuintjes.gardening.model.Task;
 import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.model.garden.Field;
@@ -11,9 +13,6 @@ import nl.mengelmoestuintjes.gardening.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 @RestController
 @RequestMapping(value = "/api/tuintjes")
@@ -58,13 +57,13 @@ public class GardenController {
 
     // READ
     @GetMapping(value = "/from/{username}")
-    public HashMap<Long, ArrayList<String>> getAllByUser(@PathVariable("username") String username) {
+    public Iterable<GardenResponse> getAllByUser(@PathVariable("username") String username) {
         User owner = userService.getUser(username);
         return service.findGardensByOwnersEquals(owner);
     }
 
     @GetMapping
-    public Iterable<Garden> getAll() {
+    public Iterable<GardenResponse> getAll() {
         return service.getAll();
     }
     @GetMapping(value = "/{id}")
@@ -72,7 +71,7 @@ public class GardenController {
         return service.getGarden(id);
     }
     @GetMapping(value = "/{id}/gebruikers")
-    public Iterable<String> getUsersFromGarden(@PathVariable("id") long id) {
+    public Iterable<UserResponse> getUsersFromGarden(@PathVariable("id") long id) {
         return service.getUsers(id);
     }
     @GetMapping(value = "/{id}/taken")
