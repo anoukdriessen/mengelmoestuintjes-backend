@@ -36,7 +36,6 @@ public class Post {
     @Column(nullable = false, columnDefinition="TEXT")
     private String description;
 
-    @Column(name = "img", nullable = true)
     @Lob
     @Type(type = "org.hibernate.type.ImageType")
     private byte[] image;

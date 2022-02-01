@@ -3,8 +3,11 @@ package nl.mengelmoestuintjes.gardening.service;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.GardenNotFoundException;
 import nl.mengelmoestuintjes.gardening.dto.request.GardenRequest;
+import nl.mengelmoestuintjes.gardening.dto.request.PostRequest;
 import nl.mengelmoestuintjes.gardening.dto.response.GardenResponse;
 import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
+import nl.mengelmoestuintjes.gardening.model.Post;
+import nl.mengelmoestuintjes.gardening.model.PostCategory;
 import nl.mengelmoestuintjes.gardening.model.Task;
 import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.model.garden.Field;
@@ -22,6 +25,7 @@ public class GardenService {
 
     private final GardenRepository repository;
     private final UserRepository userRepository;
+
     @Autowired
     public GardenService(GardenRepository repository, UserRepository userRepository) {
         this.repository = repository;
@@ -42,7 +46,7 @@ public class GardenService {
             newGarden.setFields(toAdd.getFields());
 
             newGarden.setOwners(toAdd.getOwners());
-
+            newGarden.setPosts(toAdd.getPosts());
             if (!newGarden.getOwners().isEmpty()) newGarden.setTasks();
 
             return repository.save(newGarden);
@@ -58,7 +62,14 @@ public class GardenService {
         ArrayList<GardenResponse> responses = new ArrayList<>();
 
         all.forEach(garden -> {
-            responses.add(new GardenResponse(garden.getId(), garden.getName(), garden.getSize(), garden.getNumberOfTasks(), garden.getOwners()));
+            responses.add(new GardenResponse(
+                    garden.getId(),
+                    garden.getName(),
+                    garden.getSize(),
+                    garden.getNumberOfTasks(),
+                    garden.getPosts(),
+                    garden.getFields(),
+                    garden.getOwners()));
         });
         return responses;
     }
@@ -83,6 +94,8 @@ public class GardenService {
                             g.getName(),
                             g.getSize(),
                             g.getNumberOfTasks(),
+                            g.getPosts(),
+                            g.getFields(),
                             g.getOwners()
                     );
                     result.add(thisGarden);
@@ -99,6 +112,10 @@ public class GardenService {
         Garden garden = getGarden(id);
         return garden.getTasks();
     }
+    public Iterable<Post> getPosts(long id) {
+        Garden garden = getGarden(id);
+        return garden.getPosts();
+    }
     public Iterable<Field> getFields(long id) {
         Garden garden = getGarden(id);
         return garden.getFields();
@@ -109,6 +126,20 @@ public class GardenService {
         garden.addOwner(user);
         repository.save( garden );
         return garden.getName() + " has now owner " + user.getUsername();
+    }
+    public Garden addNote(Garden garden, PostRequest toAdd) {
+        Post newPost = new Post();
+        toAdd.setCategory(PostCategory.NOTE);
+        newPost = toAdd.convert();
+        newPost.setAuthor(toAdd.getAuthor());
+        garden.addPost(newPost);
+        return repository.save(garden);
+    }
+    public Field addField(Field field, Garden garden) {
+        field.setGarden(garden);
+        garden.addField(field);
+        repository.save(garden);
+        return field;
     }
     public Garden updateGarden(long id, GardenRequest modified) {
         Garden garden = getGarden(id);
@@ -163,5 +194,10 @@ public class GardenService {
             repository.delete(garden);
             return "removed " + garden.getName() + " because all owners are removed";
         }
+    }
+    public String deletePost(Post post, Garden garden) {
+        garden.removePost(post);
+        repository.save(garden);
+        return "removed " + post.getTitle() + " from garden " + garden.getName();
     }
 }

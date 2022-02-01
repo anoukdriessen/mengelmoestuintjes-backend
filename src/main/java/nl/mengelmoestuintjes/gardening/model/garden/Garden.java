@@ -1,12 +1,9 @@
 package nl.mengelmoestuintjes.gardening.model.garden;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
-import nl.mengelmoestuintjes.gardening.model.Task;
-import nl.mengelmoestuintjes.gardening.model.TaskType;
-import nl.mengelmoestuintjes.gardening.model.User;
+import nl.mengelmoestuintjes.gardening.model.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -40,7 +37,6 @@ public class Garden {
     )
     private List<User> owners = new ArrayList<>();
 
-    @JsonIgnoreProperties("gardens")
     @OneToMany(
             fetch=FetchType.LAZY,
             cascade= {CascadeType.PERSIST, CascadeType.MERGE,
@@ -52,7 +48,17 @@ public class Garden {
     )
     private List<Task> tasks = new ArrayList<>();
 
-    @JsonIgnoreProperties("gardens")
+    @OneToMany(
+            fetch=FetchType.LAZY,
+            cascade= {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(
+            name="gardens_posts",
+            joinColumns=@JoinColumn(name="garden_id"),
+            inverseJoinColumns=@JoinColumn(name="post_id")
+    )
+    private List<Post> posts = new ArrayList<>();
+
     @OneToMany(
             fetch=FetchType.LAZY,
             cascade= {CascadeType.PERSIST, CascadeType.MERGE,
@@ -113,31 +119,42 @@ public class Garden {
             tasks.remove(toRemove);
         }
     }
+    public void addPost(Post toAdd) {
+        toAdd.setCategory(PostCategory.NOTE);
+        posts.add(toAdd);
+    }
+    public void removePost(Post toRemove) {
+        if (!posts.isEmpty()) {
+            posts.remove(toRemove);
+        }
+    }
+
+    public void addField(Field toAdd) {
+        this.fields.add(toAdd);
+    }
+    public void removeField(Field toRemove) {
+        this.fields.remove(toRemove);
+    }
     public void setFields(ArrayList<Field> fields) {
-        if (this.fields.isEmpty()) {
-            setEmptyFields();
-        } else {
-            this.fields = fields;
-        }
+        this.fields = fields;
     }
-    public void setEmptyFields() {
-        int size = Integer.parseInt(this.getSize());
-        for (int i = 0; i < size; i++) {
-            Field toAdd = new Field();
-            toAdd.setStatus(FieldStatus.EMPTY);
-            fields.add(toAdd);
-        }
-    }
+
+//    public void setEmptyFields() {
+//        char[] letters = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+//        int rows = this.getX();
+//        int cols = this.getY();
+//        for (int i = 0; i < rows; i++) {
+//            char letter = letters[i];
+//            for (int j = 0; j < cols; j++) {
+//                Field toAdd = new Field();
+//                String name = "" + letter + j + 1;
+//                toAdd.setName(name);
+//                toAdd.setStatus(FieldStatus.EMPTY);
+//                fields.add(toAdd);
+//            }
+//        }
+//    }
 
 }
 
-//
-//    @JsonGetter("squares")
-//    public int getSquares() {
-//        return x * y ;
-//    }
-//
-//    @JsonGetter("number_of_fields")
-//    public int getNumberOfFields() {
-//        return fields.size();
-//    }
+

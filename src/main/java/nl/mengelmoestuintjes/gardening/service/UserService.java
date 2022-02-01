@@ -67,8 +67,9 @@ public class UserService {
             String chosenUsername = toAdd.getUsername();
             String chosenEmail = toAdd.getEmail();
 
-            if (userExistsByUsername(chosenUsername)) throw new InvalidException("username already exists");
-            if (userExistsByEmail(chosenEmail)) throw new InvalidException("email already exists");
+            if (userExistsByUsername(chosenUsername) || userExistsByEmail(chosenEmail)) {
+                throw new BadRequestException("username or email already exists");
+            }
 
             user.setUsername(toAdd.getUsername());
             try {
@@ -198,10 +199,6 @@ public class UserService {
     public byte[] getProfileImg(String username) {
         User user = getUser(username);
         return user.getProfileImg();
-    }
-    public HashMap<Long, ArrayList<String>> getGardens(String username) {
-        User toFind = getUser( username );
-        return toFind.getGardens();
     }
 
     public HashMap<Garden, ArrayList<UserResponse>> getGardens(String username) {

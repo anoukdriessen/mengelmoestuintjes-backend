@@ -122,6 +122,7 @@ public class User {
         this.setProvince(Province.HIDDEN);
         this.setPosts(new ArrayList<Post>());
         this.setTasks(new ArrayList<Task>());
+        this.setGardens(new ArrayList<Garden>());
     }
 
     public boolean birthdayIsToday() {
@@ -284,32 +285,33 @@ public class User {
     }
 
     // GARDENS
-    public boolean hasGarden(Garden garden) {
-        for (Garden g : this.getGardens()) {
-            if (g.equals(garden)) return true;
-        }
-        return false;
-    }
-    public HashMap<Long, ArrayList<String>> getGardens(){
-        HashMap<Long, ArrayList<String>> myGardens = new HashMap<>();
-        for (Garden g : this.gardens) {
-            myGardens.put(g.getId(), g.getOwners());
-        }
-        return myGardens;
-    }
+//    public boolean hasGarden(Garden garden) {
+//        for (Garden g : this.getGardens()) {
+//            if (g.equals(garden)) return true;
+//        }
+//        return false;
+//    }
+//    public HashMap<Long, ArrayList<UserResponse>> getGardens(){
+//        HashMap<Long, ArrayList<UserResponse>> myGardens = new HashMap<>();
+//        for (Garden g : this.gardens) {
+//            myGardens.put(g.getId(), g.getOwners());
+//        }
+//        return myGardens;
+//    }
     public UserResponse getUserProfile() {
         UserResponse thisProfile = new UserResponse();
         thisProfile.setUsername(this.getUsername());
         thisProfile.setName(this.getName());
         return thisProfile;
     }
-//    public HashMap<Garden, ArrayList<UserResponse>> getGardens(){
-//        HashMap<Garden, ArrayList<UserResponse>> myGardens = new HashMap<>();
-//        for (Garden g : this.gardens) {
-//            myGardens.put(g, g.getOwners());
-//        }
-//        return myGardens;
-//    }
+
+    public HashMap<Garden, ArrayList<UserResponse>> getGardens(){
+        HashMap<Garden, ArrayList<UserResponse>> myGardens = new HashMap<>();
+        for (Garden g : this.gardens) {
+            myGardens.put(g, g.getOwners());
+        }
+        return myGardens;
+    }
 
     public void addGarden(Garden garden) {
         this.gardens.add(garden);

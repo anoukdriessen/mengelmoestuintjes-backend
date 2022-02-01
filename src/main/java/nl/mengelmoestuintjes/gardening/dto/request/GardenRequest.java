@@ -1,6 +1,7 @@
 package nl.mengelmoestuintjes.gardening.dto.request;
 
 import lombok.Data;
+import nl.mengelmoestuintjes.gardening.model.Post;
 import nl.mengelmoestuintjes.gardening.model.Task;
 import nl.mengelmoestuintjes.gardening.model.TaskType;
 import nl.mengelmoestuintjes.gardening.model.User;
@@ -18,6 +19,7 @@ public class GardenRequest {
     private int x;
     private int y;
     private List<Task> tasks = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
     private ArrayList<Field> fields = new ArrayList<>();
 
     public boolean hasOwner(User user){

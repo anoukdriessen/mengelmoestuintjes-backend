@@ -17,10 +17,11 @@ public class Field {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+
     @Enumerated(EnumType.STRING)
     private FieldStatus status;
 
-    @JsonIgnoreProperties("fields")
     @ManyToOne(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH},
@@ -28,7 +29,6 @@ public class Field {
     @JoinColumn(name = "garden_id")
     private Garden garden;
 
-    @JsonIgnoreProperties("fields")
     @OneToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH},
@@ -64,5 +64,9 @@ public class Field {
                 this.setStatus(FieldStatus.PLANTED_AND_WATERED);
                 break;
         }
+    }
+
+    public Long getGarden() {
+        return garden.getId();
     }
 }

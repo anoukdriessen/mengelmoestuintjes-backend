@@ -95,11 +95,45 @@ VALUES ('vivalanouk', 'TODO', FALSE, 'to do expired', '10-01-2022', '22-01-2022'
        ('vivalanouk', 'TODO', FALSE, 'to do soon', '10-01-2022', '29-01-2022'),
        ('itiskevin', 'GARDENING', FALSE, 'water geven', '10-01-2022', '10-01-2022');
 
-INSERT INTO gardens(name, x, y, size)
-VALUES ('volkstuintje', 10, 10, '100'),
-       ('achtertuin', 5, 5, '25');
+INSERT INTO gardens(name, x, y, size )
+VALUES ('volkstuintje', 3, 3, '9'),
+       ('achtertuin', 2, 3, '6');
+
+-- INSERT INTO fields(name, status, garden_id)
+-- VALUES ('A1', 'EMPTY', 1),
+--        ('A2', 'EMPTY', 1),
+--        ('A3', 'EMPTY', 1),
+--        ('B1', 'EMPTY', 1),
+--        ('B2', 'EMPTY', 1),
+--        ('B3', 'EMPTY', 1),
+--        ('C1', 'EMPTY', 1),
+--        ('C2', 'EMPTY', 1),
+--        ('C3', 'EMPTY', 1),
+--        ('A1', 'EMPTY', 2),
+--        ('A2', 'PATH', 2),
+--        ('A3', 'GRASS', 2),
+--        ('B1', 'PLANTABLE', 2),
+--        ('B2', 'PLANTED', 2),
+--        ('B3', 'PLANTED_AND_WATERED', 2);
 
 INSERT INTO gardens_users(garden_id, user_id)
 VALUES (1, 'itiskevin'),
        (1, 'vivalanouk'),
        (2, 'vivalanouk');
+
+-- INSERT INTO gardens_fields(garden_id, field_id)
+-- VALUES (1, 1),
+--        (1, 2),
+--        (1, 3),
+--        (1, 4),
+--        (1, 5),
+--        (1, 6),
+--        (1, 7),
+--        (1, 8),
+--        (1, 9),
+--        (2, 1),
+--        (2, 2),
+--        (2, 3),
+--        (2, 4),
+--        (2, 5),
+--        (2, 6);
