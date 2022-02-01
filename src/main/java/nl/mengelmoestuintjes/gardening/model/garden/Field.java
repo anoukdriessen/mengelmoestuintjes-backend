@@ -1,6 +1,5 @@
 package nl.mengelmoestuintjes.gardening.model.garden;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import nl.mengelmoestuintjes.gardening.model.garden.plants.Plant;
 

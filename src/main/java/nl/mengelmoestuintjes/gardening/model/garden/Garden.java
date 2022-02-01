@@ -37,6 +37,7 @@ public class Garden {
     )
     private List<User> owners = new ArrayList<>();
 
+    @Column(name = "tasks")
     @OneToMany(
             fetch=FetchType.LAZY,
             cascade= {CascadeType.PERSIST, CascadeType.MERGE,

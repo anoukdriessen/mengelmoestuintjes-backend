@@ -46,6 +46,7 @@ public class User {
     private LocalDate memberSince = LocalDate.now();
     private LocalDate lastActivity = LocalDate.now();
 
+    @JsonIgnore
     @OneToMany(
             targetEntity = Authority.class,
             mappedBy = "username",
@@ -81,13 +82,14 @@ public class User {
     )
     private List<Task> tasks = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToMany(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH}
     )
     @JoinTable(
-            name = "garden_users",
+            name = "gardens_users",
             joinColumns=@JoinColumn(name = "garden_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
