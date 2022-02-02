@@ -47,7 +47,6 @@ public class GardenService {
 
             newGarden.setOwners(toAdd.getOwners());
             newGarden.setPosts(toAdd.getPosts());
-            if (!newGarden.getOwners().isEmpty()) newGarden.setTasks();
 
             return repository.save(newGarden);
         } catch (Exception e) {
@@ -66,7 +65,6 @@ public class GardenService {
                     garden.getId(),
                     garden.getName(),
                     garden.getSize(),
-                    garden.getNumberOfTasks(),
                     garden.getPosts(),
                     garden.getFields(),
                     garden.getOwners()));
@@ -93,7 +91,6 @@ public class GardenService {
                             g.getId(),
                             g.getName(),
                             g.getSize(),
-                            g.getNumberOfTasks(),
                             g.getPosts(),
                             g.getFields(),
                             g.getOwners()
@@ -107,10 +104,6 @@ public class GardenService {
     public Iterable<UserResponse> getUsers(long id) {
         Garden garden = getGarden(id);
         return garden.getOwners();
-    }
-    public Iterable<Task> getTasks(long id) {
-        Garden garden = getGarden(id);
-        return garden.getTasks();
     }
     public Iterable<Post> getPosts(long id) {
         Garden garden = getGarden(id);
@@ -154,8 +147,6 @@ public class GardenService {
 
             if (!modified.getOwners().isEmpty()) garden.setOwners(modified.getOwners());
 
-            if (!garden.getOwners().isEmpty()) garden.setTasks();
-
             return repository.save(garden);
         } catch (Exception e) {
             throw new BadRequestException("cannot update garden");
@@ -173,10 +164,6 @@ public class GardenService {
         } catch (Exception e) {
             throw new BadRequestException("cannot update garden size");
         }
-    }
-    public Iterable<Task> updateTasks(Garden toModify) {
-        toModify.setTasks();
-        return toModify.getTasks();
     }
 
     // DELETE

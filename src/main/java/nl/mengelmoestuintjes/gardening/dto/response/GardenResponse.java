@@ -19,8 +19,31 @@ public class GardenResponse {
     Long id;
     String name;
     String size;
-    int numberOfTasks;
     List<Post> posts = new ArrayList<>();
     List<Field> fields = new ArrayList<>();
     ArrayList<UserResponse> profiles = new ArrayList<>();
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public List<Field> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
+    }
+
+    public ArrayList<UserResponse> getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(ArrayList<UserResponse> profiles) {
+        this.profiles = profiles;
+    }
 }

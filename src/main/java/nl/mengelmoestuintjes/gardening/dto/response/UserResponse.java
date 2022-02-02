@@ -21,4 +21,7 @@ public class UserResponse {
     @Lob
     private byte[] image;
     private List<Task> tasks = new ArrayList<>();
+    private List<String> authorities = new ArrayList<>();
+
+
 }

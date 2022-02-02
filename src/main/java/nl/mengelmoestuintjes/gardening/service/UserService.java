@@ -130,7 +130,7 @@ public class UserService {
             throw  new UserNotFoundException(username);
         }
     }
-    public List<Authority> getAuthorities(String username) {
+    public List<String> getAuthorities(String username) {
         User toFind = getUser( username );
         return toFind.getAuthorities();
     }

@@ -1,6 +1,5 @@
 package nl.mengelmoestuintjes.gardening.model.garden.plants;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import nl.mengelmoestuintjes.gardening.model.garden.Field;
 
@@ -15,21 +14,21 @@ public class Plant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @JsonIgnoreProperties("plants")
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
     @ManyToOne(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH},
             fetch = FetchType.EAGER)
-    @JoinColumn(name = "field_id")
     private Field field;
-
-    @Column(nullable = false)
-    private String name;
-
-    //    private Category category;
-    //    private String name;
-    //    private String description;
-
 
 }
 

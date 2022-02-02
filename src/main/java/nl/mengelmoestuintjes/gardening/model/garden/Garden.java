@@ -37,18 +37,6 @@ public class Garden {
     )
     private List<User> owners = new ArrayList<>();
 
-    @Column(name = "tasks")
-    @OneToMany(
-            fetch=FetchType.LAZY,
-            cascade= {CascadeType.PERSIST, CascadeType.MERGE,
-                      CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(
-            name="gardens_tasks",
-            joinColumns=@JoinColumn(name="garden_id"),
-            inverseJoinColumns=@JoinColumn(name="task_id")
-    )
-    private List<Task> tasks = new ArrayList<>();
-
     @OneToMany(
             fetch=FetchType.LAZY,
             cascade= {CascadeType.PERSIST, CascadeType.MERGE,
@@ -98,27 +86,11 @@ public class Garden {
                     u.getUsername(),
                     u.getName(),
                     u.getProfileImg(),
-                    u.getTasks());
+                    u.getTasks(),
+                    u.getAuthorities());
             profiles.add(thisUser);
         }
         return profiles;
-    }
-    public void setTasks() {
-        for (User u : this.owners) {
-            tasks.addAll(u.getTasksByType(TaskType.GARDENING));
-        }
-    }
-    public int getNumberOfTasks() {
-        return this.tasks.size();
-    }
-    public void addTask(Task toAdd) {
-        toAdd.setType(TaskType.GARDENING);
-        tasks.add(toAdd);
-    }
-    public void removeTask(Task toRemove) {
-        if (!tasks.isEmpty()) {
-            tasks.remove(toRemove);
-        }
     }
     public void addPost(Post toAdd) {
         toAdd.setCategory(PostCategory.NOTE);

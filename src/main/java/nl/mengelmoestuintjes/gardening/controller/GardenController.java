@@ -6,7 +6,6 @@ import nl.mengelmoestuintjes.gardening.dto.request.PostRequest;
 import nl.mengelmoestuintjes.gardening.dto.response.GardenResponse;
 import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
 import nl.mengelmoestuintjes.gardening.model.Post;
-import nl.mengelmoestuintjes.gardening.model.Task;
 import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.model.garden.Field;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
@@ -79,8 +78,6 @@ public class GardenController {
     public Iterable<UserResponse> getUsersFromGarden(@PathVariable("id") long id) {
         return service.getUsers(id);
     }
-    @GetMapping(value = "/{id}/taken")
-    public Iterable<Task> getTasksFromGarden(@PathVariable("id") long id) { return service.getTasks(id); }
     @GetMapping(value = "/{id}/notities")
     public Iterable<Post> getPostsFromGarden(@PathVariable("id") long id) { return service.getPosts(id); }
     @GetMapping(value = "{id}/velden")
@@ -102,17 +99,6 @@ public class GardenController {
             @RequestBody GardenRequest request
     ) {
         return ResponseEntity.ok().body(service.updateSize(id, request.getX(), request.getY()));
-    }
-    @PutMapping(value = "/{id}/taken")
-    public Iterable<Task> addTasks(
-            @PathVariable("id") long id
-    ) {
-        try {
-            Garden garden = service.getGarden(id);
-            return service.updateTasks(garden);
-        } catch (Exception e) {
-            throw new BadRequestException( "cannot update tasks ");
-        }
     }
     @PutMapping(value = "/{id}/velden")
     public Field addField(

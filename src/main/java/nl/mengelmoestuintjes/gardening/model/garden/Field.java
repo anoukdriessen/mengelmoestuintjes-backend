@@ -28,7 +28,7 @@ public class Field {
     @JoinColumn(name = "garden_id")
     private Garden garden;
 
-    @OneToMany(
+    @ManyToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH},
             fetch = FetchType.EAGER)

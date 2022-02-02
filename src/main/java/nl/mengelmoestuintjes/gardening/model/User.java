@@ -137,6 +137,13 @@ public class User {
     }
 
     // AUTHORITHIES
+    public List<String> getAuthorities() {
+        List<String> authorithyStrings = new ArrayList<>();
+        for ( Authority authority : this.authorities ) {
+            authorithyStrings.add(authority.getAuthority());
+        }
+        return authorithyStrings;
+    }
     private boolean isPossibleAuthority(String toAdd) {
         List<String> possible = new ArrayList<>();
 
@@ -231,7 +238,7 @@ public class User {
         long limit = parseLong(this.levelUpLimit);
         if (newXP >= limit) {
             // level up limit behaald, verhoog limit
-            limit = limit + ( limit / 3 );
+            limit = 1000 + Math.round(limit * 1.1);
             setLevelUpLimit( limit );
             this.levelUp();
             out += " user has leveled up ";
@@ -304,6 +311,7 @@ public class User {
         UserResponse thisProfile = new UserResponse();
         thisProfile.setUsername(this.getUsername());
         thisProfile.setName(this.getName());
+        thisProfile.setAuthorities(this.getAuthorities());
         return thisProfile;
     }
 
