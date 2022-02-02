@@ -1,6 +1,6 @@
 INSERT INTO users (username, password, enabled, email, level, xp, level_up_limit, name, birthday, province, member_since)
 VALUES ('gebruiker', '$2a$12$NqhSMXWP/LqMLaOwNw1naevyjgEUeJHiaeGiMgOsrYvRab4CpXMD6', TRUE, 'info@mengelmoestuintjes.nl',  '10',  '16000', '18296', 'Gustavo', '01-04-2000', 'DRENTHE',    '2022-01-01'),
-       ('itiskevin', '$2a$12$YpxMaVfaXlIh11w2WJ3fyeWZ2GTUcR4sHzxDKC0XoqGlNZhQUsklu', TRUE, 'kevin@mengelmoestuintjes.nl', '99', 'MAX',  'MAX',  'Kevin',   '12-01-1991', 'OVERIJSSEL', '2022-01-01'),
+       ('itiskevin', '$2a$12$YpxMaVfaXlIh11w2WJ3fyeWZ2GTUcR4sHzxDKC0XoqGlNZhQUsklu', TRUE, 'kevin@mengelmoestuintjes.nl', '99', '0', '0',  'Kevin',   '12-01-1991', 'OVERIJSSEL', '2022-01-01'),
        ('lmnadora',  '$2a$12$4SA1oYMfKWq3cRGj8GQhA.kK5Cojnhg5Ru47iTi31vmO1X2zh9Roy', TRUE, 'iris@mengelmoestuintjes.nl',  '5',  '6500', '7569', '',        '12-01-1991', 'LIMBURG',    '2022-01-01');
 
 INSERT INTO users (username, password, enabled, email, level, xp, level_up_limit, name, birthday, province, member_since)

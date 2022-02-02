@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +24,7 @@ import java.util.Map;
 @CrossOrigin
 public class UserController {
 
-//    @Value("${app.uploads}")
-//    private String storageLocation;
-
-    private UserService service;
+    private final UserService service;
 
     @Autowired
     public UserController(UserService service) {
@@ -37,22 +33,23 @@ public class UserController {
 
     // CREATE
     @PostMapping
-    public ResponseEntity<Object> create( @RequestBody User toAdd ) {
+    public ResponseEntity<Object> create(
+            @RequestBody User toAdd
+    ) {
         return ResponseEntity.ok().body(service.create( toAdd ));
     }
 
     @PostMapping(value = "/{username}/authorities")
-    public String addUserAuthority(
+    public Iterable<String> addUserAuthority(
             @PathVariable("username") String username,
             @RequestBody Map<String, Object> fields
     ) {
         try {
             String authorityName = (String) fields.get("authority");
             return service.addAuthority(username, authorityName);
-        } catch (Exception e) {
-            throw new BadRequestException( e.getMessage() );
-        }
+        } catch (Exception e) { throw new BadRequestException( e.getMessage() ); }
     }
+
     @PostMapping(value = "/{username}/berichten")
     public Long addUserPost(
             @PathVariable("username") String username,
@@ -61,10 +58,9 @@ public class UserController {
         try {
             List<Post> posts = service.addPost(username, fields);
             return posts.get(posts.size() - 1).getId();
-        } catch (Exception e) {
-            throw new BadRequestException( e.getMessage() );
-        }
+        } catch (Exception e) { throw new BadRequestException( e.getMessage() ); }
     }
+
     @PostMapping(value = "/{username}/taken")
     public Task addUserTask(
             @PathVariable("username") String username,
@@ -72,9 +68,7 @@ public class UserController {
     ) {
         try {
             return service.addTask(username, fields);
-        } catch (Exception e) {
-            throw new BadRequestException( e.getMessage() );
-        }
+        } catch (Exception e) { throw new BadRequestException( e.getMessage() ); }
     }
 
     @CrossOrigin
@@ -95,45 +89,71 @@ public class UserController {
     }
 
     // READ
+//    @GetMapping
+//    public Iterable<User> getUsers(
+//            @RequestParam(name = "email", defaultValue = "", required = false) String email,
+//            @RequestParam(name = "level", defaultValue = "", required = false) String level,
+//            @RequestParam(name = "province", defaultValue = "", required = false) Province province
+//    ) {
     @GetMapping
     public Iterable<User> getUsers(
-            @RequestParam(name = "email", defaultValue = "", required = false) String email,
-            @RequestParam(name = "level", defaultValue = "", required = false) String level,
             @RequestParam(name = "province", defaultValue = "", required = false) Province province
     ) {
-        return service.getAll(email, level, province);
+        return service.getAll(province);
     }
+
     @GetMapping(value = "/profiles")
     public HashMap<String, byte[]> getUsersProfile(){
         return service.getAllProfiles();
     }
+
     @GetMapping(value = "/{username}")
-    public User getUser( @PathVariable("username") String username ) {
+    public User getUser(
+            @PathVariable("username") String username
+    ) {
         return service.getUser(username);
     }
+
     @GetMapping(value = "/profile/{username}")
-    public UserResponse getUsersProfile( @PathVariable("username") String username) { return service.getUsersProfile(username);}
+    public UserResponse getUsersProfile(
+            @PathVariable("username") String username
+    ) {
+        return service.getUsersProfile(username);
+    }
+
     @GetMapping(value = "/check/username/{username}")
-    public boolean isUserByUsername( @PathVariable("username") String username ) {
+    public boolean isUserByUsername(
+            @PathVariable("username") String username
+    ) {
         return service.userExistsByUsername(username);
     }
+
     @GetMapping(value = "/check/email/{email}")
-    public boolean isUserByEmail( @PathVariable("email") String email ) {
+    public boolean isUserByEmail(
+            @PathVariable("email") String email
+    ) {
         return service.userExistsByEmail(email);
     }
 
     @GetMapping(value = "/{username}/authorities")
-    public ResponseEntity<Object> getUserAuthorities( @PathVariable("username") String username ) {
+    public ResponseEntity<Object> getUserAuthorities(
+            @PathVariable("username") String username
+    ) {
         return ResponseEntity.ok().body(service.getAuthorities(username));
     }
+
     @GetMapping(value = "/{username}/xp")
-    public ResponseEntity<Object> getUserXpInfo( @PathVariable("username") String username ) {
+    public ResponseEntity<Object> getUserXpInfo(
+            @PathVariable("username") String username
+    ) {
         return ResponseEntity.ok().body(service.getXP(username));
     }
+
     @GetMapping(value = "/provincies")
     public ResponseEntity<Object> allProvinces() {
-        return ResponseEntity.ok().body( service.getProvinces() );
+        return ResponseEntity.ok().body( service.getAllPossibleProvinces() );
     }
+
     @GetMapping(value = "/birthdays")
     public Iterable<String> allUsersWhosBirthdayToday() {
         return service.getWithBirthdayToday();
@@ -147,6 +167,7 @@ public class UserController {
     ) {
         return ResponseEntity.ok().body(service.getPosts(username, category, published));
     }
+
     @GetMapping(value = "/{username}/taken/{type}")
     public ResponseEntity<Object> getUserTaken(
             @PathVariable("username") String username,
@@ -154,12 +175,14 @@ public class UserController {
     ) {
         return ResponseEntity.ok().body(service.getTasks(username, type));
     }
+
     @GetMapping(value = "/{username}/img")
     public ResponseEntity<Object> getUserProfile(
             @PathVariable("username") String username
     ) {
         return ResponseEntity.ok().body(service.getProfileImg(username));
     }
+
     @GetMapping("/{username}/tuintjes")
     public ResponseEntity<Object> getUserGardens(
             @PathVariable("username") String username
@@ -169,18 +192,20 @@ public class UserController {
 
     // UPDATE
     @PutMapping(value = "/{username}")
-    public ArrayList<String> update(
+    public User update(
             @PathVariable("username") String username,
             @RequestBody UserRequest user) {
         return service.update(username, user);
     }
+
     @PatchMapping(value = "/{username}")
-    public ArrayList<String> updateProfile(
+    public User updateProfile(
             @PathVariable("username") String username,
             @RequestBody UserRequest user
     ) {
         return service.updateProfile(username, user);
     }
+
     @PatchMapping(value = "/{username}/password")
     public String setPassword(
             @PathVariable("username") String username,
@@ -189,6 +214,7 @@ public class UserController {
         service.setPassword(username, password);
         return "Password changed for user " + username;
     }
+
     @PatchMapping(value = "/{username}/birthday")
     public LocalDate setBirthday(
             @PathVariable("username") String username,
@@ -202,6 +228,7 @@ public class UserController {
         }
         return service.setBirthday(username, birthday);
     }
+
     @PatchMapping(value = "/{username}/xp/{num}")
     public String setXP(
             @PathVariable("username") String username,
@@ -209,6 +236,7 @@ public class UserController {
     ) {
         return service.setXP(username, toAdd);
     }
+
     @PatchMapping(value = "/{username}/activity")
     public String setLastActivity(
             @PathVariable("username") String username,
@@ -223,16 +251,20 @@ public class UserController {
         return service.setLastActivity(username, activity);
     }
 
-
     // DELETE
     @DeleteMapping(value = "/{username}")
-    public String delete(@PathVariable("username") String username) {
+    public String delete(
+            @PathVariable("username") String username
+    ) {
         service.deleteUser(username);
         return "user " + username + " is deleted";
     }
 
     @DeleteMapping(value = "/{username}/authorities/{authority}")
-    public String deleteUserAuthority(@PathVariable("username") String username, @PathVariable("authority") String authority) {
+    public String deleteUserAuthority(
+            @PathVariable("username") String username,
+            @PathVariable("authority") String authority
+    ) {
         return service.removeAuthority(username, authority);
     }
 }

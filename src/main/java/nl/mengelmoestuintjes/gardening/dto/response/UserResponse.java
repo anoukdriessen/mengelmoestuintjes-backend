@@ -23,5 +23,4 @@ public class UserResponse {
     private List<Task> tasks = new ArrayList<>();
     private List<String> authorities = new ArrayList<>();
 
-
 }
