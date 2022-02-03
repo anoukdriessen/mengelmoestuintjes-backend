@@ -32,6 +32,8 @@ public class Plant {
 
 }
 
+    
+
 //
 //    @Column(columnDefinition = "integer default 0")
 //    private Location location;            // de standplaats van de plant

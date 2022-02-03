@@ -1,10 +1,8 @@
 package nl.mengelmoestuintjes.gardening.model.garden;
 
-
-import lombok.Data;
 import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
 import nl.mengelmoestuintjes.gardening.model.*;
-
+import lombok.Data;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +19,9 @@ public class Garden {
     @Column(nullable = false)
     private String name;
 
-    private String size;
-
     private int x;
     private int y;
+    private String size;
 
     @ManyToMany(
             fetch=FetchType.LAZY,
@@ -62,15 +59,12 @@ public class Garden {
     public int calculateSize(int x, int y) {
         return x * y;
     }
-
     public void setSize(int x, int y) {
         this.size = "" + (calculateSize(x, y));
     }
 
     public boolean hasOwner(String username){
-        for (User u : this.owners) {
-            if (u.getUsername().equals(username)) return true;
-        }
+        for (User u : this.owners) { if (u.getUsername().equals(username)) return true; }
         return false;
     }
     public void addOwner(User user) {
@@ -92,6 +86,7 @@ public class Garden {
         }
         return profiles;
     }
+
     public void addPost(Post toAdd) {
         toAdd.setCategory(PostCategory.NOTE);
         posts.add(toAdd);
@@ -102,32 +97,15 @@ public class Garden {
         }
     }
 
+    public Field findFieldById(int id) {
+        return this.fields.get(id);
+    }
     public void addField(Field toAdd) {
         this.fields.add(toAdd);
     }
     public void removeField(Field toRemove) {
         this.fields.remove(toRemove);
     }
-    public void setFields(ArrayList<Field> fields) {
-        this.fields = fields;
-    }
-
-//    public void setEmptyFields() {
-//        char[] letters = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-//        int rows = this.getX();
-//        int cols = this.getY();
-//        for (int i = 0; i < rows; i++) {
-//            char letter = letters[i];
-//            for (int j = 0; j < cols; j++) {
-//                Field toAdd = new Field();
-//                String name = "" + letter + j + 1;
-//                toAdd.setName(name);
-//                toAdd.setStatus(FieldStatus.EMPTY);
-//                fields.add(toAdd);
-//            }
-//        }
-//    }
-
 }
 
 

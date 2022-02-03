@@ -1,9 +1,7 @@
 package nl.mengelmoestuintjes.gardening.repository;
 
-import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface GardenRepository extends CrudRepository<Garden, Long> {
-
+public interface GardenRepository extends JpaRepository<Garden, Long> {
 }

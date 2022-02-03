@@ -1,8 +1,7 @@
 package nl.mengelmoestuintjes.gardening.model.garden;
 
-import lombok.Data;
 import nl.mengelmoestuintjes.gardening.model.garden.plants.Plant;
-
+import lombok.Data;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,7 @@ public class Field {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     private String name;
 
@@ -67,5 +66,9 @@ public class Field {
 
     public Long getGarden() {
         return garden.getId();
+    }
+
+    public void addPlant(Plant toAdd) {
+        this.occupiedBy.add(toAdd);
     }
 }

@@ -2,22 +2,24 @@ package nl.mengelmoestuintjes.gardening.service;
 
 import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.GardenNotFoundException;
+import nl.mengelmoestuintjes.gardening.controller.exceptions.RecordNotFoundException;
 import nl.mengelmoestuintjes.gardening.dto.request.GardenRequest;
 import nl.mengelmoestuintjes.gardening.dto.request.PostRequest;
 import nl.mengelmoestuintjes.gardening.dto.response.GardenResponse;
 import nl.mengelmoestuintjes.gardening.dto.response.UserResponse;
 import nl.mengelmoestuintjes.gardening.model.Post;
 import nl.mengelmoestuintjes.gardening.model.PostCategory;
-import nl.mengelmoestuintjes.gardening.model.Task;
 import nl.mengelmoestuintjes.gardening.model.User;
 import nl.mengelmoestuintjes.gardening.model.garden.Field;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
+import nl.mengelmoestuintjes.gardening.model.garden.plants.Plant;
 import nl.mengelmoestuintjes.gardening.repository.GardenRepository;
 import nl.mengelmoestuintjes.gardening.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,25 +36,17 @@ public class GardenService {
 
     // CREATE
     public Garden create(GardenRequest toAdd) {
-        Garden newGarden = new Garden();
+        GardenRequest request = new GardenRequest();
 
-        try {
-            newGarden.setId(toAdd.getId());
-            newGarden.setName(toAdd.getName());
+        request.setId(toAdd.getId());
+        request.setName(toAdd.getName());
+        request.setSize(toAdd.getX(), toAdd.getY());
 
-            newGarden.setX(toAdd.getX());
-            newGarden.setY(toAdd.getY());
-            newGarden.setSize(newGarden.getX(), newGarden.getY());
-            newGarden.setFields(toAdd.getFields());
+        request.setFields(toAdd.getFields());
+        request.setOwners(toAdd.getOwners());
+        request.setPosts(toAdd.getPosts());
 
-            newGarden.setOwners(toAdd.getOwners());
-            newGarden.setPosts(toAdd.getPosts());
-
-            return repository.save(newGarden);
-        } catch (Exception e) {
-            throw new BadRequestException("cannot create garden");
-        }
-
+        return repository.save(request.toGarden());
     }
 
     // READ
@@ -71,6 +65,7 @@ public class GardenService {
         });
         return responses;
     }
+
     public Garden getGarden(long id) {
         Optional<Garden> toFind = repository.findById(id);
         boolean gardenFound = toFind.isPresent();
@@ -80,6 +75,7 @@ public class GardenService {
             throw new GardenNotFoundException(id);
         }
     }
+
     public ArrayList<GardenResponse> findGardensByOwnersEquals(User user){
         ArrayList<GardenResponse> result = new ArrayList<>();
         Iterable<Garden> all = repository.findAll();
@@ -101,25 +97,54 @@ public class GardenService {
         }
         return result;
     }
+
     public Iterable<UserResponse> getUsers(long id) {
-        Garden garden = getGarden(id);
-        return garden.getOwners();
+        Garden found = getGarden(id);
+        return found.getOwners();
     }
+
     public Iterable<Post> getPosts(long id) {
-        Garden garden = getGarden(id);
-        return garden.getPosts();
+        Garden found = getGarden(id);
+        return found.getPosts();
     }
+
     public Iterable<Field> getFields(long id) {
-        Garden garden = getGarden(id);
-        return garden.getFields();
+        Garden found = getGarden(id);
+        return found.getFields();
+    }
+
+    public Field getFieldByName(long id, String nameToFind) {
+        Garden found = getGarden(id);
+        for (Field field : found.getFields()) {
+            Field thisField = field;
+            if (thisField.getName().equals(nameToFind)) {
+                return found.getFields().get(thisField.getId() -1);
+            }
+        }
+        return null;
+    }
+
+    public List<Plant> getPlantsByField(long id, String fieldName) {
+        Field toFind = getFieldByName(id, fieldName);
+        return toFind.getOccupiedBy();
+    }
+
+    public Plant getPlantOnFieldById(long id, String fieldName, int plantid) {
+        Field toFind = getFieldByName(id, fieldName);
+        try {
+            return toFind.getOccupiedBy().get(plantid - 1);
+        } catch (Exception e) {
+            throw new BadRequestException("Not valid index for plant");
+        }
     }
 
     // UPDATE
-    public String addUser(User user, Garden garden) {
+    public ArrayList<UserResponse> addUser(User user, Garden garden) {
         garden.addOwner(user);
         repository.save( garden );
-        return garden.getName() + " has now owner " + user.getUsername();
+        return garden.getOwners();
     }
+
     public Garden addNote(Garden garden, PostRequest toAdd) {
         Post newPost = new Post();
         toAdd.setCategory(PostCategory.NOTE);
@@ -128,12 +153,25 @@ public class GardenService {
         garden.addPost(newPost);
         return repository.save(garden);
     }
+
     public Field addField(Field field, Garden garden) {
         field.setGarden(garden);
         garden.addField(field);
         repository.save(garden);
         return field;
     }
+
+    public Field addPlantToField(Garden garden, Field field, Plant plant) {
+        try {
+            plant.setField(field);
+        } catch (Exception e) { throw new BadRequestException("cannot set field");}
+        try {
+            field.addPlant(plant);
+        } catch (Exception e) { throw new BadRequestException("cannot add plant");}
+        repository.save(garden);
+        return field;
+    }
+
     public Garden updateGarden(long id, GardenRequest modified) {
         Garden garden = getGarden(id);
         try {
@@ -152,6 +190,7 @@ public class GardenService {
             throw new BadRequestException("cannot update garden");
         }
     }
+
     public Garden updateSize(long id, int x, int y) {
         Garden garden = getGarden(id);
         try {
@@ -168,10 +207,11 @@ public class GardenService {
 
     // DELETE
     public String delete(long id) {
-        Garden g = getGarden(id);
+        Garden found = getGarden(id);
         repository.deleteById(id);
-        return g.getName() + " is deleted";
+        return found.getName() + " is deleted";
     }
+
     public String removeUser(User user, Garden garden) {
         garden.removeOwner(user);
         if (!garden.getOwners().isEmpty()) {
@@ -182,9 +222,20 @@ public class GardenService {
             return "removed " + garden.getName() + " because all owners are removed";
         }
     }
+
     public String deletePost(Post post, Garden garden) {
         garden.removePost(post);
         repository.save(garden);
         return "removed " + post.getTitle() + " from garden " + garden.getName();
     }
+
+    public String deleteField(Garden garden, String name) {
+        Field toDelete = getFieldByName(garden.getId(), name);
+        if(toDelete == null) { throw new RecordNotFoundException("Field does not exist"); }
+        String deleted = toDelete.getName();
+        garden.removeField(toDelete);
+        repository.save(garden);
+        return deleted;
+    }
+
 }

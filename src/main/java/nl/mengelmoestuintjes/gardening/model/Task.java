@@ -32,9 +32,6 @@ public class Task {
     @Column(nullable = false)
     private String title;
 
-//    @Column(nullable = false)
-//    private String description;
-
     @Column(nullable = false)
     private boolean done;
 
