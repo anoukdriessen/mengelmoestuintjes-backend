@@ -71,4 +71,7 @@ public class Field {
     public void addPlant(Plant toAdd) {
         this.occupiedBy.add(toAdd);
     }
+    public void removePlant(Plant toRemove) {
+        this.occupiedBy.removeIf(plant -> toRemove == plant );
+    }
 }

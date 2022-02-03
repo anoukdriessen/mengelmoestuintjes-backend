@@ -30,6 +30,18 @@ public class Plant {
             fetch = FetchType.EAGER)
     private Field field;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "plant_details_id")
+    private PlantDetails details;
+
+    public PlantDetails getDetails() {
+        if (details == null) {
+            PlantDetails empty = new PlantDetails();
+            empty.setToEmpty();
+            setDetails(empty);
+        }
+        return this.details;
+    }
 }
 
     

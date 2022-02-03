@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "api/taken")
 @CrossOrigin
 public class TaskController {
-    private TaskService service;
-    private UserService userService;
+    private final TaskService service;
+    private final UserService userService;
 
     @Autowired
     public TaskController(TaskService taskService, UserService userService) {
@@ -48,6 +48,7 @@ public class TaskController {
     ) {
         return service.getAll(title, type, isDone);
     }
+
     @GetMapping("/{id}")
     public Task getTaskById(
             @PathVariable( "id" ) long id
@@ -63,6 +64,7 @@ public class TaskController {
     ){
         return ResponseEntity.ok().body(service.updateTask(id, request));
     }
+
     @PutMapping("{id}/{done}")
     public ResponseEntity<Object> setIsDone(
             @PathVariable("id") long id,

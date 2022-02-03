@@ -118,12 +118,3 @@ public class PostService {
         return p.getTitle() + " is deleted";
     }
 }
-
-/*
- *     public Post getRandom() {
- *         long bound = postRepository.count();
- *         Random r = new Random();
- *         int id = r.nextInt( (int) bound );
- *         return getPostById( id );
- *     }
- * */

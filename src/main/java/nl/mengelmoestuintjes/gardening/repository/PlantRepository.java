@@ -1,9 +1,12 @@
 package nl.mengelmoestuintjes.gardening.repository;
+
+import nl.mengelmoestuintjes.gardening.model.garden.plants.Category;
 import nl.mengelmoestuintjes.gardening.model.garden.plants.Plant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PlantRepository extends JpaRepository<Plant, Long> {
     boolean existsByName(String name);
+    Iterable<Plant> findAllByCategory(Category category);
 
 //    Iterable<Plant> findPlantByNameContaining(String name);
 //    Iterable<Plant> findPlantByCategory(Category category);

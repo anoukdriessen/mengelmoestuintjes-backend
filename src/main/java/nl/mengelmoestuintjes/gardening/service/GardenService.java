@@ -14,7 +14,7 @@ import nl.mengelmoestuintjes.gardening.model.garden.Field;
 import nl.mengelmoestuintjes.gardening.model.garden.Garden;
 import nl.mengelmoestuintjes.gardening.model.garden.plants.Plant;
 import nl.mengelmoestuintjes.gardening.repository.GardenRepository;
-import nl.mengelmoestuintjes.gardening.repository.UserRepository;
+import nl.mengelmoestuintjes.gardening.repository.PlantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +26,12 @@ import java.util.Optional;
 public class GardenService {
 
     private final GardenRepository repository;
-    private final UserRepository userRepository;
+    private final PlantRepository plantRepository;
 
     @Autowired
-    public GardenService(GardenRepository repository, UserRepository userRepository) {
+    public GardenService(GardenRepository repository, PlantRepository plantRepository) {
         this.repository = repository;
-        this.userRepository = userRepository;
+        this.plantRepository = plantRepository;
     }
 
     // CREATE
@@ -113,6 +113,17 @@ public class GardenService {
         return found.getFields();
     }
 
+    public Field getFieldById(long id, int fieldToFind) {
+        Garden found = getGarden(id);
+        for (Field field : found.getFields()) {
+            Field thisField = field;
+            if (thisField.getId() == fieldToFind) {
+                return found.getFields().get(thisField.getId() -1 );
+            }
+        }
+        return null;
+    }
+
     public Field getFieldByName(long id, String nameToFind) {
         Garden found = getGarden(id);
         for (Field field : found.getFields()) {
@@ -161,15 +172,20 @@ public class GardenService {
         return field;
     }
 
-    public Field addPlantToField(Garden garden, Field field, Plant plant) {
-        try {
-            plant.setField(field);
-        } catch (Exception e) { throw new BadRequestException("cannot set field");}
-        try {
-            field.addPlant(plant);
-        } catch (Exception e) { throw new BadRequestException("cannot add plant");}
-        repository.save(garden);
-        return field;
+    public Field addPlantToField(Garden garden, int fieldId, Long plantId) {
+        Field field = getFieldById(garden.getId(), fieldId);
+        Optional<Plant> toFind = plantRepository.findById(plantId);
+        if (toFind.isEmpty()) {
+            throw new RecordNotFoundException("Plant not found");
+        }
+        if (field != null) {
+            Plant found = toFind.get();
+            field.addPlant(found);
+            repository.save(garden);
+            return field;
+        } else {
+            throw new RecordNotFoundException("Field not found");
+        }
     }
 
     public Garden updateGarden(long id, GardenRequest modified) {
@@ -236,6 +252,22 @@ public class GardenService {
         garden.removeField(toDelete);
         repository.save(garden);
         return deleted;
+    }
+
+    public Field removePlantFromField(Garden garden, int fieldId, Long plantId) {
+        Field field = getFieldById(garden.getId(), fieldId);
+        Optional<Plant> toFind = plantRepository.findById(plantId);
+        if (toFind.isEmpty()) {
+            throw new RecordNotFoundException("Plant not found");
+        }
+        if (field != null) {
+            Plant found = toFind.get();
+            field.removePlant(found);
+            repository.save(garden);
+            return field;
+        } else {
+            throw new RecordNotFoundException("Field not found");
+        }
     }
 
 }

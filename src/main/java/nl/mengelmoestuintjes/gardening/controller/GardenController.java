@@ -114,6 +114,14 @@ public class GardenController {
         return service.getFieldByName(id, name);
     }
 
+    @GetMapping(value = "{id}/velden/id/{fieldid}")
+    public Field getFieldByName(
+            @PathVariable("id") long id,
+            @PathVariable("fieldid") int field
+    ){
+        return service.getFieldById(id, field);
+    }
+
     @GetMapping(value = "{id}/velden/{name}/planten")
     public List<Plant> getPlantsFromField(
             @PathVariable("id") long id,
@@ -179,6 +187,16 @@ public class GardenController {
         }
     }
 
+    @PutMapping(value = "/{id}/velden/{fieldid}/{plantid}")
+    public Field addPlantToField(
+            @PathVariable("id") Long id,
+            @PathVariable("fieldid") int field,
+            @PathVariable("plantid") Long plant
+    ) {
+        Garden garden = service.getGarden(id);
+        return service.addPlantToField(garden, field, plant);
+    }
+
     // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") long id) {
@@ -220,4 +238,15 @@ public class GardenController {
         Garden garden = getGardenById(id);
         return service.deleteField(garden, name);
     }
+
+    @DeleteMapping(value = "/{id}/velden/{fieldid}/{plantid}")
+    public Field removePlantFromField(
+            @PathVariable("id") Long id,
+            @PathVariable("fieldid") int field,
+            @PathVariable("plantid") Long plant
+    ) {
+        Garden garden = service.getGarden(id);
+        return service.removePlantFromField(garden, field, plant);
+    }
+
 }

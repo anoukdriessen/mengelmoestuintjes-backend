@@ -20,8 +20,8 @@ import java.io.IOException;
 @RequestMapping("/api/berichten")
 @CrossOrigin
 public class PostController {
-    private PostService service;
-    private UserService userService;
+    private final PostService service;
+    private final UserService userService;
 
     @Autowired
     public PostController(PostService postService, UserService userService) {
