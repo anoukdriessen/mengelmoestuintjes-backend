@@ -1,5 +1,6 @@
 package nl.mengelmoestuintjes.gardening.service;
 
+import nl.mengelmoestuintjes.gardening.controller.exceptions.BadRequestException;
 import nl.mengelmoestuintjes.gardening.controller.exceptions.RecordNotFoundException;
 import nl.mengelmoestuintjes.gardening.model.garden.plants.Category;
 import nl.mengelmoestuintjes.gardening.model.garden.plants.Plant;
@@ -19,6 +20,9 @@ public class PlantService {
     }
 
     public Plant newPlant(Plant toAdd) {
+        if (repository.existsByName(toAdd.getName())) {
+            throw new BadRequestException("Name already exists");
+        }
         return repository.save( toAdd );
     }
     public Plant newFlower(Plant toAdd){
@@ -52,10 +56,18 @@ public class PlantService {
 
     public Plant getById( long id ) {
         Optional<Plant> toFind = repository.findById(id);
-        if (toFind.isPresent()) {   // check if quote exists
+        if (toFind.isPresent()) {   // check if plant exists
             return toFind.get();
-        } else {                    // post does not exists
+        } else {                    // plant does not exists
             throw new RecordNotFoundException("post not found");
+        }
+    }
+    public Plant findPlantByName( String name ) {
+        Optional<Plant> toFind = repository.findPlantByName( name );
+        if (toFind.isPresent()) {   // check if plant exists
+            return toFind.get();
+        } else {                    // plant does not exists
+            return null;
         }
     }
 

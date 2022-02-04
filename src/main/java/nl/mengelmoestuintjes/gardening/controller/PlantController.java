@@ -73,6 +73,13 @@ public class PlantController {
         return service.getById( id );
     }
 
+    @GetMapping(value = "plant/{name}")
+    public Plant getPlantByName(
+            @PathVariable("name") String name
+    ) {
+        return service.findPlantByName( name );
+    }
+
     @PutMapping(value = "/{id}")
     public Plant updatePlant(
             @PathVariable( "id" ) int id,

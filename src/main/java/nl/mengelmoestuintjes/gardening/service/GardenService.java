@@ -108,6 +108,20 @@ public class GardenService {
         return found.getPosts();
     }
 
+    public Iterable<Plant> getPlantsInGarden(long id) {
+        Iterable<Field> fields = getFields(id);
+        List<Plant> all = new ArrayList<>();
+        fields.forEach(field -> {
+            List<Plant> plants = field.getOccupiedBy();
+            plants.forEach(plant -> {
+                if (!all.contains(plant)) {
+                    all.add(plant);
+                }
+            });
+        });
+        return all;
+    }
+
     public Iterable<Field> getFields(long id) {
         Garden found = getGarden(id);
         return found.getFields();

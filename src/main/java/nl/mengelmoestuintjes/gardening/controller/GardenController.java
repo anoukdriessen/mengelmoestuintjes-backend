@@ -106,6 +106,7 @@ public class GardenController {
         return service.getFields(id);
     }
 
+
     @GetMapping(value = "{id}/velden/{name}")
     public Field getFieldByName(
             @PathVariable("id") long id,
@@ -115,11 +116,18 @@ public class GardenController {
     }
 
     @GetMapping(value = "{id}/velden/id/{fieldid}")
-    public Field getFieldByName(
+    public Field getFieldById(
             @PathVariable("id") long id,
             @PathVariable("fieldid") int field
     ){
         return service.getFieldById(id, field);
+    }
+
+    @GetMapping(value = "{id}/planten")
+    public Iterable<Plant> getPlantsInGarden(
+            @PathVariable("id") long id
+    ){
+        return service.getPlantsInGarden(id);
     }
 
     @GetMapping(value = "{id}/velden/{name}/planten")
