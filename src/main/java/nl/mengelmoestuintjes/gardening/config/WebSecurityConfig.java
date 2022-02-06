@@ -25,8 +25,8 @@ import static org.springframework.http.HttpMethod.*;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private DataSource dataSource;
-    private JwtRequestFilter jwtRequestFilter;
+    private final DataSource dataSource;
+    private final JwtRequestFilter jwtRequestFilter;
 
     @Autowired
     WebSecurityConfig(DataSource dataSource, JwtRequestFilter jwtRequestFilter) {
@@ -67,18 +67,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers(POST,"/authenticate").permitAll()
+                .antMatchers(POST, "/api/quotes/**").hasRole("MODERATOR")
                 .antMatchers(GET, "/api/quotes/**").permitAll()
+                .antMatchers(PUT, "/api/quotes/**").hasRole("MODERATOR")
+                .antMatchers(DELETE, "/api/quotes/**").hasRole("MODERATOR")
+                .antMatchers(POST, "/api/planten/**").hasRole("MODERATOR")
+                .antMatchers(GET, "/api/planten/**").permitAll()
+                .antMatchers(PUT, "/api/planten/**").hasRole("MODERATOR")
+                .antMatchers(POST, "/api/taken/**").hasRole("USER")
+                .antMatchers(GET, "/api/taken/**").hasRole("USER")
+                .antMatchers(PUT, "/api/taken/**").hasRole("USER")
+                .antMatchers(DELETE, "/api/taken/**").hasRole("USER")
                 .antMatchers(GET, "/api/berichten?published=TRUE&category=BLOG").permitAll()
                 .antMatchers(GET, "/api/berichten?published=TRUE&category=POST").hasRole("USER")
-                .antMatchers(GET,"/api/gebruikers/check/**").permitAll()
-                .antMatchers(POST,"/authenticate").permitAll()
-                .antMatchers(POST,"/api/gebruikers").permitAll()
+                .antMatchers(POST, "/api/berichten/**").hasRole("USER")
+                .antMatchers(PUT, "/api/berichten/**").hasRole("USER")
+                .antMatchers(DELETE, "/api/berichten/**").hasRole("USER")
                 .antMatchers(GET, "/api/gebruikers/**").hasRole("USER")
+                .antMatchers(GET,"/api/gebruikers/check/**").permitAll()
+                .antMatchers(POST,"/api/gebruikers").permitAll()
                 .antMatchers(POST,"/api/gebruikers/**").hasRole("USER")
                 .antMatchers(PATCH,"/api/gebruikers/**").hasRole("USER")
                 .antMatchers(PUT,"/api/gebruikers/**").hasRole("USER")
-
-                .antMatchers("/api/quotes/**").hasAnyRole("MODERATOR", "ADMIN")
+                .antMatchers(PUT,"/api/tuintjes/**").hasRole("USER")
                 .anyRequest().permitAll()
                 .and()
                 .sessionManagement()
@@ -89,13 +101,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 }
-/**
- * //                .antMatchers("/").permitAll()
- * //                .antMatchers("/actuator/info").permitAll()
- * //                .antMatchers("/actuator/**").hasRole("DEVELOPER")
- * //                .antMatchers("/api/gebruikers/**").hasRole("ADMIN")
- * //                .antMatchers(POST, "/api/quotes").hasRole("MODERATOR")
- * //                .antMatchers(PATCH, "/api/quotes").hasRole("MODERATOR")
- * //                .antMatchers(DELETE, "/api/quotes").hasRole("MODERATOR")
- * //                .antMatchers(PATCH,"/gebruikers/{^[\\w]$}/password").authenticated()
- */
+

@@ -1,34 +1,49 @@
+# Mengelmoestuintjes backend
 
-###dependencies
-####Spring Boot Starter
-Web : starter for building web applications using Spring MVC
-uses Tomcat as the default embedded container
+onderdeel van het project mengelmoestuintjes.
+- [anoukdriessen/mengelmoestuintjes-app](https://github.com/anoukdriessen/mengelmoestuintjes-app)
 
-Data JPA : starter for using Spring Data JPA with Hibernate
+Main class: GardeningApplication.java
 
-Security : for using Spring Security
+Dit project is opgesteld met behulp van Springboot waardoor de bestandstructuur opgedeeld is in de verschillende lagen.
 
-Test : starter for testing Spring Boot applications with libraries including JUnit Jupiter, Hamcrest and Mockito
+## Bestanden
+- main klasse GardeningApplication
+- CustomApplicationListener, voor het uitlezen van de endpoints
 
-Actuator : starter for using Spring Boot's Actuator which provides production ready features to help you monitor and manage the application
-automatically exposes endpoints for metrics out-of-the-box, prefixed with: /actuator
-- health : health information
-- info : empty by default, info set in application.properties
-- mappings : shows a collated list of all @RequestMapping paths
+### /config
+configuratie bestanden
+- GlobalCorsConfiguration
+- WebSecurityConfig
 
-more endpoints: https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#actuator.endpoints
+### /controller
+De controller laag zorgt voor de endpoints van de API
+- map met custom Exceptions
+- ApiController, eerste testbestand
+- AuthenticationController, zorgt voor de authenticatie
+- GardenController, zorgt voor de functionaliteiten van de tuintjes
+- PlantController, zorgt voor de functionaliteiten van de planten
+- PostController, zorgt voor de functionaliteiten van de berichten
+- QuoteController, zorgt voor de functionaliteiten van de quotes
+- TaskController, zorgt voor de functionaliteiten van de taken
+- UserController, zorgt voor de functionaliteiten van de gebruikers
 
-####Spring Boot
-Devtools : Spring boot Developer tools, no more need for restarting project when code gets updated
+### /dto
+de DTO's dienen als Data Transfer Object tussen Request en Response, er is niet voor ieder object een Dto gebruikt
+de DTO's zijn onderverdeeld in mappen Request en Response
 
-####PostgreSQL
-PostgreSQL JDBC driver
+### /model
+de data objecten van de applicatie, ook wel POJO's (Plain Old Java Objects)
+op basis van deze objecten zijn de rest van de lagen opgebouwd
 
-####Hibernate
-Validator : hibernate's jakarta bean validation reference implemntation
+### /repository
+de repositories zijn verantwoordelijk voor het gemakkelijk filteren van data
 
-####Project Lombok
-Spice up your java: Automatic Resource Management, automatic generation of getters, setters, equals, hasCode and toString ect.
+### /security
+in de security map staan twee bestanden de JwtRequestFilter en JwtUtil die beiden verantwoordelijk zijn voor de authenticatie door middel van een JWT token
 
-####JSON Web Token
-JJWT 
+### /service
+de service laag dient voor de filtering van de dataobjecten voordat deze verzonden worden naar de controller
+De service laag communiceert met de repository.
+
+Het klassendiagram van dit project is te zien in het Technisch Ontwerp.

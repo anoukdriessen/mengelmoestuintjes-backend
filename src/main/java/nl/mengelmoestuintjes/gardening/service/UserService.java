@@ -297,9 +297,10 @@ public class UserService {
     public String setXP(String username, long toAdd) {
         User user = getUser(username);
         try {
-            String xp = "" + toAdd;
+            String xp = "" + (Long.parseLong(user.getXp()) + toAdd);
+            user.setXp(xp);
             repository.save(user);
-            return xp;
+            return user.getXp();
         } catch (Exception e) { throw new BadRequestException("cannot set xp to user " + username); }
     }
 
