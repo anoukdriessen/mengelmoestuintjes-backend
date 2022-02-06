@@ -6,6 +6,7 @@ onderdeel van het project mengelmoestuintjes.
 Main class: GardeningApplication.java
 
 Dit project is opgesteld met behulp van Springboot waardoor de bestandstructuur opgedeeld is in de verschillende lagen.
+In het application.properties bestand staan de database gegevens geconfigureerd, vergeet deze niet te veranderen naar jouw eigen gegevens voordat het project opgestart wordt
 
 ## Bestanden
 - main klasse GardeningApplication
@@ -47,3 +48,18 @@ de service laag dient voor de filtering van de dataobjecten voordat deze verzond
 De service laag communiceert met de repository.
 
 Het klassendiagram van dit project is te zien in het Technisch Ontwerp.
+De API REST Endpoints staan uitgebreid beschreven in de Installatie handleiding.
+
+# Rollen en Gebruikers
+Dit zijn de geconfigureerde testgebruikers
+
+USERS
+1. gebruiker - IkBenG3bru1k3r$
+2. itiskevin - M1jnW4chtW!
+3. lmnadora - Y01o43ver#me
+
+MODERATOR
+1. mengelmoestuintje - M3ng3l2TheM03s#
+
+ADMIN
+1. vivalanouk - #H34dSldrsKn33s!
